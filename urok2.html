@@ -46,7 +46,7 @@
     display: flex; flex-direction: column;
   }
 
-  /* ============ HEADER ============ */
+  /* HEADER */
   header {
     background: linear-gradient(135deg, #d9c8ff 0%, #ffd6e8 50%, #c8ecff 100%);
     padding: 18px 28px;
@@ -76,24 +76,25 @@
     background: rgba(255,255,255,0.8); padding: 6px 14px;
     border-radius: 20px; font-size: 0.85em; font-weight: 600;
     color: #5a4a8a;
-    transition: 0.25s;
+    transition: 0.25s; max-width: 200px;
   }
   .student-badge:hover {
-    background: #fff;
-    transform: translateY(-2px);
+    background: #fff; transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(180,150,220,0.2);
   }
   .student-badge .avatar {
     width: 26px; height: 26px; border-radius: 50%;
     background: linear-gradient(135deg, #b8a8e8, #ff8a95);
     color: #fff; display: flex; align-items: center; justify-content: center;
-    font-size: 0.85em; font-weight: 700;
+    font-size: 0.85em; font-weight: 700; flex-shrink: 0;
+  }
+  .student-badge span:last-child {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .flowers {
     display: flex; align-items: center; gap: 4px;
     background: rgba(255,255,255,0.8); padding: 6px 14px;
-    border-radius: 20px; font-size: 0.95em;
-    min-width: 130px;
+    border-radius: 20px; font-size: 0.95em; min-width: 130px;
   }
   .flowers .count {
     color: #8a7ab0; font-size: 0.78em; font-weight: 600;
@@ -114,7 +115,7 @@
     border-radius: 10px; transition: width 0.5s; width: 0%;
   }
 
-  /* ============ РЕЖИМ УЧИТЕЛЯ ============ */
+  /* РЕЖИМ УЧИТЕЛЯ */
   body.teacher-mode .student-badge,
   body.teacher-mode .flowers,
   body.teacher-mode .progress-wrap,
@@ -129,12 +130,8 @@
   body.teacher-mode #btn-back-to-main {
     display: none !important;
   }
-  body.teacher-mode .editor-box {
-    border-style: solid;
-    border-color: #d9c8ff;
-  }
 
-  /* ============ МОДАЛКА ============ */
+  /* МОДАЛКА */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -189,7 +186,7 @@
     background: #e0d8f0; cursor: not-allowed; box-shadow: none;
   }
 
-  /* ============ СЛАЙДЫ ============ */
+  /* СЛАЙДЫ */
   .slide-viewport { flex: 1; padding: 32px 42px; }
   .slide { display: none; animation: slideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
   .slide.active { display: block; }
@@ -208,7 +205,7 @@
   h3 { color: #7a5aa8; margin: 20px 0 10px; font-size: 1.08em; font-weight: 700; }
   p { line-height: 1.7; margin-bottom: 12px; color: #5a5a7a; }
 
-  /* ============ КОД ============ */
+  /* КОД */
   .code-block {
     background: #fdfbff; border: 2px solid #e8dfff;
     border-radius: 16px; padding: 18px 22px;
@@ -224,9 +221,8 @@
   .code-block .str { color: #4aa87a; }
   .code-block .com { color: #a99cd0; font-style: italic; }
   .code-block .var { color: #5a4a7a; }
-  .code-block .hl  { background: rgba(255,232,176,0.6); padding: 1px 4px; border-radius: 4px; }
 
-  /* ============ ВИЗУАЛИЗАТОР ============ */
+  /* ВИЗУАЛИЗАТОР */
   .array-viz {
     display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0;
     justify-content: center; padding: 18px;
@@ -265,42 +261,31 @@
     100% { transform: translateY(-8px) rotate(0deg); }
   }
 
-  /* ============ СХЕМА СДВИГА ============ */
+  /* СХЕМА СДВИГА */
   .shift-scheme {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    gap: 14px;
-    align-items: center;
-    margin: 16px 0;
-    padding: 18px;
-    background: #fdfbff;
-    border: 2px solid #e8dfff;
-    border-radius: 16px;
+    gap: 14px; align-items: center; margin: 16px 0;
+    padding: 18px; background: #fdfbff;
+    border: 2px solid #e8dfff; border-radius: 16px;
   }
   .shift-scheme .side {
     text-align: center;
     font-family: 'Consolas', monospace;
-    font-size: 1.1em;
-    color: #5a4a7a;
-    font-weight: 700;
+    font-size: 1.1em; color: #5a4a7a; font-weight: 700;
   }
-  .shift-scheme .arrow {
-    font-size: 1.8em;
-    color: #b8a8e8;
-  }
+  .shift-scheme .arrow { font-size: 1.8em; color: #b8a8e8; }
   .shift-scheme .label {
-    font-size: 0.75em;
-    color: #8a7ab0;
+    font-size: 0.75em; color: #8a7ab0;
     font-family: 'Comfortaa', sans-serif;
-    font-weight: 400;
-    margin-top: 6px;
+    font-weight: 400; margin-top: 6px;
   }
   @media (max-width: 500px) {
     .shift-scheme { grid-template-columns: 1fr; }
     .shift-scheme .arrow { transform: rotate(90deg); }
   }
 
-  /* ============ КНОПКИ ============ */
+  /* КНОПКИ */
   .btn {
     background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
     color: #fff; border: none;
@@ -311,7 +296,6 @@
     box-shadow: 0 6px 15px rgba(184,168,232,0.4);
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(184,168,232,0.55); }
-  .btn:active { transform: translateY(0); }
   .btn.rose { background: linear-gradient(135deg, #ffaaa5, #ff8a95); box-shadow: 0 6px 15px rgba(255,170,165,0.5); }
   .btn.rose:hover { box-shadow: 0 10px 22px rgba(255,170,165,0.7); }
   .btn.mint { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #3a7a5a; box-shadow: 0 6px 15px rgba(168,230,207,0.5); }
@@ -323,24 +307,39 @@
   .btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
   .btn.small { padding: 7px 16px; font-size: 0.82em; }
 
-  /* ============ РЕДАКТОР ============ */
+  /* РЕДАКТОР */
   .editor-box {
     background: #fff; border: 2px dashed #b8a8e8;
     border-radius: 20px; padding: 18px; margin: 16px 0;
-    transition: 0.3s;
+    transition: 0.3s; position: relative;
   }
   .editor-box.completed {
     border-style: solid; border-color: var(--mint-deep);
     background: linear-gradient(135deg, #f8fffc, #f0fff8);
+    box-shadow: 0 8px 25px rgba(126,217,184,0.25);
   }
-  body.teacher-mode .editor-box.completed {
-    border-color: #d9c8ff;
-    background: #fff;
+  .editor-box.completed::after {
+    content: "✓";
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #fff; font-weight: 700; font-size: 1.1em;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(126,217,184,0.4);
+    animation: pop 0.4s cubic-bezier(0.4,1.6,0.6,1);
+  }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.4); }
+    100% { transform: scale(1); }
   }
   .editor-title {
     display: flex; align-items: center; gap: 8px;
-    font-weight: 700; color: #7a5aa8; margin-bottom: 12px;
+    font-weight: 700; color: #7a5aa8; margin-bottom: 10px;
     font-size: 0.95em; flex-wrap: wrap;
+    padding-right: 45px;
   }
   .editor-title .task-badge {
     background: linear-gradient(135deg, #ffe8b0, #ffd966);
@@ -354,6 +353,49 @@
   }
   .editor-box.completed .done-badge { display: inline-block; }
   .editor-box.completed .task-badge { display: none; }
+
+  /* ИКОНКА-ПОДСКАЗКА */
+  .editor-hint {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: linear-gradient(135deg, #fff8e6, #ffefcc);
+    color: #8a6020;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ffd966;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1em; font-weight: 700;
+    transition: 0.25s;
+    z-index: 10; font-family: inherit;
+  }
+  .editor-hint:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 6px 15px rgba(255,184,77,0.4);
+  }
+  .editor-hint.opened {
+    background: linear-gradient(135deg, #ffd966, #ffb84d);
+    color: #fff;
+  }
+  .hint-popup {
+    display: none;
+    background: linear-gradient(135deg, #fff8e6, #ffefcc);
+    border-left: 5px solid #ffb84d;
+    color: #7a5a1a;
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin: 12px 0;
+    font-size: 0.92em;
+    line-height: 1.65;
+    animation: slideIn 0.3s ease;
+  }
+  .hint-popup.visible { display: block; }
+  .hint-popup code {
+    background: rgba(255,255,255,0.8);
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-family: 'Consolas', monospace;
+  }
 
   textarea {
     width: 100%; min-height: 140px;
@@ -375,13 +417,14 @@
     white-space: pre-wrap; word-break: break-word; line-height: 1.7;
   }
   .output.error { background: #fff0f0; border-color: #ffaaa5; color: #c04a4a; }
+  .output.hint { background: #fff8e6; border-color: #ffd966; color: #7a5a1a; }
   .output.success {
     background: linear-gradient(135deg, #f0fff8, #e8fff4);
     border-color: var(--mint-deep); color: #2a6a4a;
-    animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1);
+    font-weight: 600;
   }
 
-  /* ============ QUIZ ============ */
+  /* QUIZ */
   .quiz {
     background: linear-gradient(135deg, #fff8f0, #fef6ff);
     border: 2px solid #ffd3b6; border-radius: 18px;
@@ -422,7 +465,7 @@
   .quiz-option.correct .letter { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); }
   .quiz-option.wrong .letter { background: linear-gradient(135deg, #ffaaa5, #ff8a95); }
 
-  /* ============ NOTE ============ */
+  /* NOTE */
   .note {
     padding: 16px 20px; border-radius: 16px; margin: 14px 0;
     display: flex; gap: 12px; align-items: flex-start;
@@ -438,7 +481,7 @@
     border-radius: 5px; font-family: 'Consolas',monospace;
   }
 
-  /* ============ ЧИПЫ ============ */
+  /* ЧИПЫ */
   .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
   .chip {
     background: #fff; border: 2px solid #ece4ff; color: #7a5aa8;
@@ -447,9 +490,8 @@
     font-family: inherit;
   }
   .chip:hover { background: linear-gradient(135deg, #f4ebff, #e8d8ff); border-color: #b8a8e8; transform: translateY(-2px); }
-  .chip.active { background: linear-gradient(135deg, #b8a8e8, #9a8ad8); color: #fff; border-color: transparent; }
 
-  /* ============ СЛАЙДЕР ============ */
+  /* СЛАЙДЕР */
   .slider-wrap {
     background: #fdfbff; border: 2px solid #e8dfff;
     border-radius: 16px; padding: 18px; margin: 12px 0;
@@ -471,7 +513,7 @@
     cursor: pointer; border: 3px solid #fff;
   }
 
-  /* ============ ФИНАЛЬНЫЙ БУКЕТ ============ */
+  /* БУКЕТ */
   .bouquet {
     text-align: center; padding: 38px 24px;
     background: linear-gradient(135deg, #fff8f0, #fef6ff, #e8f4fd);
@@ -500,150 +542,106 @@
     font-size: 1em; color: #8a7ab0; margin-bottom: 12px;
   }
 
-  /* ============ СЕРТИФИКАТ ============ */
+  /* СЕРТИФИКАТ */
   .certificate {
-    margin: 24px auto;
-    max-width: 720px;
+    margin: 24px auto; max-width: 720px;
     background: linear-gradient(135deg, #fffef8, #fff8f0, #fef6ff);
     border: 3px solid #d9c8ff;
     border-radius: 20px;
     padding: 34px 40px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(180,150,220,0.25);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .certificate::before {
-    content: "";
-    position: absolute; inset: 8px;
+    content: ""; position: absolute; inset: 8px;
     border: 1px dashed #d9c8ff;
-    border-radius: 14px;
-    pointer-events: none;
+    border-radius: 14px; pointer-events: none;
   }
   .certificate .cert-label {
-    font-size: 0.8em;
-    letter-spacing: 3px;
-    color: #a99cd0;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    font-weight: 700;
+    font-size: 0.8em; letter-spacing: 3px;
+    color: #a99cd0; text-transform: uppercase;
+    margin-bottom: 10px; font-weight: 700;
   }
   .certificate .cert-title {
-    font-size: 1.8em;
-    font-weight: 800;
+    font-size: 1.8em; font-weight: 800;
     background: linear-gradient(135deg, #b8a8e8, #ff8a95);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 6px;
+    background-clip: text; margin-bottom: 6px;
   }
   .certificate .cert-subtitle {
-    color: #8a7ab0;
-    font-size: 0.95em;
-    margin-bottom: 22px;
+    color: #8a7ab0; font-size: 0.95em; margin-bottom: 22px;
   }
   .certificate .cert-name {
-    font-size: 2.2em;
-    font-weight: 800;
-    color: #5a4a8a;
-    margin: 14px 0;
-    line-height: 1.2;
-    position: relative;
-    display: inline-block;
-    padding: 0 20px;
+    font-size: 2.2em; font-weight: 800;
+    color: #5a4a8a; margin: 14px 0;
+    line-height: 1.2; position: relative;
+    display: inline-block; padding: 0 20px;
   }
   .certificate .cert-name::before,
   .certificate .cert-name::after {
-    content: "🌸";
-    font-size: 0.55em;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.7;
+    content: "🌸"; font-size: 0.55em;
+    position: absolute; top: 50%;
+    transform: translateY(-50%); opacity: 0.7;
   }
   .certificate .cert-name::before { left: -10px; }
   .certificate .cert-name::after  { right: -10px; }
   .certificate .cert-text {
-    color: #5a5a7a;
-    font-size: 1em;
-    line-height: 1.7;
-    margin-bottom: 20px;
+    color: #5a5a7a; font-size: 1em;
+    line-height: 1.7; margin-bottom: 20px;
   }
   .certificate .cert-stats {
-    display: flex;
-    justify-content: center;
-    gap: 26px;
-    margin: 22px 0;
-    flex-wrap: wrap;
+    display: flex; justify-content: center;
+    gap: 26px; margin: 22px 0; flex-wrap: wrap;
   }
   .certificate .cert-stat { text-align: center; }
   .certificate .cert-stat .num {
-    font-size: 1.9em;
-    font-weight: 800;
+    font-size: 1.9em; font-weight: 800;
     background: linear-gradient(135deg, #b8a8e8, #ff8a95);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.1;
+    background-clip: text; line-height: 1.1;
   }
   .certificate .cert-stat .lbl {
-    font-size: 0.78em;
-    color: #8a7ab0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-top: 4px;
+    font-size: 0.78em; color: #8a7ab0;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    font-weight: 600; margin-top: 4px;
   }
   .certificate .cert-flowers {
-    font-size: 1.6em;
-    margin: 16px 0 8px;
-    line-height: 1.4;
-    word-break: break-all;
+    font-size: 1.6em; margin: 16px 0 8px;
+    line-height: 1.4; word-break: break-all;
   }
   .certificate .cert-date {
-    margin-top: 22px;
-    font-size: 0.85em;
-    color: #8a7ab0;
-    font-style: italic;
+    margin-top: 22px; font-size: 0.85em;
+    color: #8a7ab0; font-style: italic;
   }
   .certificate .cert-signature {
-    margin-top: 24px;
-    padding-top: 16px;
+    margin-top: 24px; padding-top: 16px;
     border-top: 1px dashed #d9c8ff;
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: flex; justify-content: space-around;
+    gap: 20px; flex-wrap: wrap;
   }
   .certificate .sign-block {
-    text-align: center;
-    font-size: 0.85em;
-    color: #8a7ab0;
+    text-align: center; font-size: 0.85em; color: #8a7ab0;
   }
   .certificate .sign-line {
-    width: 140px;
-    height: 1px;
-    background: #d9c8ff;
-    margin: 0 auto 6px;
+    width: 140px; height: 1px;
+    background: #d9c8ff; margin: 0 auto 6px;
   }
   .cert-actions {
-    text-align: center;
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
+    text-align: center; margin-top: 20px;
+    display: flex; gap: 10px;
+    justify-content: center; flex-wrap: wrap;
   }
 
-  /* ============ САЛЮТ ============ */
+  /* САЛЮТ */
   #fireworksCanvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 999;
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999;
     display: none;
   }
   #fireworksCanvas.active { display: block; }
 
-  /* ============ СПИСОК ЗАДАНИЙ ============ */
+  /* СПИСОК ЗАДАНИЙ */
   .task-list {
     background: linear-gradient(135deg, #fef6ff, #f0f8ff);
     border-radius: 18px; padding: 18px 22px;
@@ -668,7 +666,7 @@
     border-color: var(--mint-deep);
   }
 
-  /* ============ НАВИГАЦИЯ ============ */
+  /* НАВИГАЦИЯ */
   .nav-bar {
     display: flex; justify-content: space-between; align-items: center;
     padding: 16px 30px;
@@ -718,6 +716,7 @@
     .modal { padding: 28px 24px; }
     .certificate { padding: 24px 20px; }
     .certificate .cert-name { font-size: 1.7em; }
+    .student-badge { max-width: 140px; }
   }
 
   @media print {
@@ -733,7 +732,6 @@
 </head>
 <body>
 
-<!-- МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ -->
 <div class="modal-bg hidden" id="nameModal">
   <div class="modal">
     <div class="flower-deco">🌸</div>
@@ -762,7 +760,7 @@
       </div>
       <div class="flowers" id="flowersBox">
         <span id="flowersIcons">—</span>
-        <span class="count" id="flowersCount">0 / 12</span>
+        <span class="count" id="flowersCount">0 / 15</span>
       </div>
       <div class="progress-wrap">
         <span id="slide-counter">1 / 9</span>
@@ -777,27 +775,27 @@
     <div class="slide active" data-slide="1">
       <div class="slide-num">Слайд 1 · Введение</div>
       <h2>Второй урок: обработка массивов 🎨</h2>
-      <p>На первом уроке мы научились создавать массивы, работать с индексами и перебирать элементы. Сегодня — следующий шаг: настоящие алгоритмы обработки.</p>
+      <p>На первом уроке мы научились создавать массивы, работать с индексами и перебирать элементы. Сегодня — настоящие алгоритмы обработки.</p>
 
       <div class="note idea">
         <div class="icon">🧠</div>
-        <div>Вспомни, что мы уже знаем: индексы (обычные и отрицательные), <code>len</code>, изменение элементов, цикл <code>for</code>, <code>sum()</code>, <code>count()</code>. Сегодня — на ступеньку выше!</div>
+        <div>Вспомни: индексы (обычные и отрицательные), <code>len</code>, методы <code>.append</code> и <code>.count</code>, цикл <code>for</code>, <code>sum</code>. Сегодня — на ступеньку выше!</div>
       </div>
 
       <h3>Что нас ждёт на уроке</h3>
       <div class="task-list">
         <h4>Задания урока — за каждое даётся цветочек 🌸</h4>
-        <div class="task-item" data-task="7"><div class="check">✓</div> Дописать поиск элемента</div>
-        <div class="task-item" data-task="8"><div class="check">✓</div> Дописать фильтрацию</div>
-        <div class="task-item" data-task="9"><div class="check">✓</div> Дописать сортировку</div>
-        <div class="task-item" data-task="10"><div class="check">✓</div> Дописать сдвиг массива</div>
-        <div class="task-item" data-task="11"><div class="check">✓</div> Мини-проект: статистика</div>
-        <div class="task-item" data-task="12"><div class="check">✓</div> Своя программа (творческая)</div>
+        <div class="task-item" data-task="10"><div class="check">✓</div> Дописать поиск элемента</div>
+        <div class="task-item" data-task="11"><div class="check">✓</div> Отфильтровать чётные числа</div>
+        <div class="task-item" data-task="12"><div class="check">✓</div> Отсортировать массив</div>
+        <div class="task-item" data-task="13"><div class="check">✓</div> Сдвинуть массив влево</div>
+        <div class="task-item" data-task="14"><div class="check">✓</div> Мини-проект: статистика забега</div>
+        <div class="task-item" data-task="15"><div class="check">✓</div> Своя программа (творческая)</div>
       </div>
 
       <div class="note love">
         <div class="icon">💖</div>
-        <div>Твой прогресс с первого урока сохранён — цветочки, которые ты собрала, никуда не делись. В финале мы соберём общий букет!</div>
+        <div>Твой прогресс с первого урока сохранён. В финале соберём общий букет из 15 цветочков!</div>
       </div>
     </div>
 
@@ -805,9 +803,8 @@
     <div class="slide" data-slide="2">
       <div class="slide-num">Слайд 2 · Поиск</div>
       <h2>Поиск элемента 🔍</h2>
-      <p>Как найти нужное значение в массиве? Есть два способа: написать цикл или использовать готовые средства Python.</p>
+      <p>Как найти нужное значение в массиве? Перебираем элементы и сравниваем с искомым.</p>
 
-      <h3>Способ 1: перебор с проверкой</h3>
       <div class="code-block">
         <span class="line"><span class="var">nums</span> = [<span class="num">4</span>, <span class="num">8</span>, <span class="num">15</span>, <span class="num">16</span>, <span class="num">23</span>, <span class="num">42</span>]</span>
         <span class="line"><span class="var">target</span> = <span class="num">16</span></span>
@@ -817,26 +814,10 @@
         <span class="line">        <span class="fn">print</span>(<span class="str">"Найдено на позиции"</span>, <span class="var">i</span>)</span>
         <span class="line">        <span class="kw">break</span></span>
       </div>
-      <p style="font-size:0.92em;color:#5a5a7a;">
-        Мы проходим по индексам и сравниваем каждый элемент с искомым.
-        Как только нашли — выводим позицию и <code>break</code> — прерываем цикл, чтобы не искать дальше.
-      </p>
 
-      <h3>Способ 2: с оператором in</h3>
-      <p>Оператор <code>in</code> проверяет, есть ли значение в массиве. Возвращает <b>True</b> или <b>False</b>.</p>
-      <div class="code-block">
-        <span class="line"><span class="kw">if</span> <span class="var">target</span> <span class="kw">in</span> <span class="var">nums</span>:</span>
-        <span class="line">    <span class="fn">print</span>(<span class="str">"Число есть в массиве"</span>)</span>
-      </div>
-
-      <p>А метод <code>.index(x)</code> возвращает номер (индекс) элемента <code>x</code>:</p>
-      <div class="code-block">
-        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">index</span>(<span class="num">16</span>))  <span class="com"># 3</span></span>
-      </div>
-
-      <div class="note tip">
+      <div class="note idea">
         <div class="icon">💡</div>
-        <div>Коротко можно так: <code>if target in nums: print(nums.index(target))</code> — проверяем, что число есть, и сразу выводим его индекс.</div>
+        <div><code>break</code> — прерывает цикл, когда нашли нужное. Без него цикл продолжал бы работать.</div>
       </div>
 
       <h3>🎬 Визуализатор поиска</h3>
@@ -850,20 +831,21 @@
       </div>
       <div class="output" id="search-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Выбери число для поиска</div>
 
-      <h3>Задание 7. Дописать поиск</h3>
-      <div class="editor-box" id="box-task-7">
+      <h3>Задание 10. Дописать поиск</h3>
+      <div class="editor-box" id="box-task-10">
+        <button class="editor-hint" onclick="toggleHint('hint-task-10', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 7
+          Задание 10
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши условие, чтобы программа нашла число <code>16</code> и вывела его позицию.
-          <br><br>
-          💡 <b>Подсказка:</b> сравни <code>nums[i]</code> с <code>target</code> через <code>==</code>.
-          Не забудь <code>break</code> — он уже есть в коде.
-        </p>
-        <textarea id="code-task-7">nums = [4, 8, 15, 16, 23, 42]
+        <div class="hint-popup" id="hint-task-10">
+          💡 <b>Подсказка:</b><br>
+          Сравни <code>nums[i]</code> с <code>target</code> через <code>==</code>.<br>
+          Условие: <code>if nums[i] == target:</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие, чтобы программа нашла число <code>16</code> и вывела его позицию.</p>
+        <textarea id="code-task-10" spellcheck="false">nums = [4, 8, 15, 16, 23, 42]
 target = 16
 
 for i in range(len(nums)):
@@ -871,9 +853,9 @@ for i in range(len(nums)):
     if ?:
         print("Найдено на позиции", i)
         break</textarea>
-        <button class="btn" onclick="runTask('task-7', 7, checkTask7)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-7')">↺ Сбросить</button>
-        <div class="output" id="out-task-7">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-10', 10, checkTask10)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-10')">↺ Сбросить</button>
+        <div class="output" id="out-task-10">Здесь появится результат ✨</div>
       </div>
     </div>
 
@@ -881,7 +863,7 @@ for i in range(len(nums)):
     <div class="slide" data-slide="3">
       <div class="slide-num">Слайд 3 · Фильтрация</div>
       <h2>Фильтрация: отбираем лучшее ✨</h2>
-      <p>Иногда нужно оставить только те элементы, которые подходят под условие. Например — только положительные числа.</p>
+      <p>Фильтрация — оставляем только те элементы, которые подходят под условие.</p>
 
       <div class="code-block">
         <span class="line"><span class="var">nums</span> = [<span class="num">3</span>, <span class="num">-1</span>, <span class="num">7</span>, <span class="num">-5</span>, <span class="num">10</span>, <span class="num">-2</span>, <span class="num">8</span>]</span>
@@ -892,13 +874,7 @@ for i in range(len(nums)):
         <span class="line">    <span class="kw">if</span> <span class="var">x</span> > <span class="num">0</span>:</span>
         <span class="line">        <span class="var">positive</span>.<span class="fn">append</span>(<span class="var">x</span>)</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">positive</span>)</span>
-        <span class="line"><span class="com"># [3, 7, 10, 8]</span></span>
-      </div>
-
-      <div class="note idea">
-        <div class="icon">💡</div>
-        <div><b>Как это работает:</b> создаём пустой массив, проходим по старому, и если элемент подходит под условие — <code>.append()</code> добавляет его в новый.</div>
+        <span class="line"><span class="fn">print</span>(<span class="var">positive</span>)   <span class="com"># [3, 7, 10, 8]</span></span>
       </div>
 
       <h3>🎛️ Интерактивный фильтр</h3>
@@ -909,20 +885,21 @@ for i in range(len(nums)):
         <div class="output" id="filter-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Двигай ползунок — увидишь подходящие элементы</div>
       </div>
 
-      <h3>Задание 8. Дописать фильтр</h3>
-      <div class="editor-box" id="box-task-8">
+      <h3>Задание 11. Отфильтруй чётные</h3>
+      <div class="editor-box" id="box-task-11">
+        <button class="editor-hint" onclick="toggleHint('hint-task-11', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 8
+          Задание 11
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши условие и добавление в новый массив, чтобы остались только <b>чётные</b> числа.
-          <br><br>
-          💡 <b>Подсказка:</b> число чётное, если при делении на 2 остатка нет — <code>x % 2 == 0</code>.
-          Чтобы добавить в массив, используй <code>evens.append(x)</code>.
-        </p>
-        <textarea id="code-task-8">nums = [3, -1, 7, -5, 10, -2, 8]
+        <div class="hint-popup" id="hint-task-11">
+          💡 <b>Подсказка:</b><br>
+          • чётное: <code>x % 2 == 0</code><br>
+          • добавить в конец: <code>evens.append(x)</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие и добавление — оставь только чётные числа.</p>
+        <textarea id="code-task-11" spellcheck="false">nums = [3, -1, 7, -5, 10, -2, 8]
 
 evens = []
 for x in nums:
@@ -932,9 +909,9 @@ for x in nums:
         evens.append(?)
 
 print("Чётные:", evens)</textarea>
-        <button class="btn" onclick="runTask('task-8', 8, checkTask8)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-8')">↺ Сбросить</button>
-        <div class="output" id="out-task-8">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-11', 11, checkTask11)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-11')">↺ Сбросить</button>
+        <div class="output" id="out-task-11">Здесь появится результат ✨</div>
       </div>
     </div>
 
@@ -942,57 +919,21 @@ print("Чётные:", evens)</textarea>
     <div class="slide" data-slide="4">
       <div class="slide-num">Слайд 4 · Сортировка</div>
       <h2>Сортировка массива 📊</h2>
-      <p>Отсортировать массив — значит расставить элементы по возрастанию или убыванию.</p>
+      <p>Отсортировать массив — расставить элементы по возрастанию или убыванию.</p>
 
-      <h3>Встроенная сортировка — один вызов</h3>
       <div class="code-block">
         <span class="line"><span class="var">nums</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>]</span>
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="com"># По возрастанию</span></span>
         <span class="line"><span class="var">nums</span>.<span class="fn">sort</span>()</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)</span>
-        <span class="line"><span class="com"># [1, 2, 5, 7, 9]</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)   <span class="com"># [1, 2, 5, 7, 9]</span></span>
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="com"># По убыванию</span></span>
         <span class="line"><span class="var">nums</span>.<span class="fn">sort</span>(reverse=<span class="kw">True</span>)</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)</span>
-        <span class="line"><span class="com"># [9, 7, 5, 2, 1]</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)   <span class="com"># [9, 7, 5, 2, 1]</span></span>
       </div>
 
-      <h3>Как работает «пузырьковая» сортировка</h3>
-      <p>Идея: <b>сравниваем два соседних элемента</b>. Если они стоят не по порядку — меняем местами. Повторяем много раз, пока массив не станет отсортированным.</p>
-
-      <h4 style="font-size:0.98em;color:#7a5aa8;margin:14px 0 8px;">Один проход — на примере:</h4>
-      <div class="code-block">
-        <span class="line"><span class="com"># Было: [5, 2, 9, 1]</span></span>
-        <span class="line"><span class="com"># Сравниваем 5 и 2 → 5 &gt; 2, меняем местами → [2, 5, 9, 1]</span></span>
-        <span class="line"><span class="com"># Сравниваем 5 и 9 → 5 &lt; 9, оставляем     → [2, 5, 9, 1]</span></span>
-        <span class="line"><span class="com"># Сравниваем 9 и 1 → 9 &gt; 1, меняем местами → [2, 5, 1, 9]</span></span>
-        <span class="line"><span class="com"># 9 «всплыл» в конец — самый большой на месте</span></span>
-      </div>
-
-      <h4 style="font-size:0.98em;color:#7a5aa8;margin:14px 0 8px;">Как это записать в коде:</h4>
-      <div class="code-block">
-        <span class="line"><span class="var">arr</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>]</span>
-        <span class="line"><span class="var">n</span> = <span class="fn">len</span>(<span class="var">arr</span>)</span>
-        <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span> - <span class="num">1</span>):</span>
-        <span class="line">    <span class="kw">for</span> <span class="var">j</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span> - <span class="num">1</span> - <span class="var">i</span>):</span>
-        <span class="line">        <span class="kw">if</span> <span class="var">arr</span>[<span class="var">j</span>] > <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>]:</span>
-        <span class="line">            <span class="var">arr</span>[<span class="var">j</span>], <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>] = <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>], <span class="var">arr</span>[<span class="var">j</span>]</span>
-      </div>
-
-      <div class="note idea">
-        <div class="icon">🫧</div>
-        <div>Большие числа как будто «всплывают» в конец массива — как пузырьки в воде. Отсюда название — <b>пузырьковая сортировка</b>.</div>
-      </div>
-
-      <div class="note warn">
-        <div class="icon">📌</div>
-        <div>Эта сортировка медленная для больших массивов, но её хорошо понимать — она показывает саму <b>идею сортировки</b>. В реальных программах используют встроенный <code>.sort()</code>.</div>
-      </div>
-
-      <h3>🎬 Смотрим сортировку по шагам</h3>
+      <h3>🎬 Посмотри пузырьковую сортировку</h3>
       <div class="array-viz" id="bubble-viz"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn" onclick="bubbleSortVisual()">▶ Запустить сортировку</button>
@@ -1000,37 +941,38 @@ print("Чётные:", evens)</textarea>
       </div>
       <div class="output" id="bubble-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Запустить сортировку»</div>
 
-      <h3>Задание 9. Дописать сортировку</h3>
-      <div class="editor-box" id="box-task-9">
+      <h3>Задание 12. Отсортируй массив</h3>
+      <div class="editor-box" id="box-task-12">
+        <button class="editor-hint" onclick="toggleHint('hint-task-12', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 9
+          Задание 12
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши вызов метода сортировки, чтобы массив стал <code>[1, 2, 5, 7, 9]</code>.
-          <br><br>
-          💡 <b>Подсказка:</b> нужен метод <code>.sort()</code> без параметров (по возрастанию).
-        </p>
-        <textarea id="code-task-9">nums = [5, 2, 9, 1, 7]
+        <div class="hint-popup" id="hint-task-12">
+          💡 <b>Подсказка:</b><br>
+          Нужен метод <code>.sort()</code> без параметров (по возрастанию):<br>
+          <code>nums.sort()</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши вызов метода, чтобы массив стал <code>[1, 2, 5, 7, 9]</code>.</p>
+        <textarea id="code-task-12" spellcheck="false">nums = [5, 2, 9, 1, 7]
 
 # Вызови сортировку по возрастанию
 nums.?
 
 print("Отсортировано:", nums)</textarea>
-        <button class="btn" onclick="runTask('task-9', 9, checkTask9)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-9')">↺ Сбросить</button>
-        <div class="output" id="out-task-9">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-12', 12, checkTask12)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-12')">↺ Сбросить</button>
+        <div class="output" id="out-task-12">Здесь появится результат ✨</div>
       </div>
     </div>
 
     <!-- СЛАЙД 5 — СДВИГ -->
     <div class="slide" data-slide="5">
       <div class="slide-num">Слайд 5 · Сдвиг</div>
-      <h2>Сдвиг элементов массива 🎠</h2>
-      <p>Сдвиг влево — каждый элемент перемещается на одну позицию влево, а первый элемент оказывается в конце.</p>
+      <h2>Сдвиг элементов 🎠</h2>
+      <p>Сдвиг влево — каждый элемент переходит на одну позицию влево, а первый оказывается в конце.</p>
 
-      <h3>Что происходит 🔍</h3>
       <div class="shift-scheme">
         <div class="side">
           [1, 2, 3, 4, 5]
@@ -1043,31 +985,20 @@ print("Отсортировано:", nums)</textarea>
         </div>
       </div>
 
-      <h3>Как это сделать в коде</h3>
       <div class="code-block">
         <span class="line"><span class="var">arr</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># 1. Запоминаем первый элемент, иначе он потеряется</span></span>
+        <span class="line"><span class="com"># 1. Запоминаем первый элемент</span></span>
         <span class="line"><span class="var">first</span> = <span class="var">arr</span>[<span class="num">0</span>]</span>
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="com"># 2. Сдвигаем каждый элемент влево</span></span>
         <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">arr</span>) - <span class="num">1</span>):</span>
         <span class="line">    <span class="var">arr</span>[<span class="var">i</span>] = <span class="var">arr</span>[<span class="var">i</span> + <span class="num">1</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># 3. Возвращаем первый элемент в конец</span></span>
-        <span class="line"><span class="var">arr</span>[<span class="var">-1</span>] = <span class="var">first</span></span>
+        <span class="line"><span class="com"># 3. Возвращаем сохранённый элемент в конец</span></span>
+        <span class="line"><span class="var">arr</span>[<span class="num">-1</span>] = <span class="var">first</span></span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">arr</span>)</span>
-        <span class="line"><span class="com"># [2, 3, 4, 5, 1]</span></span>
-      </div>
-
-      <div class="note idea">
-        <div class="icon">💡</div>
-        <div>Разбираем по шагам:<br>
-          • <code>first = arr[0]</code> — сохраняем первый элемент (1)<br>
-          • Цикл: <code>arr[0] = arr[1]</code> (2), <code>arr[1] = arr[2]</code> (3), <code>arr[2] = arr[3]</code> (4), <code>arr[3] = arr[4]</code> (5)<br>
-          • <code>arr[-1] = first</code> — возвращаем сохранённый элемент в конец
-        </div>
+        <span class="line"><span class="fn">print</span>(<span class="var">arr</span>)   <span class="com"># [2, 3, 4, 5, 1]</span></span>
       </div>
 
       <h3>🎬 Смотрим сдвиг по шагам</h3>
@@ -1078,19 +1009,21 @@ print("Отсортировано:", nums)</textarea>
       </div>
       <div class="output" id="shift-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Выполнить сдвиг»</div>
 
-      <h3>Задание 10. Дописать сдвиг</h3>
-      <div class="editor-box" id="box-task-10">
+      <h3>Задание 13. Дописать сдвиг</h3>
+      <div class="editor-box" id="box-task-13">
+        <button class="editor-hint" onclick="toggleHint('hint-task-13', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 10
+          Задание 13
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши тело цикла — присвой элементу <code>arr[i]</code> значение следующего элемента.
-          <br><br>
-          💡 <b>Подсказка:</b> «следующий» — это <code>arr[i + 1]</code>. Получится <code>arr[i] = arr[i + 1]</code>.
-        </p>
-        <textarea id="code-task-10">arr = [1, 2, 3, 4, 5]
+        <div class="hint-popup" id="hint-task-13">
+          💡 <b>Подсказка:</b><br>
+          «Следующий» — это <code>arr[i + 1]</code>.<br>
+          Получится: <code>arr[i] = arr[i + 1]</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши тело цикла — присвой <code>arr[i]</code> значение следующего элемента.</p>
+        <textarea id="code-task-13" spellcheck="false">arr = [1, 2, 3, 4, 5]
 first = arr[0]
 
 for i in range(len(arr) - 1):
@@ -1099,16 +1032,16 @@ for i in range(len(arr) - 1):
 
 arr[-1] = first
 print("После сдвига:", arr)</textarea>
-        <button class="btn" onclick="runTask('task-10', 10, checkTask10)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-10')">↺ Сбросить</button>
-        <div class="output" id="out-task-10">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-13', 13, checkTask13)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-13')">↺ Сбросить</button>
+        <div class="output" id="out-task-13">Здесь появится результат ✨</div>
       </div>
     </div>
 
     <!-- СЛАЙД 6 — МИНИ-ПРОЕКТ -->
     <div class="slide" data-slide="6">
       <div class="slide-num">Слайд 6 · Мини-проект</div>
-      <h2>Мини-проект: статистика результатов 📊</h2>
+      <h2>Мини-проект: статистика забега 📊</h2>
       <p>У тебя есть массив результатов забега на 100 метров. Посчитаем статистику.</p>
 
       <div class="note idea">
@@ -1117,47 +1050,51 @@ print("После сдвига:", arr)</textarea>
           <br>1. <b>Отсортировать</b> массив — <code>results.sort()</code>
           <br>2. Вывести <b>лучший</b> результат — <code>results[0]</code>
           <br>3. Вывести <b>худший</b> результат — <code>results[-1]</code>
-          <br>4. Найти <b>среднее время</b> — <code>sum(results) / len(results)</code>
-          <br>5. Посчитать, сколько результатов <b>лучше среднего</b> — цикл + счётчик
+          <br>4. Найти <b>среднее</b> — <code>sum(results) / len(results)</code>
         </div>
       </div>
 
-      <div class="editor-box" id="box-task-11">
+      <div class="editor-box" id="box-task-14">
+        <button class="editor-hint" onclick="toggleHint('hint-task-14', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 11
+          Задание 14
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Напиши код полностью сама по шагам выше. Каждый шаг — отдельный <code>print()</code>.
-        </p>
-        <textarea id="code-task-11" style="min-height: 200px;"># Результаты забега на 100 метров (в секундах)
+        <div class="hint-popup" id="hint-task-14">
+          💡 <b>Подсказка:</b><br>
+          <code>results.sort()</code><br>
+          <code>print("Лучший:", results[0])</code><br>
+          <code>print("Худший:", results[-1])</code><br>
+          <code>print("Средний:", sum(results) / len(results))</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Напиши код полностью сама по шагам выше.</p>
+        <textarea id="code-task-14" spellcheck="false" style="min-height: 200px;"># Результаты забега на 100 метров (в секундах)
 results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
 
 # 1. Отсортируй массив
-# 2. Выведи лучший результат (results[0])
-# 3. Выведи худший результат (results[-1])
+# 2. Выведи лучший результат
+# 3. Выведи худший результат
 # 4. Найди среднее время
-# 5. Посчитай, сколько результатов лучше среднего</textarea>
-        <button class="btn" onclick="runTask('task-11', 11, checkTask11)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-11')">↺ Сбросить</button>
-        <button class="btn mint" onclick="showHint11()">💡 Подсказка</button>
-        <div class="output" id="out-task-11">Здесь появится результат ✨</div>
+</textarea>
+        <button class="btn" onclick="runTask('task-14', 14, checkTask14)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-14')">↺ Сбросить</button>
+        <div class="output" id="out-task-14">Здесь появится результат ✨</div>
       </div>
     </div>
 
     <!-- СЛАЙД 7 — ТВОРЧЕСКАЯ ЗАДАЧА -->
     <div class="slide" data-slide="7">
       <div class="slide-num">Слайд 7 · Творческая задача</div>
-      <h2>Задание 12. Своя программа 🎨</h2>
+      <h2>Задание 15. Своя программа 🎨</h2>
       <p>Придумай свой массив и обработай его — используй то, что узнала на двух уроках.</p>
 
       <div class="note love">
         <div class="icon">🌟</div>
-        <div><b>Идеи для программы:</b>
-          <br>• массив любимых фильмов — отсортировать по алфавиту;
-          <br>• массив температур за месяц — найти среднее и максимум;
-          <br>• массив цен на товары — посчитать сумму и отфильтровать дорогие;
+        <div><b>Идеи:</b>
+          <br>• массив оценок — средний балл, максимум;
+          <br>• массив температур — среднее, отфильтровать выше 20;
+          <br>• массив цен — отсортировать, посчитать сумму;
           <br>• придумай свою тему!
         </div>
       </div>
@@ -1166,31 +1103,38 @@ results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
         <div class="icon">✅</div>
         <div><b>Что должно быть в программе:</b>
           <br>• свой массив (минимум 5 элементов)
-          <br>• минимум <b>две</b> изученные операции — например, <code>.sort()</code> и <code>sum()</code>, или фильтрация и <code>max()</code>
-          <br>• минимум три <code>print()</code> с результатами
+          <br>• минимум <b>две</b> изученные операции (<code>.sort()</code>, <code>sum()</code>, <code>.count()</code>, фильтрация, поиск)
+          <br>• минимум два <code>print()</code> с результатами
           <br>• код должен работать без ошибок
         </div>
       </div>
 
-      <div class="editor-box" id="box-task-12">
+      <div class="editor-box" id="box-task-15">
+        <button class="editor-hint" onclick="toggleHint('hint-task-15', event)" title="Подсказка">?</button>
         <div class="editor-title">
-          Задание 12
+          Задание 15
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Пиши свою программу. Главное — чтобы она работала и использовала хотя бы две операции из курса.
-        </p>
-        <textarea id="code-task-12" style="min-height: 220px;"># Придумай свой массив и обработай его
+        <div class="hint-popup" id="hint-task-15">
+          💡 Пример программы с оценками:<br>
+          <code>grades = [5, 4, 3, 5, 2, 4, 5]</code><br>
+          <code>grades.sort()</code><br>
+          <code>print("Лучший:", grades[-1])</code><br>
+          <code>print("Средний:", sum(grades) / len(grades))</code><br>
+          <code>print("Пятёрок:", grades.count(5))</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Придумай свою программу с массивом и обработай его.</p>
+        <textarea id="code-task-15" spellcheck="false" style="min-height: 220px;"># Придумай свой массив и обработай его
 # Например: температуры за месяц
 
 temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
 
 # Твой код здесь
 </textarea>
-        <button class="btn" onclick="runTask('task-12', 12, checkTask12)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-12')">↺ Сбросить</button>
-        <div class="output" id="out-task-12">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-15', 15, checkTask15)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-15')">↺ Сбросить</button>
+        <div class="output" id="out-task-15">Здесь появится результат ✨</div>
       </div>
     </div>
 
@@ -1204,13 +1148,14 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
         <span class="line">🌸  Изменение элементов</span>
         <span class="line">🌸  Перебор массива циклом for</span>
         <span class="line">🌸  Сумма, среднее, максимум, минимум</span>
-        <span class="line">🌸  Поиск элемента (in, .index())</span>
+        <span class="line">🌸  Поиск элемента</span>
         <span class="line">🌸  Фильтрация по условию</span>
-        <span class="line">🌸  Сортировка (встроенная и пузырьковая)</span>
+        <span class="line">🌸  Сортировка</span>
         <span class="line">🌸  Сдвиг элементов массива</span>
       </div>
 
       <h3>Финальная проверка 🎯</h3>
+
       <div class="quiz" data-correct="1">
         <div class="question">Что делает метод <code>arr.sort()</code>?</div>
         <div class="options">
@@ -1230,9 +1175,19 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
           <button class="quiz-option" data-i="3"><span class="letter">D</span> arr &gt; 0</button>
         </div>
       </div>
+
+      <div class="quiz" data-correct="0">
+        <div class="question">Что делает <code>break</code> внутри цикла?</div>
+        <div class="options">
+          <button class="quiz-option" data-i="0"><span class="letter">A</span> Прерывает цикл</button>
+          <button class="quiz-option" data-i="1"><span class="letter">B</span> Перезапускает цикл</button>
+          <button class="quiz-option" data-i="2"><span class="letter">C</span> Пропускает одну итерацию</button>
+          <button class="quiz-option" data-i="3"><span class="letter">D</span> Ничего не делает</button>
+        </div>
+      </div>
     </div>
 
-    <!-- СЛАЙД 9 — ФИНАЛ -->
+    <!-- СЛАЙД 9 — ФИНАЛ С БУКЕТОМ -->
     <div class="slide" data-slide="9">
       <div class="slide-num">Слайд 9 · Финал</div>
       <h2>Ты справилась! 🎉</h2>
@@ -1242,7 +1197,7 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
         <div class="subtitle-final">🌸 Финал курса 🌸</div>
         <h2 id="finalName">Молодец!</h2>
         <div class="flowers-big" id="finalBouquet">🌸</div>
-        <div class="score-big" id="finalScore">0 / 12</div>
+        <div class="score-big" id="finalScore">0 / 15</div>
         <div class="score-label" id="finalPercent">0% выполнено</div>
         <div id="finalMessage" style="margin-top: 24px; font-size: 1.05em; color: #5a5a7a; line-height: 1.7;"></div>
       </div>
@@ -1319,7 +1274,7 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
 
 <script>
 /* ==========================================================
-   РЕЖИМ УЧИТЕЛЯ (если открыт в iframe)
+   РЕЖИМ УЧИТЕЛЯ
    ========================================================== */
 const isInIframe = (() => {
   try { return window.self !== window.top; }
@@ -1336,7 +1291,8 @@ let progress = {
   task1: false, task2: false, task3: false,
   task4: false, task5: false, task6: false,
   task7: false, task8: false, task9: false,
-  task10: false, task11: false, task12: false
+  task10: false, task11: false, task12: false,
+  task13: false, task14: false, task15: false
 };
 
 function loadProgress() {
@@ -1348,14 +1304,14 @@ function saveProgress() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e) {}
 }
 function countFlowers() {
-  return ['task1','task2','task3','task4','task5','task6',
-          'task7','task8','task9','task10','task11','task12']
+  return ['task1','task2','task3','task4','task5','task6','task7','task8','task9',
+          'task10','task11','task12','task13','task14','task15']
     .filter(k => progress[k]).length;
 }
 function updateFlowerUI() {
   const n = countFlowers();
-  document.getElementById('flowersIcons').innerHTML = n ? '🌸'.repeat(n) : '—';
-  document.getElementById('flowersCount').textContent = `${n} / 12`;
+  document.getElementById('flowersIcons').innerHTML = n ? '🌸'.repeat(Math.min(n, 15)) : '—';
+  document.getElementById('flowersCount').textContent = `${n} / 15`;
   document.getElementById('avatarLetter').textContent = progress.name ? progress.name.charAt(0).toUpperCase() : '?';
   document.getElementById('studentName').textContent = progress.name || '—';
   document.querySelectorAll('.task-item').forEach(el => {
@@ -1386,7 +1342,6 @@ function startLesson() {
   updateFlowerUI();
   closeNameModal();
 }
-
 function openNameModal() {
   if (isInIframe) return;
   const modal = document.getElementById('nameModal');
@@ -1407,15 +1362,12 @@ function openNameModal() {
     text.innerHTML = 'Введи своё имя, чтобы начать урок.<br>За каждое выполненное задание ты будешь получать цветочек 🌸';
     btn.textContent = 'Начать урок';
   }
-
   modal.classList.remove('hidden');
   setTimeout(() => input.focus(), 100);
 }
-
 function closeNameModal() {
   document.getElementById('nameModal').classList.add('hidden');
 }
-
 document.getElementById('nameInput').addEventListener('input', e => {
   document.getElementById('startBtn').disabled = !e.target.value.trim();
 });
@@ -1434,7 +1386,7 @@ if (isInIframe) {
 }
 
 /* ==========================================================
-   НАВИГАЦИЯ
+   НАВИГАЦИЯ (без клавиш ← →)
    ========================================================== */
 let currentSlide = 1;
 const totalSlides = document.querySelectorAll('.slide').length;
@@ -1463,46 +1415,39 @@ function updateNav() {
 function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; updateNav(); } }
 function prevSlide() { if (currentSlide > 1) { currentSlide--; updateNav(); } }
 function goToSlide(n) { currentSlide = n; updateNav(); }
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') nextSlide();
-  if (e.key === 'ArrowLeft') prevSlide();
-});
 
-/* ==========================================================
-   ФИНАЛ
-   ========================================================== */
 function updateFinalSlide() {
   const n = countFlowers();
-  const pct = Math.round((n / 12) * 100);
+  const pct = Math.round((n / 15) * 100);
   const name = progress.name || 'Умница';
   document.getElementById('finalName').textContent = `${name}, вот твой букет!`;
   document.getElementById('finalBouquet').textContent = '🌸'.repeat(n) || '🌱';
-  document.getElementById('finalScore').textContent = `${n} / 12`;
+  document.getElementById('finalScore').textContent = `${n} / 15`;
   document.getElementById('finalPercent').textContent = `${pct}% заданий выполнено`;
 
   let msg = '';
-  if (n >= 12) msg = '🏆 Превосходно! Ты выполнила все задания и собрала полный букет!';
-  else if (n >= 9) msg = '🌟 Отличный результат! Ты освоила почти все темы.';
-  else if (n >= 6) msg = '💪 Хороший прогресс! Ты уже уверенно работаешь с массивами.';
-  else if (n >= 3) msg = '🌱 Хорошее начало! Осталось ещё несколько заданий.';
+  if (n >= 15) msg = '🏆 Превосходно! Ты выполнила все 15 заданий и собрала полный букет!';
+  else if (n >= 12) msg = '🌟 Отличный результат! Ты освоила почти все темы.';
+  else if (n >= 8) msg = '💪 Хороший прогресс! Ты уже уверенно работаешь с массивами.';
+  else if (n >= 4) msg = '🌱 Хорошее начало! Осталось ещё несколько заданий.';
   else msg = '🌸 Всё только начинается — вернись к заданиям!';
   document.getElementById('finalMessage').textContent = msg;
   saveProgress();
 
   fillCertificate();
-  if (n >= 12) setTimeout(launchFireworks, 800);
+  if (n >= 15) setTimeout(launchFireworks, 800);
 }
 
 function fillCertificate() {
   const n = countFlowers();
-  const pct = Math.round((n / 12) * 100);
+  const pct = Math.round((n / 15) * 100);
   const name = progress.name || 'Ученица';
   document.getElementById('certName').textContent = name;
   document.getElementById('certScore').textContent = n;
   document.getElementById('certPercent').textContent = pct + '%';
 
-  const lesson1Keys = ['task1','task2','task3','task4','task5','task6'];
-  const lesson2Keys = ['task7','task8','task9','task10','task11','task12'];
+  const lesson1Keys = ['task1','task2','task3','task4','task5','task6','task7','task8','task9'];
+  const lesson2Keys = ['task10','task11','task12','task13','task14','task15'];
   const hasL1 = lesson1Keys.some(k => progress[k]);
   const hasL2 = lesson2Keys.some(k => progress[k]);
   let lessons = 0;
@@ -1525,12 +1470,10 @@ function fillCertificate() {
 function downloadCertificate() {
   const cert = document.getElementById('certificate');
   const name = progress.name || 'Ученица';
-
   if (typeof html2canvas === 'undefined') {
     window.print();
     return;
   }
-
   html2canvas(cert, { backgroundColor: '#fffef8', scale: 2, useCORS: true })
     .then(canvas => {
       const link = document.createElement('a');
@@ -1538,10 +1481,7 @@ function downloadCertificate() {
       link.href = canvas.toDataURL('image/png');
       link.click();
     })
-    .catch(err => {
-      console.error(err);
-      window.print();
-    });
+    .catch(err => { console.error(err); window.print(); });
 }
 
 /* ==========================================================
@@ -1628,6 +1568,16 @@ window.addEventListener('resize', () => {
 });
 
 /* ==========================================================
+   ПОДСКАЗКИ
+   ========================================================== */
+function toggleHint(id, ev) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('visible');
+  if (ev && ev.currentTarget) ev.currentTarget.classList.toggle('opened');
+}
+
+/* ==========================================================
    QUIZ
    ========================================================== */
 document.querySelectorAll('.quiz').forEach(quiz => {
@@ -1652,9 +1602,31 @@ function fmt(v) {
   if (v === null || v === undefined) return 'None';
   return String(v);
 }
+
 function runCodeRaw(code) {
   let buffer = '';
   const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
+
+  // Ищем "?" в коде
+  const lines = code.split('\n');
+  let problemLine = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const noComment = lines[i].split('#')[0];
+    const noStrings = noComment.replace(/"[^"]*"/g, '""').replace(/'[^']*'/g, "''");
+    if (noStrings.includes('?')) { problemLine = i; break; }
+  }
+  if (problemLine >= 0) {
+    return {
+      output: buffer,
+      error: `В строке ${problemLine + 1} остался знак «?». Впиши значение и нажми «Запустить» ещё раз.`
+    };
+  }
+
+  const codeStripped = code.split('\n').map(l => l.split('#')[0]).join('').trim();
+  if (!codeStripped) {
+    return { output: '', error: null, empty: true };
+  }
+
   try {
     const js = translatePython(code);
     const wrapped = `
@@ -1665,6 +1637,19 @@ function runCodeRaw(code) {
       const __max = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.max(...a[0]) : Math.max(...a);
       const __sorted = (arr) => [...arr].sort((a,b)=> a<b?-1:a>b?1:0);
       const __round = (x, n=0) => { const p = Math.pow(10, n); return Math.round(x*p)/p; };
+      const __get = (arr, i) => {
+        if (Array.isArray(arr) || typeof arr === 'string') {
+          const idx = i < 0 ? arr.length + i : i;
+          const val = arr[idx];
+          return val === undefined ? null : val;
+        }
+        return null;
+      };
+      const __set = (arr, i, val) => {
+        const idx = i < 0 ? arr.length + i : i;
+        arr[idx] = val;
+        return val;
+      };
       const __range = (...a) => {
         let start=0, stop, step=1;
         if (a.length===1) stop=a[0];
@@ -1693,6 +1678,7 @@ function runCodeRaw(code) {
     return { output: buffer, error: e.message };
   }
 }
+
 function translatePython(code) {
   const lines = code.split('\n'); let js = ''; const stack = [];
   for (let raw of lines) {
@@ -1700,6 +1686,8 @@ function translatePython(code) {
     if (line.trim() === '') continue;
     const indent = line.match(/^\s*/)[0].length; let t = line.trim();
     while (stack.length && indent <= stack[stack.length-1]) { js += '}\n'; stack.pop(); }
+
+    // ШАГ 1: замены имён функций
     t = t.replace(/\bprint\s*\(/g, '__print(');
     t = t.replace(/\blen\s*\(/g, '__len(');
     t = t.replace(/\bsum\s*\(/g, '__sum(');
@@ -1710,8 +1698,28 @@ function translatePython(code) {
     t = t.replace(/\brange\s*\(/g, '__range(');
     t = t.replace(/\bTrue\b/g, 'true'); t = t.replace(/\bFalse\b/g, 'false'); t = t.replace(/\bNone\b/g, 'null');
     t = t.replace(/\band\b/g, '&&'); t = t.replace(/\bor\b/g, '||'); t = t.replace(/\bnot\s+/g, '!');
+
+    // ШАГ 2: for
+    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
+    if (mFor) {
+      js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`;
+      stack.push(indent); continue;
+    }
+
+    // ШАГ 3: индексы
+    if (/([A-Za-z_]\w*)\[[^\]]+\]\s*=/.test(t)) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]\s*=\s*(.+)/g,
+        (m, arr, idx, val) => `__set(${arr}, ${idx}, ${val})`);
+    }
+    if (!t.includes('__get(') && !t.includes('__set(')) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]/g, '__get($1, $2)');
+    }
+
+    // ШАГ 4: in / not in
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+not\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '!__in($1, $2)');
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '__in($1, $2)');
+
+    // ШАГ 5: методы
     t = t.replace(/([A-Za-z_]\w*)\.append\s*\(/g, '__append($1, ');
     t = t.replace(/([A-Za-z_]\w*)\.pop\s*\(([^)]*)\)/g, '__pop($1, $2)');
     t = t.replace(/([A-Za-z_]\w*)\.insert\s*\(/g, '__insert($1, ');
@@ -1720,8 +1728,8 @@ function translatePython(code) {
     t = t.replace(/([A-Za-z_]\w*)\.count\s*\(/g, '__count($1, ');
     t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
     t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
-    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
-    if (mFor) { js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`; stack.push(indent); continue; }
+
+    // ШАГ 6: while, if, else, break, continue
     let mWhile = t.match(/^while\s+(.+):$/);
     if (mWhile) { js += ' '.repeat(indent) + `while (__truthy(${mWhile[1]})) {\n`; stack.push(indent); continue; }
     let mIf = t.match(/^if\s+(.+):$/);
@@ -1732,6 +1740,7 @@ function translatePython(code) {
     if (t === 'break') { js += ' '.repeat(indent) + 'break;\n'; continue; }
     if (t === 'continue') { js += ' '.repeat(indent) + 'continue;\n'; continue; }
     if (t === 'pass') { js += ' '.repeat(indent) + ';\n'; continue; }
+
     js += ' '.repeat(indent) + t + ';\n';
   }
   while (stack.length) { js += '}\n'; stack.pop(); }
@@ -1743,7 +1752,7 @@ function translatePython(code) {
    ========================================================== */
 const taskDefaults = {};
 function saveDefaults() {
-  for (let i = 7; i <= 12; i++) {
+  for (let i = 10; i <= 15; i++) {
     const el = document.getElementById('code-task-' + i);
     if (el) taskDefaults[i] = el.value;
   }
@@ -1755,13 +1764,20 @@ function runTask(taskId, taskNum, checker) {
   const out = document.getElementById('out-' + taskId);
   const box = document.getElementById('box-' + taskId);
   const result = runCodeRaw(code);
+
+  if (result.empty) {
+    out.textContent = 'Сначала напиши код, а потом нажми «Запустить» ✍️';
+    out.classList.remove('error','success','hint');
+    return;
+  }
   if (result.error) {
-    out.textContent = result.output + '\n❌ Ошибка: ' + result.error;
-    out.classList.add('error'); out.classList.remove('success');
+    out.textContent = '❌ ' + result.error;
+    out.classList.add('error');
+    out.classList.remove('success','hint');
     return;
   }
   out.textContent = result.output;
-  out.classList.remove('error');
+  out.classList.remove('error','hint');
   if (isInIframe) return;
   if (checker) {
     const ok = checker(code, result.output);
@@ -1781,98 +1797,88 @@ function resetTask(taskId) {
   if (taskDefaults[num]) el.value = taskDefaults[num];
   const out = document.getElementById('out-' + taskId);
   out.textContent = 'Здесь появится результат ✨';
-  out.classList.remove('error','success');
+  out.classList.remove('error','success','hint');
 }
 
 /* ==========================================================
-   ПРОВЕРКИ ЗАДАНИЙ 7–12 (ОСЛАБЛЕННЫЕ)
+   ПРОВЕРКИ — числа по токенам в строках
    ========================================================== */
-function cleanOutput(output) {
-  return output.replace(/\s+/g, '').toLowerCase();
+function outputLines(output) {
+  return output.trim().split('\n').map(l => l.trim()).filter(l => l);
+}
+function hasTokenInLines(output, value) {
+  const strVal = String(value);
+  const lines = outputLines(output);
+  return lines.some(line => {
+    const tokens = line.split(/[\s,()\[\]{}:;'"]+/).filter(t => t !== '');
+    return tokens.includes(strVal);
+  });
 }
 
-function checkTask7(code, output) {
-  const o = cleanOutput(output);
+function checkTask10(code, output) {
   if (/if\s*\?/.test(code)) return false;
   const hasCompare = /nums\s*\[\s*i\s*\]\s*==\s*target/.test(code) ||
                      /target\s*==\s*nums\s*\[\s*i\s*\]/.test(code);
   const hasBreak = /\bbreak\b/.test(code);
-  const hasFound = /найдено/i.test(output) && /\b3\b/.test(o);
+  const o = output.toLowerCase();
+  const hasFound = o.includes('найдено') && hasTokenInLines(output, 3);
   return hasCompare && hasBreak && hasFound;
 }
 
-function checkTask8(code, output) {
+function checkTask11(code, output) {
   if (/if\s*\?/.test(code) || /append\s*\(\s*\?\s*\)/.test(code)) return false;
-  const o = cleanOutput(output);
+  const o = output.toLowerCase();
   const hasMod = /%\s*2\s*==\s*0/.test(code) || /%\s*2\s*!=\s*1/.test(code);
   const hasAppend = /\.append\s*\(/.test(code);
-  const has10 = /10/.test(o);
-  const hasMinus2 = /-2/.test(o);
-  const has8 = /(^|[^\d])8([^\d]|$)/.test(o);
+  const has10 = hasTokenInLines(output, 10);
+  const hasMinus2 = hasTokenInLines(output, -2);
+  const has8 = hasTokenInLines(output, 8);
   return hasMod && hasAppend && has10 && hasMinus2 && has8;
 }
 
-function checkTask9(code, output) {
-  const o = cleanOutput(output);
+function checkTask12(code, output) {
+  const o = output.replace(/\s+/g, '');
   const hasSort = /\.sort\s*\(\s*\)/.test(code);
-  const hasSorted = /\[1\s*,\s*2\s*,\s*5\s*,\s*7\s*,\s*9\s*\]/.test(output) ||
-                    o.includes('[1,2,5,7,9]');
+  const hasSorted = /\[1,2,5,7,9\]/.test(o);
   return hasSort && hasSorted;
 }
 
-function checkTask10(code, output) {
+function checkTask13(code, output) {
   if (/=\s*\?/.test(code)) return false;
-  const o = cleanOutput(output);
+  const o = output.replace(/\s+/g, '');
   const hasShift = /arr\s*\[\s*i\s*\]\s*=\s*arr\s*\[\s*i\s*\+\s*1\s*\]/.test(code) ||
                    /arr\s*\[\s*i\s*\]\s*=\s*arr\s*\[\s*1\s*\+\s*i\s*\]/.test(code);
-  const hasResult = /\[2\s*,\s*3\s*,\s*4\s*,\s*5\s*,\s*1\s*\]/.test(output) ||
-                    o.includes('[2,3,4,5,1]');
+  const hasResult = /\[2,3,4,5,1\]/.test(o);
   return hasShift && hasResult;
 }
 
-function checkTask11(code, output) {
+function checkTask14(code, output) {
   const codeOnly = code
     .split('\n')
     .map(line => line.split('#')[0])
     .join('')
     .replace(/\s+/g, '');
-  if (codeOnly.length < 60) return false;
+  if (codeOnly.length < 40) return false;
 
-  const o = cleanOutput(output);
-  const hasBest = /13[.,]5/.test(o);
-  const hasWorst = /16[.,]1/.test(o);
-  const hasAvg = /14[.,]7/.test(o);
+  const hasBest = hasTokenInLines(output, 13.5);
+  const hasWorst = hasTokenInLines(output, 16.1);
+  // Среднее 101.4 / 7 ≈ 14.4857 — принимаем ~14.5
+  const hasAvg = /14[.,]4/.test(output);
   const count = [hasBest, hasWorst, hasAvg].filter(Boolean).length;
-  return count >= 2 && o.length > 25;
+  // Требуем хотя бы 2 из 3
+  return count >= 2;
 }
 
-function checkTask12(code, output) {
+function checkTask15(code, output) {
   const codeOnly = code
     .split('\n')
     .map(line => line.split('#')[0])
     .join('')
     .replace(/\s+/g, '');
-  if (codeOnly.length < 50) return false;
-  const o = cleanOutput(output);
-  // Хотя бы 3 разных print и вывод есть
+  if (codeOnly.length < 40) return false;
+  const o = output.toLowerCase();
   const printCount = (code.match(/print\s*\(/g) || []).length;
   return o.length > 5 && printCount >= 2 && !o.includes('ошибка');
-}
-
-function showHint11() {
-  const out = document.getElementById('out-task-11');
-  out.textContent = '💡 Подсказка:\n\n' +
-    'results.sort()\n' +
-    'print("Лучший:", results[0])\n' +
-    'print("Худший:", results[-1])\n' +
-    'avg = sum(results) / len(results)\n' +
-    'print("Средний:", round(avg, 2))\n\n' +
-    'better = 0\n' +
-    'for t in results:\n' +
-    '    if t < avg:\n' +
-    '        better += 1\n' +
-    'print("Лучше среднего:", better)';
-  out.classList.remove('error','success');
 }
 
 /* ==========================================================
@@ -1881,6 +1887,7 @@ function showHint11() {
 const searchData = [4, 8, 15, 16, 23, 42];
 (function initSearch() {
   const box = document.getElementById('search-viz');
+  if (!box) return;
   box.innerHTML = '';
   searchData.forEach((v, i) => {
     const c = document.createElement('div');
@@ -1893,6 +1900,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 async function startSearch(target) {
   const cells = document.querySelectorAll('#search-viz .cell');
   const out = document.getElementById('search-output');
+  if (!cells.length) return;
   cells.forEach(c => c.classList.remove('highlight', 'found'));
   for (let i = 0; i < searchData.length; i++) {
     cells.forEach(c => c.classList.remove('highlight'));
@@ -1937,6 +1945,7 @@ filterDemo(5);
 let bubbleData = [5, 2, 9, 1, 7];
 function renderBubble(highlight=-1, swapPair=null) {
   const box = document.getElementById('bubble-viz');
+  if (!box) return;
   box.innerHTML = '';
   bubbleData.forEach((v, i) => {
     const c = document.createElement('div');
@@ -1971,7 +1980,7 @@ async function bubbleSortVisual() {
   renderBubble();
   out.textContent = `✅ Отсортировано: [${bubbleData.join(', ')}]`;
 }
-renderBubble();
+if (document.getElementById('bubble-viz')) renderBubble();
 
 /* ==========================================================
    СДВИГ
@@ -1981,6 +1990,7 @@ let shiftData = [...shiftOriginal];
 let shiftStage = 0;
 function renderShift() {
   const box = document.getElementById('shift-viz');
+  if (!box) return;
   box.innerHTML = '';
   shiftData.forEach((v, i) => {
     const c = document.createElement('div');
@@ -2011,7 +2021,7 @@ function shiftReset() {
   renderShift();
   document.getElementById('shift-output').textContent = 'Нажми «Выполнить сдвиг»';
 }
-renderShift();
+if (document.getElementById('shift-viz')) renderShift();
 
 /* ==========================================================
    ИНИЦИАЛИЗАЦИЯ
