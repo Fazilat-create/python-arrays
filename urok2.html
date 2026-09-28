@@ -1274,13 +1274,72 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
 
 <script>
 /* ==========================================================
-   РЕЖИМ УЧИТЕЛЯ
+   РЕЖИМ УЧИТЕЛЯ + ?open=1
    ========================================================== */
 const isInIframe = (() => {
   try { return window.self !== window.top; }
   catch (e) { return true; }
 })();
 if (isInIframe) document.body.classList.add('teacher-mode');
+
+// Проверяем флаг ?open=1 (учитель разрешил открыть урок 2 для всех)
+const urlParams = new URLSearchParams(window.location.search);
+const forceOpen = urlParams.get('open') === '1';
+
+// Если урок НЕ в iframe и НЕ через ?open=1 — проверяем прогресс урока 1
+if (!isInIframe && !forceOpen) {
+  // Проверяем: пройдены ли все 9 заданий урока 1
+  const rawProgress = (() => {
+    try { return JSON.parse(localStorage.getItem('python_arrays_progress') || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const lesson1Keys = ['task1','task2','task3','task4','task5','task6','task7','task8','task9'];
+  const lesson1Done = lesson1Keys.every(k => rawProgress[k]);
+
+  if (!lesson1Done) {
+    // Показываем блокирующий экран
+    document.body.innerHTML = `
+      <div style="
+        display:flex; align-items:center; justify-content:center;
+        min-height:100vh; padding:20px;
+        font-family:'Comfortaa','Segoe UI',sans-serif;
+        background:linear-gradient(135deg, #fef6ff 0%, #e8f4fd 50%, #fff5e6 100%);
+      ">
+        <div style="
+          max-width:460px; background:#fff; border-radius:24px;
+          padding:38px 40px; text-align:center;
+          box-shadow:0 25px 70px rgba(180,150,220,0.3);
+          border:2px solid #f0eaff;
+        ">
+          <div style="font-size:3em; margin-bottom:14px;">🔒</div>
+          <h2 style="
+            font-size:1.5em; margin-bottom:12px;
+            background:linear-gradient(135deg,#b8a8e8,#ff8a95);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text;
+          ">Урок 2 пока закрыт</h2>
+          <p style="color:#8a7ab0; margin-bottom:22px; line-height:1.6;">
+            Сначала пройди урок 1 до конца — собери все 9 цветочков.<br>
+            Потом возвращайся сюда 🌸
+          </p>
+          <a href="urok1.html" style="
+            display:inline-block; padding:14px 28px;
+            background:linear-gradient(135deg,#b8a8e8,#ff8a95);
+            color:#fff; text-decoration:none; border-radius:14px;
+            font-weight:700; box-shadow:0 8px 20px rgba(184,168,232,0.4);
+          ">← Вернуться к уроку 1</a>
+          <div style="margin-top:20px;">
+            <a href="index.html" style="color:#8a7ab0; font-size:0.88em; text-decoration:none;">
+              На главную
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+    // Прекращаем выполнение скрипта
+    throw new Error('Lesson 2 locked');
+  }
+}
 
 /* ==========================================================
    ПРОГРЕСС
