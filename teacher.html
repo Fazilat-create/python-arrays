@@ -87,7 +87,6 @@
   .login-card input:focus {
     border-color: #b8a8e8;
     box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
-    letter-spacing: 2px;
   }
   .login-card input.error {
     border-color: #ff8a95;
@@ -223,6 +222,24 @@
   }
   .home-link:hover { background: #fff; transform: translateY(-2px); }
 
+  /* ============ КНОПКА СБРОСА ============ */
+  .reset-btn {
+    background: linear-gradient(135deg, #ffe8b0, #ffd966);
+    border: none; padding: 8px 16px;
+    border-radius: 12px; font-family: inherit;
+    font-size: 0.85em; font-weight: 700;
+    color: #7a4a00; cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(255,184,77,0.3);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .reset-btn:hover {
+    background: linear-gradient(135deg, #ffd966, #ffb84d);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255,184,77,0.5);
+  }
+  .reset-btn:active { transform: translateY(0); }
+
   .logout-btn {
     background: rgba(255,255,255,0.9);
     border: none; padding: 8px 14px;
@@ -247,9 +264,34 @@
     z-index: 1;
   }
 
+  /* ==========================================================
+     ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+     ========================================================== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #2a6a4a;
+    padding: 14px 26px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.95em;
+    box-shadow: 0 12px 30px rgba(126,217,184,0.4);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 2000;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 1100px) {
+    .teacher-header .brand h1 { font-size: 0.95em; }
+    .reset-btn { padding: 6px 12px; font-size: 0.78em; }
+  }
+
   @media (max-width: 900px) {
     .teacher-header { padding: 10px 14px; }
-    .teacher-header .brand h1 { font-size: 0.95em; }
     .lesson-switch button { padding: 6px 12px; font-size: 0.8em; }
     .timer { padding: 5px 10px; font-size: 0.85em; }
     .student-link, .home-link, .logout-btn { padding: 6px 10px; font-size: 0.78em; }
@@ -284,7 +326,7 @@
       <div class="icon">👩‍🏫</div>
       <div>
         <h1>Панель учителя · Массивы в Python</h1>
-        <div class="sub">Показ уроков на экране · встроенный таймер</div>
+        <div class="sub">Показ уроков · таймер · сброс прогресса</div>
       </div>
     </div>
 
@@ -307,6 +349,10 @@
         Открыть версию ученика ↗
       </a>
 
+      <button class="reset-btn" onclick="askResetProgress()" title="Очистить имя, цветочки и выполненные задания в этом браузере">
+        🧹 Сбросить прогресс
+      </button>
+
       <button class="logout-btn" onclick="logout()">Выйти</button>
     </div>
   </div>
@@ -314,21 +360,22 @@
   <iframe id="lessonFrame" src="urok1.html" class="lesson-frame" title="Урок"></iframe>
 </div>
 
+<!-- Всплывающее уведомление -->
+<div class="toast" id="toast">Прогресс сброшен 🌸</div>
+
 <script>
 /* ==========================================================
    ПАРОЛЬ
-   Меняется здесь. Хранится в localStorage под ключом teacher_auth.
    ========================================================== */
 const TEACHER_PASSWORD = 'teacher2024';   // ← поменяйте на свой
 const AUTH_KEY = 'teacher_auth';
 
 /* ==========================================================
-   ВХОД
+   ВХОД / ВЫХОД
    ========================================================== */
 function checkAuth() {
-  try {
-    return localStorage.getItem(AUTH_KEY) === 'ok';
-  } catch(e) { return false; }
+  try { return localStorage.getItem(AUTH_KEY) === 'ok'; }
+  catch(e) { return false; }
 }
 
 function showTeacherPanel() {
@@ -371,7 +418,6 @@ function logout() {
   showLoginScreen();
 }
 
-// обработчики полей ввода
 document.getElementById('passwordInput').addEventListener('input', e => {
   document.getElementById('loginBtn').disabled = !e.target.value;
   document.getElementById('errorText').textContent = '';
@@ -381,7 +427,7 @@ document.getElementById('passwordInput').addEventListener('keydown', e => {
 });
 
 /* ==========================================================
-   ПРИ ЗАГРУЗКЕ: ПРОВЕРЯЕМ ПАРОЛЬ
+   ПРИ ЗАГРУЗКЕ
    ========================================================== */
 if (checkAuth()) {
   showTeacherPanel();
@@ -390,7 +436,7 @@ if (checkAuth()) {
 }
 
 /* ==========================================================
-   ПЕРЕКЛЮЧЕНИЕ УРОКОВ В iframe
+   ПЕРЕКЛЮЧЕНИЕ УРОКОВ
    ========================================================== */
 function switchLesson(n, btn) {
   document.querySelectorAll('.lesson-switch button').forEach(b => b.classList.remove('active'));
@@ -401,7 +447,7 @@ function switchLesson(n, btn) {
 }
 
 /* ==========================================================
-   ТАЙМЕР НА 45 МИНУТ
+   ТАЙМЕР
    ========================================================== */
 const LESSON_DURATION = 45 * 60;
 let timerSeconds = LESSON_DURATION;
@@ -410,8 +456,7 @@ let timerInterval = null;
 function updateTimer() {
   const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
   const s = String(timerSeconds % 60).padStart(2, '0');
-  const display = document.getElementById('timerDisplay');
-  display.textContent = `${m}:${s}`;
+  document.getElementById('timerDisplay').textContent = `${m}:${s}`;
 
   const box = document.getElementById('timerBox');
   box.classList.toggle('warning', timerSeconds <= 300 && timerSeconds > 60);
@@ -449,10 +494,64 @@ function resetTimer() {
 }
 
 /* ==========================================================
+   СБРОС ПРОГРЕССА
+   ========================================================== */
+function askResetProgress() {
+  const ok = confirm(
+    '🧹 Сбросить прогресс?\n\n' +
+    'Это очистит в ЭТОМ браузере:\n' +
+    '• имя ученицы\n' +
+    '• собранные цветочки\n' +
+    '• отметки о выполненных заданиях\n\n' +
+    'Учеников это НЕ затронет — у них свои браузеры.\n\n' +
+    'Продолжить?'
+  );
+  if (!ok) return;
+  doResetProgress();
+}
+
+function doResetProgress() {
+  // 1. Удаляем прогресс учениц
+  try {
+    localStorage.removeItem('python_arrays_progress');
+  } catch(e) {}
+
+  // 2. Перезагружаем iframe — урок откроется с чистого листа
+  const frame = document.getElementById('lessonFrame');
+  const currentSrc = frame.src;
+  // Обнуляем, потом ставим заново — так гарантированно перезагрузится
+  frame.src = 'about:blank';
+  setTimeout(() => { frame.src = currentSrc; }, 50);
+
+  // 3. Показываем всплывающее уведомление
+  showToast('Прогресс сброшен 🌸');
+
+  // 4. Сбрасываем таймер на всякий случай
+  resetTimer();
+}
+
+/* ==========================================================
+   ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+   ========================================================== */
+let toastTimeout = null;
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+    toastTimeout = null;
+  }, 2500);
+}
+
+/* ==========================================================
    ГОРЯЧИЕ КЛАВИШИ
    ========================================================== */
 document.addEventListener('keydown', e => {
-  if (document.getElementById('loginScreen').classList.contains('hidden') === false) return;
+  // не работаем, пока открыт экран входа
+  if (!document.getElementById('loginScreen').classList.contains('hidden')) return;
+
   if ((e.ctrlKey || e.metaKey) && e.key === '1') {
     e.preventDefault();
     switchLesson(1, document.querySelectorAll('.lesson-switch button')[0]);
@@ -460,6 +559,11 @@ document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === '2') {
     e.preventDefault();
     switchLesson(2, document.querySelectorAll('.lesson-switch button')[1]);
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+    // Ctrl+R — только сброс таймера, чтобы не перезагружать страницу
+    e.preventDefault();
+    resetTimer();
   }
   if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
     e.preventDefault();
