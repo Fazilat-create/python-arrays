@@ -29,7 +29,7 @@
   body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
 
   /* ==========================================================
-     ЭКРАН ВХОДА ПО ПАРОЛЮ
+     ЭКРАН ВХОДА
      ========================================================== */
   .login-screen {
     position: fixed; inset: 0;
@@ -41,17 +41,13 @@
   .login-screen.hidden { display: none; }
 
   .login-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 40px 44px;
-    max-width: 440px;
-    width: 100%;
+    background: #fff; border-radius: 24px;
+    padding: 40px 44px; max-width: 440px; width: 100%;
     text-align: center;
     box-shadow: 0 25px 70px rgba(180,150,220,0.3);
     border: 2px solid #f0eaff;
     animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
   @keyframes modalIn {
     from { opacity: 0; transform: translateY(20px) scale(0.95); }
@@ -72,17 +68,13 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .login-card p {
-    color: var(--ink-soft); margin-bottom: 22px;
-    font-size: 0.95em; line-height: 1.5;
-  }
+  .login-card p { color: var(--ink-soft); margin-bottom: 22px; font-size: 0.95em; line-height: 1.5; }
   .login-card input {
     width: 100%; padding: 14px 18px;
     border: 2px solid #ece4ff; border-radius: 14px;
     font-family: inherit; font-size: 1em;
     text-align: center; color: var(--ink); outline: none;
-    transition: 0.25s; background: #fdfbff;
-    letter-spacing: 2px;
+    transition: 0.25s; background: #fdfbff; letter-spacing: 2px;
   }
   .login-card input:focus {
     border-color: #b8a8e8;
@@ -114,15 +106,13 @@
     background: #e0d8f0; cursor: not-allowed; box-shadow: none;
   }
   .login-card .error-text {
-    margin-top: 12px;
-    color: #c04a4a; font-size: 0.88em; font-weight: 600;
-    min-height: 20px;
+    margin-top: 12px; color: #c04a4a;
+    font-size: 0.88em; font-weight: 600; min-height: 20px;
   }
   .login-card .back-link {
-    display: inline-block;
-    margin-top: 18px; font-size: 0.85em;
-    color: var(--ink-soft); text-decoration: none;
-    font-weight: 600;
+    display: inline-block; margin-top: 18px;
+    font-size: 0.85em; color: var(--ink-soft);
+    text-decoration: none; font-weight: 600;
   }
   .login-card .back-link:hover { color: var(--ink); }
   .login-card .hint-pass {
@@ -131,7 +121,7 @@
   }
 
   /* ==========================================================
-     ВЕРХНЯЯ ПАНЕЛЬ УЧИТЕЛЯ
+     ВЕРХНЯЯ ПАНЕЛЬ
      ========================================================== */
   .teacher-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -140,8 +130,7 @@
     border-bottom: 1px solid rgba(180,150,220,0.3);
     flex-wrap: wrap; gap: 12px;
     box-shadow: 0 2px 12px rgba(180,150,220,0.15);
-    position: relative;
-    z-index: 10;
+    position: relative; z-index: 10;
   }
   .teacher-header .brand {
     display: flex; align-items: center; gap: 12px;
@@ -222,7 +211,22 @@
   }
   .home-link:hover { background: #fff; transform: translateY(-2px); }
 
-  /* ============ КНОПКА СБРОСА ============ */
+  .open-lesson2-btn {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    border: none; padding: 8px 16px;
+    border-radius: 12px; font-family: inherit;
+    font-size: 0.85em; font-weight: 700;
+    color: #2a6a4a; cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(126,217,184,0.35);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .open-lesson2-btn:hover {
+    background: linear-gradient(135deg, #7ed9b8, #5ec497);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(126,217,184,0.5);
+  }
+
   .reset-btn {
     background: linear-gradient(135deg, #ffe8b0, #ffd966);
     border: none; padding: 8px 16px;
@@ -238,7 +242,6 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(255,184,77,0.5);
   }
-  .reset-btn:active { transform: translateY(0); }
 
   .logout-btn {
     background: rgba(255,255,255,0.9);
@@ -249,8 +252,7 @@
     transition: 0.25s;
   }
   .logout-btn:hover {
-    background: #fff;
-    transform: translateY(-2px);
+    background: #fff; transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(255,138,149,0.3);
   }
 
@@ -260,50 +262,135 @@
     border: none;
     background: #fff;
     display: block;
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
 
   /* ==========================================================
-     ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+     МОДАЛКА «ОТКРЫТЬ УРОК 2»
      ========================================================== */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
+  }
+  .modal-bg.hidden { display: none; }
+  .open-modal {
+    background: #fff; border-radius: 24px;
+    padding: 34px 38px; max-width: 600px; width: 100%;
+    box-shadow: 0 25px 70px rgba(180,150,220,0.3);
+    border: 2px solid #f0eaff;
+    animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  .open-modal h3 {
+    color: var(--ink); font-size: 1.3em;
+    margin-bottom: 8px; text-align: center;
+  }
+  .open-modal p {
+    color: var(--ink-soft); font-size: 0.92em;
+    text-align: center; margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .link-box {
+    background: #fdfbff;
+    border: 2px solid #e8dfff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9em;
+    color: #5a4a7a;
+    word-break: break-all;
+    margin: 10px 0;
+    user-select: all;
+  }
+  .open-modal .actions {
+    display: flex; gap: 10px;
+    justify-content: center; flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .open-modal .btn-modal {
+    padding: 11px 22px; border: none;
+    border-radius: 22px; font-family: inherit;
+    font-size: 0.92em; font-weight: 600;
+    cursor: pointer; transition: 0.25s;
+  }
+  .open-modal .btn-modal.primary {
+    background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
+    color: #fff;
+    box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+  }
+  .open-modal .btn-modal.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(184,168,232,0.55);
+  }
+  .open-modal .btn-modal.mint {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #2a6a4a;
+    box-shadow: 0 6px 15px rgba(126,217,184,0.4);
+  }
+  .open-modal .btn-modal.mint:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(126,217,184,0.6);
+  }
+  .open-modal .btn-modal.ghost {
+    background: #fff; color: #7a5aa8;
+    border: 2px solid #ece4ff;
+  }
+  .open-modal .btn-modal.ghost:hover {
+    background: #faf6ff; border-color: #d9c8ff;
+  }
+  .open-modal .close-x {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.4em; color: var(--ink-soft);
+    transition: 0.2s;
+    padding: 4px 8px;
+  }
+  .open-modal .close-x:hover { color: var(--ink); }
+  .open-modal .hint-block {
+    background: #f0fdf7;
+    border-left: 4px solid #7ed9b8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 18px;
+    font-size: 0.85em;
+    color: #2a6a4a;
+    line-height: 1.6;
+  }
+
+  /* Всплывашка */
   .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
+    position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
     color: #2a6a4a;
-    padding: 14px 26px;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 0.95em;
+    padding: 14px 26px; border-radius: 16px;
+    font-weight: 700; font-size: 0.95em;
     box-shadow: 0 12px 30px rgba(126,217,184,0.4);
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    z-index: 2000;
-    pointer-events: none;
+    z-index: 2000; pointer-events: none;
+    max-width: 90%; text-align: center;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  @media (max-width: 1100px) {
-    .teacher-header .brand h1 { font-size: 0.95em; }
-    .reset-btn { padding: 6px 12px; font-size: 0.78em; }
-  }
-
   @media (max-width: 900px) {
     .teacher-header { padding: 10px 14px; }
+    .teacher-header .brand h1 { font-size: 0.95em; }
     .lesson-switch button { padding: 6px 12px; font-size: 0.8em; }
     .timer { padding: 5px 10px; font-size: 0.85em; }
-    .student-link, .home-link, .logout-btn { padding: 6px 10px; font-size: 0.78em; }
+    .student-link, .home-link, .logout-btn, .reset-btn, .open-lesson2-btn {
+      padding: 6px 10px; font-size: 0.78em;
+    }
     .lesson-frame { height: calc(100vh - 66px); }
+    .open-modal { padding: 26px 22px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ==========================================================
-     ЭКРАН ВХОДА ПО ПАРОЛЮ
-     ========================================================== -->
+<!-- ЭКРАН ВХОДА -->
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
     <div class="lock-icon">🔐</div>
@@ -317,16 +404,14 @@
   </div>
 </div>
 
-<!-- ==========================================================
-     ПАНЕЛЬ УЧИТЕЛЯ
-     ========================================================== -->
+<!-- ПАНЕЛЬ УЧИТЕЛЯ -->
 <div id="teacherPanel" style="display: none;">
   <div class="teacher-header">
     <div class="brand">
       <div class="icon">👩‍🏫</div>
       <div>
         <h1>Панель учителя · Массивы в Python</h1>
-        <div class="sub">Показ уроков · таймер · сброс прогресса</div>
+        <div class="sub">Показ уроков · таймер · управление доступом</div>
       </div>
     </div>
 
@@ -349,8 +434,12 @@
         Открыть версию ученика ↗
       </a>
 
+      <button class="open-lesson2-btn" onclick="openLesson2Modal()" title="Получить ссылку с открытым уроком 2">
+        🔓 Открыть урок 2
+      </button>
+
       <button class="reset-btn" onclick="askResetProgress()" title="Очистить имя, цветочки и выполненные задания в этом браузере">
-        🧹 Сбросить прогресс
+        🧹 Сброс прогресса
       </button>
 
       <button class="logout-btn" onclick="logout()">Выйти</button>
@@ -360,14 +449,37 @@
   <iframe id="lessonFrame" src="urok1.html" class="lesson-frame" title="Урок"></iframe>
 </div>
 
-<!-- Всплывающее уведомление -->
-<div class="toast" id="toast">Прогресс сброшен 🌸</div>
+<!-- МОДАЛКА «ОТКРЫТЬ УРОК 2» -->
+<div class="modal-bg hidden" id="openLesson2Modal">
+  <div class="open-modal">
+    <button class="close-x" onclick="closeLesson2Modal()">×</button>
+    <h3>🔓 Урок 2 открыт для учениц</h3>
+    <p>Скопируйте ссылку и раздайте её ученицам. По этой ссылке урок 2 откроется даже у тех, кто ещё не закончил урок 1.</p>
+
+    <div class="link-box" id="lesson2Link">https://...</div>
+
+    <div class="actions">
+      <button class="btn-modal primary" onclick="copyLesson2Link()">📋 Скопировать ссылку</button>
+      <button class="btn-modal mint" onclick="openLesson2InNewTab()">👁 Открыть у себя</button>
+      <button class="btn-modal ghost" onclick="closeLesson2Modal()">Закрыть</button>
+    </div>
+
+    <div class="hint-block">
+      💡 <b>Как это работает:</b> в конце ссылки есть параметр <code>?open=1</code>. Ученицы открывают урок 2 напрямую — блокировка в главной странице не мешает.
+      <br><br>
+      <b>Совет:</b> эту ссылку удобно скинуть в чат класса или вывести на экран через проектор — ученицы введут её вручную.
+    </div>
+  </div>
+</div>
+
+<!-- УВЕДОМЛЕНИЕ -->
+<div class="toast" id="toast">Ссылка скопирована 🌸</div>
 
 <script>
 /* ==========================================================
    ПАРОЛЬ
    ========================================================== */
-const TEACHER_PASSWORD = 'teacher2024';   // ← поменяйте на свой
+const TEACHER_PASSWORD = 'teacher2024';
 const AUTH_KEY = 'teacher_auth';
 
 /* ==========================================================
@@ -442,8 +554,8 @@ function switchLesson(n, btn) {
   document.querySelectorAll('.lesson-switch button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const frame = document.getElementById('lessonFrame');
-  frame.src = n === 1 ? 'urok1.html' : 'urok2.html';
-  document.getElementById('studentLink').href = n === 1 ? 'urok1.html' : 'urok2.html';
+  frame.src = n === 1 ? 'urok1.html' : 'urok2.html?open=1';
+  document.getElementById('studentLink').href = n === 1 ? 'urok1.html' : 'urok2.html?open=1';
 }
 
 /* ==========================================================
@@ -494,6 +606,60 @@ function resetTimer() {
 }
 
 /* ==========================================================
+   ССЫЛКА НА УРОК 2 С ?open=1
+   ========================================================== */
+function getLesson2Url() {
+  // Берём текущий адрес сайта и формируем абсолютную ссылку
+  const base = window.location.href.replace(/teacher\.html.*$/, '');
+  return base + 'urok2.html?open=1';
+}
+
+function openLesson2Modal() {
+  const link = getLesson2Url();
+  document.getElementById('lesson2Link').textContent = link;
+  document.getElementById('openLesson2Modal').classList.remove('hidden');
+}
+
+function closeLesson2Modal() {
+  document.getElementById('openLesson2Modal').classList.add('hidden');
+}
+
+function copyLesson2Link() {
+  const link = getLesson2Url();
+  // Копируем через Clipboard API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).then(() => {
+      showToast('Ссылка скопирована 🌸');
+    }).catch(() => {
+      fallbackCopy(link);
+    });
+  } else {
+    fallbackCopy(link);
+  }
+}
+
+function fallbackCopy(text) {
+  // Фолбэк для старых браузеров
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('Ссылка скопирована 🌸');
+  } catch(e) {
+    alert('Не удалось скопировать. Скопируйте вручную:\n\n' + text);
+  }
+  document.body.removeChild(ta);
+}
+
+function openLesson2InNewTab() {
+  window.open(getLesson2Url(), '_blank');
+}
+
+/* ==========================================================
    СБРОС ПРОГРЕССА
    ========================================================== */
 function askResetProgress() {
@@ -511,27 +677,19 @@ function askResetProgress() {
 }
 
 function doResetProgress() {
-  // 1. Удаляем прогресс учениц
   try {
     localStorage.removeItem('python_arrays_progress');
   } catch(e) {}
-
-  // 2. Перезагружаем iframe — урок откроется с чистого листа
   const frame = document.getElementById('lessonFrame');
   const currentSrc = frame.src;
-  // Обнуляем, потом ставим заново — так гарантированно перезагрузится
   frame.src = 'about:blank';
   setTimeout(() => { frame.src = currentSrc; }, 50);
-
-  // 3. Показываем всплывающее уведомление
   showToast('Прогресс сброшен 🌸');
-
-  // 4. Сбрасываем таймер на всякий случай
   resetTimer();
 }
 
 /* ==========================================================
-   ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+   УВЕДОМЛЕНИЕ
    ========================================================== */
 let toastTimeout = null;
 function showToast(text) {
@@ -549,8 +707,13 @@ function showToast(text) {
    ГОРЯЧИЕ КЛАВИШИ
    ========================================================== */
 document.addEventListener('keydown', e => {
-  // не работаем, пока открыт экран входа
+  // Не работаем, пока открыт экран входа
   if (!document.getElementById('loginScreen').classList.contains('hidden')) return;
+  // Не работаем, пока открыта модалка
+  if (!document.getElementById('openLesson2Modal').classList.contains('hidden')) {
+    if (e.key === 'Escape') closeLesson2Modal();
+    return;
+  }
 
   if ((e.ctrlKey || e.metaKey) && e.key === '1') {
     e.preventDefault();
@@ -561,7 +724,6 @@ document.addEventListener('keydown', e => {
     switchLesson(2, document.querySelectorAll('.lesson-switch button')[1]);
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-    // Ctrl+R — только сброс таймера, чтобы не перезагружать страницу
     e.preventDefault();
     resetTimer();
   }
