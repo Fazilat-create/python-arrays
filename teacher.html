@@ -28,9 +28,7 @@
   body::before { width: 400px; height: 400px; background: #d5b3ff; top: -100px; left: -100px; }
   body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
 
-  /* ==========================================================
-     ЭКРАН ВХОДА
-     ========================================================== */
+  /* ЭКРАН ВХОДА */
   .login-screen {
     position: fixed; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -120,9 +118,15 @@
     color: #a99cd0; font-style: italic;
   }
 
-  /* ==========================================================
-     ВЕРХНЯЯ ПАНЕЛЬ
-     ========================================================== */
+  /* ПАНЕЛЬ УЧИТЕЛЯ */
+  #teacherPanel {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+  }
+
   .teacher-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 24px;
@@ -130,7 +134,7 @@
     border-bottom: 1px solid rgba(180,150,220,0.3);
     flex-wrap: wrap; gap: 12px;
     box-shadow: 0 2px 12px rgba(180,150,220,0.15);
-    position: relative; z-index: 10;
+    flex-shrink: 0;
   }
   .teacher-header .brand {
     display: flex; align-items: center; gap: 12px;
@@ -256,18 +260,17 @@
     box-shadow: 0 8px 18px rgba(255,138,149,0.3);
   }
 
+  /* IFRAME — растягивается на всю оставшуюся высоту */
   .lesson-frame {
     width: 100%;
-    height: calc(100vh - 76px);
+    flex: 1;
     border: none;
     background: #fff;
     display: block;
     position: relative; z-index: 1;
   }
 
-  /* ==========================================================
-     МОДАЛКА «ОТКРЫТЬ УРОК 2»
-     ========================================================== */
+  /* МОДАЛКА «ОТКРЫТЬ УРОК 2» */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -345,8 +348,7 @@
     position: absolute; top: 14px; right: 16px;
     background: none; border: none; cursor: pointer;
     font-size: 1.4em; color: var(--ink-soft);
-    transition: 0.2s;
-    padding: 4px 8px;
+    transition: 0.2s; padding: 4px 8px;
   }
   .open-modal .close-x:hover { color: var(--ink); }
   .open-modal .hint-block {
@@ -360,7 +362,6 @@
     line-height: 1.6;
   }
 
-  /* Всплывашка */
   .toast {
     position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%) translateY(100px);
@@ -383,7 +384,6 @@
     .student-link, .home-link, .logout-btn, .reset-btn, .open-lesson2-btn {
       padding: 6px 10px; font-size: 0.78em;
     }
-    .lesson-frame { height: calc(100vh - 66px); }
     .open-modal { padding: 26px 22px; }
   }
 </style>
@@ -446,7 +446,8 @@
     </div>
   </div>
 
-  <iframe id="lessonFrame" src="urok1.html" class="lesson-frame" title="Урок"></iframe>
+  <iframe id="lessonFrame" src="urok1.html" class="lesson-frame" 
+          title="Урок" scrolling="yes"></iframe>
 </div>
 
 <!-- МОДАЛКА «ОТКРЫТЬ УРОК 2» -->
@@ -467,7 +468,7 @@
     <div class="hint-block">
       💡 <b>Как это работает:</b> в конце ссылки есть параметр <code>?open=1</code>. Ученицы открывают урок 2 напрямую — блокировка в главной странице не мешает.
       <br><br>
-      <b>Совет:</b> эту ссылку удобно скинуть в чат класса или вывести на экран через проектор — ученицы введут её вручную.
+      <b>Совет:</b> эту ссылку удобно скинуть в чат класса или вывести на экран через проектор.
     </div>
   </div>
 </div>
@@ -492,7 +493,7 @@ function checkAuth() {
 
 function showTeacherPanel() {
   document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('teacherPanel').style.display = 'block';
+  document.getElementById('teacherPanel').style.display = 'flex';
   updateTimer();
 }
 
@@ -609,7 +610,6 @@ function resetTimer() {
    ССЫЛКА НА УРОК 2 С ?open=1
    ========================================================== */
 function getLesson2Url() {
-  // Берём текущий адрес сайта и формируем абсолютную ссылку
   const base = window.location.href.replace(/teacher\.html.*$/, '');
   return base + 'urok2.html?open=1';
 }
@@ -626,7 +626,6 @@ function closeLesson2Modal() {
 
 function copyLesson2Link() {
   const link = getLesson2Url();
-  // Копируем через Clipboard API
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(link).then(() => {
       showToast('Ссылка скопирована 🌸');
@@ -639,7 +638,6 @@ function copyLesson2Link() {
 }
 
 function fallbackCopy(text) {
-  // Фолбэк для старых браузеров
   const ta = document.createElement('textarea');
   ta.value = text;
   ta.style.position = 'fixed';
@@ -707,9 +705,7 @@ function showToast(text) {
    ГОРЯЧИЕ КЛАВИШИ
    ========================================================== */
 document.addEventListener('keydown', e => {
-  // Не работаем, пока открыт экран входа
   if (!document.getElementById('loginScreen').classList.contains('hidden')) return;
-  // Не работаем, пока открыта модалка
   if (!document.getElementById('openLesson2Modal').classList.contains('hidden')) {
     if (e.key === 'Escape') closeLesson2Modal();
     return;
