@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Панель учителя · Массивы в Python</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --lavender: #b8a8e8;
+    --mint: #a8e6cf;
+    --rose: #ff8a95;
+    --ink: #5a4a8a;
+    --ink-soft: #8a7ab0;
+    --line: #ece4ff;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Comfortaa', 'Segoe UI', 'Verdana', sans-serif;
+    background: linear-gradient(135deg, #fef6ff 0%, #e8f4fd 50%, #fff5e6 100%);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* ============ ВЕРХНЯЯ ПАНЕЛЬ ============ */
+  .teacher-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #d9c8ff 0%, #ffd6e8 50%, #c8ecff 100%);
+    border-bottom: 1px solid rgba(180,150,220,0.3);
+    flex-wrap: wrap; gap: 12px;
+    box-shadow: 0 2px 12px rgba(180,150,220,0.15);
+    position: relative;
+    z-index: 10;
+  }
+  .teacher-header .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; color: var(--ink);
+  }
+  .teacher-header .brand .icon {
+    font-size: 1.6em;
+    animation: float 3s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
+  }
+  .teacher-header .brand h1 { font-size: 1.05em; line-height: 1.2; }
+  .teacher-header .brand .sub {
+    font-size: 0.75em; color: var(--ink-soft);
+    font-weight: 400; margin-top: 2px;
+  }
+
+  .teacher-header .controls {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+
+  /* переключатель уроков */
+  .lesson-switch {
+    display: flex; background: #fff; border-radius: 12px; padding: 4px;
+    box-shadow: 0 4px 12px rgba(180,150,220,0.15);
+  }
+  .lesson-switch button {
+    background: none; border: none; padding: 8px 18px;
+    font-family: inherit; font-size: 0.88em; font-weight: 600;
+    color: var(--ink-soft); cursor: pointer; border-radius: 9px;
+    transition: 0.25s;
+  }
+  .lesson-switch button:hover { color: var(--ink); }
+  .lesson-switch button.active {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(184,168,232,0.4);
+  }
+
+  /* таймер */
+  .timer {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; padding: 6px 14px; border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(180,150,220,0.15);
+    font-weight: 700; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95em;
+  }
+  .timer .icon { font-size: 1.1em; }
+  .timer.warning #timerDisplay { color: #c04a4a; }
+  .timer.danger {
+    animation: pulse-timer 1s ease-in-out infinite;
+  }
+  @keyframes pulse-timer {
+    0%,100% { box-shadow: 0 4px 12px rgba(255,138,149,0.3); }
+    50% { box-shadow: 0 4px 20px rgba(255,138,149,0.7); }
+  }
+  .timer button {
+    background: none; border: none; font-family: inherit;
+    font-size: 0.78em; font-weight: 600; color: var(--ink-soft);
+    cursor: pointer; padding: 4px 10px; border-radius: 8px;
+    transition: 0.2s;
+  }
+  .timer button:hover { background: #faf6ff; color: var(--ink); }
+
+  /* ссылка на версию ученика */
+  .student-link {
+    text-decoration: none; padding: 8px 16px;
+    background: #fff; color: #7a5aa8;
+    border-radius: 12px; font-size: 0.85em; font-weight: 600;
+    box-shadow: 0 4px 12px rgba(180,150,220,0.15);
+    transition: 0.25s;
+  }
+  .student-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(180,150,220,0.3);
+  }
+
+  /* кнопка на главную */
+  .home-link {
+    text-decoration: none; padding: 8px 14px;
+    background: rgba(255,255,255,0.8); color: #7a5aa8;
+    border-radius: 12px; font-size: 0.85em; font-weight: 600;
+    transition: 0.25s;
+  }
+  .home-link:hover { background: #fff; transform: translateY(-2px); }
+
+  /* ============ ОКНО УРОКА ============ */
+  .lesson-frame {
+    width: 100%;
+    height: calc(100vh - 76px);
+    border: none;
+    background: #fff;
+    display: block;
+  }
+
+  /* ============ ПОДСКАЗКА ВНИЗУ ============ */
+  .hint {
+    position: fixed;
+    bottom: 12px; right: 16px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(6px);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    color: var(--ink-soft);
+    box-shadow: 0 6px 18px rgba(180,150,220,0.2);
+    border: 1px solid var(--line);
+    max-width: 280px;
+    line-height: 1.5;
+    transition: 0.3s;
+    z-index: 5;
+  }
+  .hint strong { color: var(--ink); }
+  .hint .close {
+    position: absolute; top: 6px; right: 8px;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-soft); font-size: 1.1em; line-height: 1;
+    padding: 2px 6px;
+  }
+  .hint .close:hover { color: var(--ink); }
+  .hint.hidden { display: none; }
+
+  @media (max-width: 900px) {
+    .teacher-header { padding: 10px 14px; }
+    .teacher-header .brand h1 { font-size: 0.95em; }
+    .lesson-switch button { padding: 6px 12px; font-size: 0.8em; }
+    .timer { padding: 5px 10px; font-size: 0.85em; }
+    .student-link, .home-link { padding: 6px 10px; font-size: 0.78em; }
+    .lesson-frame { height: calc(100vh - 66px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ВЕРХНЯЯ ПАНЕЛЬ ============ -->
+<div class="teacher-header">
+  <div class="brand">
+    <div class="icon">👩‍🏫</div>
+    <div>
+      <h1>Панель учителя · Массивы в Python</h1>
+      <div class="sub">Показ уроков на экране · встроенный таймер</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <a href="index.html" class="home-link">← На главную</a>
+
+    <div class="lesson-switch">
+      <button class="active" onclick="switchLesson(1, this)">Урок 1</button>
+      <button onclick="switchLesson(2, this)">Урок 2</button>
+    </div>
+
+    <div class="timer" id="timerBox">
+      <span class="icon">⏱</span>
+      <span id="timerDisplay">45:00</span>
+      <button id="timerBtn" onclick="toggleTimer()">Старт</button>
+      <button onclick="resetTimer()">Сброс</button>
+    </div>
+
+    <a href="urok1.html" target="_blank" class="student-link" id="studentLink">
+      Открыть версию ученика ↗
+    </a>
+  </div>
+</div>
+
+<!-- ============ ОКНО УРОКА ============ -->
+<iframe id="lessonFrame" src="urok1.html" class="lesson-frame" title="Урок"></iframe>
+
+<!-- ============ ПОДСКАЗКА ============ -->
+<div class="hint" id="hint">
+  <button class="close" onclick="document.getElementById('hint').classList.add('hidden')">×</button>
+  <strong>Подсказка:</strong> таймер можно поставить на паузу, а урок открыть в отдельной вкладке — кнопкой «Открыть версию ученика».
+</div>
+
+<script>
+/* ==========================================================
+   ПЕРЕКЛЮЧЕНИЕ УРОКОВ В iframe
+   ========================================================== */
+function switchLesson(n, btn) {
+  document.querySelectorAll('.lesson-switch button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const frame = document.getElementById('lessonFrame');
+  frame.src = n === 1 ? 'urok1.html' : 'urok2.html';
+  // Меняем ссылку «Открыть версию ученика»
+  document.getElementById('studentLink').href = n === 1 ? 'urok1.html' : 'urok2.html';
+}
+
+/* ==========================================================
+   ТАЙМЕР НА 45 МИНУТ
+   ========================================================== */
+const LESSON_DURATION = 45 * 60;   // 45 минут в секундах
+let timerSeconds = LESSON_DURATION;
+let timerInterval = null;
+
+function updateTimer() {
+  const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+  const s = String(timerSeconds % 60).padStart(2, '0');
+  const display = document.getElementById('timerDisplay');
+  display.textContent = `${m}:${s}`;
+
+  const box = document.getElementById('timerBox');
+  box.classList.toggle('warning', timerSeconds <= 300 && timerSeconds > 60);
+  box.classList.toggle('danger',  timerSeconds <= 60);
+}
+
+function toggleTimer() {
+  const btn = document.getElementById('timerBtn');
+  if (timerInterval) {
+    // Пауза
+    clearInterval(timerInterval);
+    timerInterval = null;
+    btn.textContent = 'Продолжить';
+  } else {
+    // Старт
+    timerInterval = setInterval(() => {
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.textContent = 'Готово';
+        document.getElementById('timerDisplay').textContent = '00:00';
+        return;
+      }
+      timerSeconds--;
+      updateTimer();
+    }, 1000);
+    btn.textContent = 'Пауза';
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  timerSeconds = LESSON_DURATION;
+  document.getElementById('timerBtn').textContent = 'Старт';
+  updateTimer();
+}
+
+// инициализация
+updateTimer();
+
+/* ==========================================================
+   ГОРЯЧИЕ КЛАВИШИ
+   ========================================================== */
+document.addEventListener('keydown', e => {
+  // Ctrl/Cmd + 1 → урок 1, Ctrl/Cmd + 2 → урок 2
+  if ((e.ctrlKey || e.metaKey) && e.key === '1') {
+    e.preventDefault();
+    const btn = document.querySelectorAll('.lesson-switch button')[0];
+    switchLesson(1, btn);
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === '2') {
+    e.preventDefault();
+    const btn = document.querySelectorAll('.lesson-switch button')[1];
+    switchLesson(2, btn);
+  }
+  // Пробел → старт/пауза таймера (если фокус не в поле ввода)
+  if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    toggleTimer();
+  }
+});
+</script>
+
+</body>
+</html>
