@@ -5,6 +5,22 @@
 <title>Урок 1 · Массивы в Python 🌸</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ЗАПРЕТ ВЫДЕЛЕНИЯ И КОПИРОВАНИЯ */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  textarea {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+  }
+
   :root {
     --lavender: #b8a8e8;
     --lavender-soft: #d9c8ff;
@@ -45,7 +61,6 @@
     display: flex; flex-direction: column;
   }
 
-  /* HEADER */
   header {
     background: linear-gradient(135deg, #d9c8ff 0%, #ffd6e8 50%, #c8ecff 100%);
     padding: 18px 28px;
@@ -114,7 +129,6 @@
     border-radius: 10px; transition: width 0.5s; width: 0%;
   }
 
-  /* РЕЖИМ УЧИТЕЛЯ */
   body.teacher-mode .student-badge,
   body.teacher-mode .flowers,
   body.teacher-mode .progress-wrap,
@@ -128,7 +142,6 @@
     display: none !important;
   }
 
-  /* МОДАЛКА */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -183,7 +196,6 @@
     background: #e0d8f0; cursor: not-allowed; box-shadow: none;
   }
 
-  /* СЛАЙДЫ */
   .slide-viewport { flex: 1; padding: 32px 42px; }
   .slide { display: none; animation: slideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
   .slide.active { display: block; }
@@ -202,7 +214,6 @@
   h3 { color: #7a5aa8; margin: 20px 0 10px; font-size: 1.08em; font-weight: 700; }
   p { line-height: 1.7; margin-bottom: 12px; color: #5a5a7a; }
 
-  /* КОД */
   .code-block {
     background: #fdfbff; border: 2px solid #e8dfff;
     border-radius: 16px; padding: 18px 22px;
@@ -219,7 +230,6 @@
   .code-block .com { color: #a99cd0; font-style: italic; }
   .code-block .var { color: #5a4a7a; }
 
-  /* ВИЗУАЛИЗАТОР */
   .array-viz {
     display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0;
     justify-content: center; padding: 18px;
@@ -254,7 +264,6 @@
   .cell.highlight .idx { background: linear-gradient(135deg, #ffd966, #ffb84d); color: #7a4a00; }
   .cell.highlight .idx .neg { color: #7a4a00; }
 
-  /* КНОПКИ */
   .btn {
     background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
     color: #fff; border: none;
@@ -276,12 +285,10 @@
   .btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
   .btn.small { padding: 7px 16px; font-size: 0.82em; }
 
-  /* РЕДАКТОР */
   .editor-box {
     background: #fff; border: 2px dashed #b8a8e8;
     border-radius: 20px; padding: 18px; margin: 16px 0;
-    transition: 0.3s;
-    position: relative;
+    transition: 0.3s; position: relative;
   }
   .editor-box.completed {
     border-style: solid; border-color: var(--mint-deep);
@@ -324,7 +331,6 @@
   .editor-box.completed .done-badge { display: inline-block; }
   .editor-box.completed .task-badge { display: none; }
 
-  /* ИКОНКА-ПОДСКАЗКА */
   .editor-hint {
     position: absolute;
     top: 14px; right: 14px;
@@ -336,8 +342,7 @@
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-size: 1em; font-weight: 700;
-    transition: 0.25s;
-    z-index: 10;
+    transition: 0.25s; z-index: 10;
     font-family: inherit;
   }
   .editor-hint:hover {
@@ -395,7 +400,6 @@
     font-weight: 600;
   }
 
-  /* КАРТОЧКИ */
   .cards {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 14px; margin: 18px 0;
@@ -432,7 +436,6 @@
     color: #6a4a9a; margin-top: 6px; display: inline-block;
   }
 
-  /* QUIZ */
   .quiz {
     background: linear-gradient(135deg, #fff8f0, #fef6ff);
     border: 2px solid #ffd3b6; border-radius: 18px;
@@ -473,7 +476,6 @@
   .quiz-option.correct .letter { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); }
   .quiz-option.wrong .letter { background: linear-gradient(135deg, #ffaaa5, #ff8a95); }
 
-  /* NOTE */
   .note {
     padding: 16px 20px; border-radius: 16px; margin: 14px 0;
     display: flex; gap: 12px; align-items: flex-start;
@@ -489,7 +491,6 @@
     border-radius: 5px; font-family: 'Consolas',monospace;
   }
 
-  /* СПИСОК ЗАДАНИЙ */
   .task-list {
     background: linear-gradient(135deg, #fef6ff, #f0f8ff);
     border-radius: 18px; padding: 18px 22px;
@@ -514,7 +515,6 @@
     border-color: var(--mint-deep);
   }
 
-  /* БУКЕТ */
   .bouquet {
     text-align: center; padding: 38px 24px;
     background: linear-gradient(135deg, #fff8f0, #fef6ff, #e8f4fd);
@@ -540,7 +540,6 @@
   }
   .bouquet .score-label { color: #8a7ab0; font-size: 0.9em; }
 
-  /* НАВИГАЦИЯ */
   .nav-bar {
     display: flex; justify-content: space-between; align-items: center;
     padding: 16px 30px;
@@ -1260,6 +1259,84 @@ print("Двадцаток:", temps.?)</textarea>
 
 <script>
 /* ==========================================================
+   ЗАЩИТА ОТ КОПИРОВАНИЯ И ВСТАВКИ
+   ========================================================== */
+// Запрет копирования по всему документу
+document.addEventListener('copy', e => {
+  e.preventDefault();
+  return false;
+});
+// Запрет вырезания
+document.addEventListener('cut', e => {
+  e.preventDefault();
+  return false;
+});
+// Запрет контекстного меню (правой кнопки мыши)
+document.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  return false;
+});
+// Запрет выделения мышью
+document.addEventListener('selectstart', e => {
+  e.preventDefault();
+  return false;
+});
+// Запрет горячих клавиш Ctrl+C, Ctrl+A, Ctrl+X
+document.addEventListener('keydown', e => {
+  const isMod = e.ctrlKey || e.metaKey;
+  if (isMod && ['c','C','a','A','x','X'].includes(e.key)) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// Запрет вставки в textarea
+function attachPasteGuards() {
+  document.querySelectorAll('textarea').forEach(ta => {
+    // Запрет paste
+    ta.addEventListener('paste', e => {
+      e.preventDefault();
+      showPasteWarning(ta);
+      return false;
+    });
+    // Запрет drop
+    ta.addEventListener('drop', e => {
+      e.preventDefault();
+      return false;
+    });
+    // Запрет contextmenu внутри textarea
+    ta.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      return false;
+    });
+    // Разрешаем выделение внутри textarea
+    ta.addEventListener('selectstart', e => {
+      e.stopPropagation();
+    });
+    ta.addEventListener('mousedown', e => {
+      e.stopPropagation();
+    });
+  });
+}
+
+// Показать предупреждение при попытке вставки
+function showPasteWarning(ta) {
+  const box = ta.closest('.editor-box');
+  if (!box) return;
+  const out = box.querySelector('.output');
+  if (!out) return;
+  const prev = out.textContent;
+  out.textContent = '🚫 Вставка запрещена! Пожалуйста, набирай код вручную. Это поможет тебе лучше запомнить команды.';
+  out.classList.add('hint');
+  setTimeout(() => {
+    if (out.textContent.startsWith('🚫')) {
+      out.textContent = prev;
+      out.classList.remove('hint');
+    }
+  }, 2500);
+}
+
+/* ==========================================================
    РЕЖИМ УЧИТЕЛЯ
    ========================================================== */
 const isInIframe = (() => {
@@ -1372,7 +1449,7 @@ if (isInIframe) {
 }
 
 /* ==========================================================
-   НАВИГАЦИЯ (без клавиш ← →)
+   НАВИГАЦИЯ
    ========================================================== */
 let currentSlide = 1;
 const totalSlides = document.querySelectorAll('.slide').length;
@@ -1401,8 +1478,6 @@ function updateNav() {
 function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; updateNav(); } }
 function prevSlide() { if (currentSlide > 1) { currentSlide--; updateNav(); } }
 function goToSlide(n) { currentSlide = n; updateNav(); }
-
-/* Клавиши ← → НЕ листают слайды */
 
 function updateFinalSlide() {
   const n = ['task1','task2','task3','task4','task5','task6','task7','task8','task9']
@@ -1457,7 +1532,6 @@ function runCodeRaw(code) {
   let buffer = '';
   const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
 
-  // Ищем "?" в строках кода (вне кавычек и комментариев)
   const lines = code.split('\n');
   let problemLine = -1;
   for (let i = 0; i < lines.length; i++) {
@@ -1472,7 +1546,6 @@ function runCodeRaw(code) {
     };
   }
 
-  // Пустое поле?
   const codeStripped = code.split('\n').map(l => l.split('#')[0]).join('').trim();
   if (!codeStripped) {
     return { output: '', error: null, empty: true };
@@ -1538,7 +1611,7 @@ function translatePython(code) {
     const indent = line.match(/^\s*/)[0].length; let t = line.trim();
     while (stack.length && indent <= stack[stack.length-1]) { js += '}\n'; stack.pop(); }
 
-    // ШАГ 1: базовые замены имён (ВАЖНО раньше for)
+    // ШАГ 1: замены имён
     t = t.replace(/\bprint\s*\(/g, '__print(');
     t = t.replace(/\blen\s*\(/g, '__len(');
     t = t.replace(/\bsum\s*\(/g, '__sum(');
@@ -1550,17 +1623,16 @@ function translatePython(code) {
     t = t.replace(/\bTrue\b/g, 'true'); t = t.replace(/\bFalse\b/g, 'false'); t = t.replace(/\bNone\b/g, 'null');
     t = t.replace(/\band\b/g, '&&'); t = t.replace(/\bor\b/g, '||'); t = t.replace(/\bnot\s+/g, '!');
 
-    // ШАГ 2: for ... in ... (ПОСЛЕ замен)
+    // ШАГ 2: for
     let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
     if (mFor) {
       js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`;
-      stack.push(indent);
-      continue;
+      stack.push(indent); continue;
     }
 
-    // ШАГ 3: индексы
-    if (/([A-Za-z_]\w*)\[[^\]]+\]\s*=/.test(t)) {
-      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]\s*=\s*(.+)/g,
+    // ШАГ 3: индексы — присваивание, но НЕ сравнение ==
+    if (/([A-Za-z_]\w*)\[[^\]]+\]\s*=(?!=)/.test(t)) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]\s*=(?!=)\s*(.+)/g,
         (m, arr, idx, val) => `__set(${arr}, ${idx}, ${val})`);
     }
     if (!t.includes('__get(') && !t.includes('__set(')) {
@@ -1571,7 +1643,7 @@ function translatePython(code) {
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+not\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '!__in($1, $2)');
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '__in($1, $2)');
 
-    // ШАГ 5: методы списков
+    // ШАГ 5: методы
     t = t.replace(/([A-Za-z_]\w*)\.append\s*\(/g, '__append($1, ');
     t = t.replace(/([A-Za-z_]\w*)\.pop\s*\(([^)]*)\)/g, '__pop($1, $2)');
     t = t.replace(/([A-Za-z_]\w*)\.insert\s*\(/g, '__insert($1, ');
@@ -1581,7 +1653,7 @@ function translatePython(code) {
     t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
     t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
 
-    // ШАГ 6: while, if, elif, else, break, continue
+    // ШАГ 6: while, if, else, break, continue
     let mWhile = t.match(/^while\s+(.+):$/);
     if (mWhile) { js += ' '.repeat(indent) + `while (__truthy(${mWhile[1]})) {\n`; stack.push(indent); continue; }
     let mIf = t.match(/^if\s+(.+):$/);
@@ -1653,7 +1725,7 @@ function resetTask(taskId) {
 }
 
 /* ==========================================================
-   ПРОВЕРКИ — числа проверяются ПО СТРОКАМ, не через cleanOutput
+   ПРОВЕРКИ
    ========================================================== */
 function outputLines(output) {
   return output.trim().split('\n').map(l => l.trim()).filter(l => l);
@@ -1662,7 +1734,6 @@ function hasTokenInLines(output, value) {
   const strVal = String(value);
   const lines = outputLines(output);
   return lines.some(line => {
-    // Разбиваем на токены, отделяя знаки препинания
     const tokens = line.split(/[\s,()\[\]{}:;'"]+/).filter(t => t !== '');
     return tokens.includes(strVal);
   });
@@ -1678,12 +1749,10 @@ function checkTask1(code, output) {
 
 function checkTask2(code, output) {
   if (/\[\s*\?\s*\]/.test(code)) return false;
-  // Проверяем вывод
   const o = output.toLowerCase();
   const hasApple = o.includes('яблоко');
   const hasCherry = o.includes('вишня');
   const hasPlum = o.includes('слива');
-  // И что в коде есть индексы 2 и 4
   const hasIdx2 = /fruits\s*\[\s*2\s*\]/.test(code);
   const hasIdx4 = /fruits\s*\[\s*4\s*\]/.test(code);
   return hasApple && hasCherry && hasPlum && hasIdx2 && hasIdx4;
@@ -1691,11 +1760,9 @@ function checkTask2(code, output) {
 
 function checkTask3(code, output) {
   if (/\[\s*\?\s*\]/.test(code)) return false;
-  // Проверяем числа построчно — это надёжно
   const has50 = hasTokenInLines(output, 50);
   const has40 = hasTokenInLines(output, 40);
   const has30 = hasTokenInLines(output, 30);
-  // Хотя бы один отрицательный индекс
   const hasNeg = /\[\s*-\s*\d+\s*\]/.test(code);
   return has50 && has40 && has30 && hasNeg;
 }
@@ -1743,7 +1810,6 @@ function checkTask7(code, output) {
 function checkTask8(code, output) {
   if (/avg\s*=\s*\?\s*\/\s*\?/.test(code) || /temps\.\?/.test(code)) return false;
   const hasSum = hasTokenInLines(output, 137);
-  // Среднее 137/7 ≈ 19.57 — принимаем 19.5 или 19.57
   const hasAvg = /19[.,]5/.test(output);
   const has2 = hasTokenInLines(output, 2);
   const hasSumFn = /sum\s*\(\s*temps\s*\)/.test(code);
@@ -1759,11 +1825,9 @@ function checkTask9(code, output) {
     .join('')
     .replace(/\s+/g, '');
   if (codeOnly.length < 30) return false;
-  // grades = [5,4,3,5,2,4,5,3,4,5] → 45, 4.5, 4
   const has45 = hasTokenInLines(output, 45);
   const has45avg = /4[.,]5/.test(output);
   const has4 = hasTokenInLines(output, 4);
-  // Достаточно 2 из 3 совпадений — мягко
   const count = [has45, has45avg, has4].filter(Boolean).length;
   return count >= 3;
 }
@@ -1867,6 +1931,7 @@ if (document.getElementById('loop-viz-2')) renderLoop2();
    ========================================================== */
 buildDots();
 updateNav();
+attachPasteGuards();
 </script>
 
 </body>
