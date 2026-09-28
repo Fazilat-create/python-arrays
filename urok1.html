@@ -104,12 +104,6 @@
     color: #8a7ab0; font-size: 0.78em; font-weight: 600;
     margin-left: 6px; font-variant-numeric: tabular-nums;
   }
-  .flowers .flower { animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1); }
-  @keyframes pop {
-    0% { transform: scale(0); }
-    60% { transform: scale(1.4); }
-    100% { transform: scale(1); }
-  }
   .progress-wrap {
     display: flex; align-items: center; gap: 10px;
     font-size: 0.8em; color: #8a7ab0;
@@ -297,29 +291,39 @@
     background: #fff; border: 2px dashed #b8a8e8;
     border-radius: 20px; padding: 18px; margin: 16px 0;
     transition: 0.3s;
+    position: relative;
   }
   .editor-box.completed {
     border-style: solid; border-color: var(--mint-deep);
     background: linear-gradient(135deg, #f8fffc, #f0fff8);
+    box-shadow: 0 8px 25px rgba(126,217,184,0.25);
   }
-  .editor-box.practice {
-    border: 2px solid #e8dfff;
-    background: linear-gradient(135deg, #fef9ff, #fdfbff);
-    border-style: solid;
+  .editor-box.completed::after {
+    content: "✓";
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #fff; font-weight: 700; font-size: 1.1em;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(126,217,184,0.4);
+    animation: pop 0.4s cubic-bezier(0.4,1.6,0.6,1);
+  }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.4); }
+    100% { transform: scale(1); }
   }
   .editor-title {
     display: flex; align-items: center; gap: 8px;
-    font-weight: 700; color: #7a5aa8; margin-bottom: 12px;
+    font-weight: 700; color: #7a5aa8; margin-bottom: 10px;
     font-size: 0.95em; flex-wrap: wrap;
+    padding-right: 45px;
   }
   .editor-title .task-badge {
     background: linear-gradient(135deg, #ffe8b0, #ffd966);
     color: #7a4a00; padding: 3px 12px; border-radius: 12px;
-    font-size: 0.72em; font-weight: 700;
-  }
-  .editor-title .practice-badge {
-    background: linear-gradient(135deg, #d9c8ff, #c8b8f0);
-    color: #5a4a8a; padding: 3px 12px; border-radius: 12px;
     font-size: 0.72em; font-weight: 700;
   }
   .editor-title .done-badge {
@@ -329,6 +333,57 @@
   }
   .editor-box.completed .done-badge { display: inline-block; }
   .editor-box.completed .task-badge { display: none; }
+
+  /* ============ ИКОНКА-ПОДСКАЗКА ============ */
+  .editor-hint {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: linear-gradient(135deg, #fff8e6, #ffefcc);
+    color: #8a6020;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ffd966;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    font-weight: 700;
+    transition: 0.25s;
+    z-index: 10;
+    font-family: inherit;
+  }
+  .editor-hint:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 6px 15px rgba(255,184,77,0.4);
+  }
+  .editor-hint.opened {
+    background: linear-gradient(135deg, #ffd966, #ffb84d);
+    color: #fff;
+    transform: rotate(15deg);
+  }
+
+  .hint-popup {
+    display: none;
+    background: linear-gradient(135deg, #fff8e6, #ffefcc);
+    border-left: 5px solid #ffb84d;
+    color: #7a5a1a;
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin: 12px 0;
+    font-size: 0.92em;
+    line-height: 1.65;
+    animation: slideIn 0.3s ease;
+  }
+  .hint-popup.visible { display: block; }
+  .hint-popup code {
+    background: rgba(255,255,255,0.8);
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-family: 'Consolas', monospace;
+  }
 
   textarea {
     width: 100%; min-height: 140px;
@@ -350,10 +405,11 @@
     white-space: pre-wrap; word-break: break-word; line-height: 1.7;
   }
   .output.error { background: #fff0f0; border-color: #ffaaa5; color: #c04a4a; }
+  .output.hint { background: #fff8e6; border-color: #ffd966; color: #7a5a1a; }
   .output.success {
     background: linear-gradient(135deg, #f0fff8, #e8fff4);
     border-color: var(--mint-deep); color: #2a6a4a;
-    animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1);
+    font-weight: 600;
   }
 
   /* ============ КАРТОЧКИ ============ */
@@ -641,8 +697,9 @@
         <div class="task-item" data-task="4"><div class="check">✓</div> Изменить элементы массива</div>
         <div class="task-item" data-task="5"><div class="check">✓</div> Применить методы массива</div>
         <div class="task-item" data-task="6"><div class="check">✓</div> Пройтись по массиву циклом</div>
-        <div class="task-item" data-task="7"><div class="check">✓</div> Найти сумму и среднее</div>
-        <div class="task-item" data-task="8"><div class="check">✓</div> Написать код полностью самой</div>
+        <div class="task-item" data-task="7"><div class="check">✓</div> Перебрать по индексам</div>
+        <div class="task-item" data-task="8"><div class="check">✓</div> Найти сумму и среднее</div>
+        <div class="task-item" data-task="9"><div class="check">✓</div> Написать код полностью самой</div>
       </div>
     </div>
 
@@ -665,10 +722,14 @@
 
       <h3>Задание 1. Создай свой массив</h3>
       <div class="editor-box" id="box-task-1">
+        <button class="editor-hint" onclick="toggleHint('hint-task-1')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 1
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <div class="hint-popup" id="hint-task-1">
+          💡 Просто нажми «Запустить» — код уже готов. Ты увидишь, как выглядит массив и его длина.
         </div>
         <p style="font-size:0.9em;color:#8a7ab0;">Запусти код — увидишь, как выглядит массив и его длина.</p>
         <textarea id="code-task-1"># Массив из 5 чисел
@@ -711,16 +772,19 @@ print("Всего элементов:", len(my_numbers))</textarea>
 
       <h3>Задание 2. Достань элементы по индексам</h3>
       <div class="editor-box" id="box-task-2">
+        <button class="editor-hint" onclick="toggleHint('hint-task-2')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 2
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Впиши индексы, чтобы вывести нужные элементы.
-          <br>
-          💡 «вишня» — третий элемент (индекс считается с нуля!). «слива» — пятый.
-        </p>
+        <div class="hint-popup" id="hint-task-2">
+          💡 <b>Подсказка:</b><br>
+          • «вишня» — третий элемент → индекс <code>2</code><br>
+          • «слива» — пятый элемент → индекс <code>4</code><br>
+          Индексы начинаются с нуля!
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Впиши индексы, чтобы вывести нужные элементы.</p>
         <textarea id="code-task-2">fruits = ["яблоко", "банан", "вишня", "груша", "слива"]
 
 # 1. Первый элемент (индекс 0)
@@ -766,7 +830,7 @@ print(fruits[?])</textarea>
 
       <div class="note idea">
         <div class="icon">💡</div>
-        <div><b>Правило:</b> <code>-1</code> — последний, <code>-2</code> — предпоследний, <code>-3</code> — третий с конца. Удобно, когда длина неизвестна.</div>
+        <div><b>Правило:</b> <code>-1</code> — последний, <code>-2</code> — предпоследний, <code>-3</code> — третий с конца.</div>
       </div>
 
       <h3>Нажми на ячейку — увидишь <b>оба</b> индекса 👇</h3>
@@ -775,16 +839,20 @@ print(fruits[?])</textarea>
 
       <h3>Задание 3. Используй отрицательные индексы</h3>
       <div class="editor-box" id="box-task-3">
+        <button class="editor-hint" onclick="toggleHint('hint-task-3')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 3
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Впиши отрицательные индексы: последний, предпоследний и третий с конца.
-          <br>
-          💡 Подсказка: последний = <code>-1</code>, предпоследний = <code>-2</code>, третий с конца = <code>-3</code>.
-        </p>
+        <div class="hint-popup" id="hint-task-3">
+          💡 <b>Подсказка:</b><br>
+          Впиши <b>именно отрицательные</b> индексы:<br>
+          • последний → <code>-1</code><br>
+          • предпоследний → <code>-2</code><br>
+          • третий с конца → <code>-3</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Впиши отрицательные индексы: последний, предпоследний и третий с конца.</p>
         <textarea id="code-task-3">nums = [10, 20, 30, 40, 50]
 
 # 1. Последний элемент
@@ -818,16 +886,18 @@ print(nums[?])</textarea>
 
       <h3>Задание 4. Измени оценки</h3>
       <div class="editor-box" id="box-task-4">
+        <button class="editor-hint" onclick="toggleHint('hint-task-4')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 4
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Замени последний элемент на <code>5</code>, а третий (индекс 2) — на <code>4</code>.
-          <br>
-          💡 Подсказка: последний можно менять через <code>[-1]</code> или <code>[4]</code>.
-        </p>
+        <div class="hint-popup" id="hint-task-4">
+          💡 <b>Подсказка:</b><br>
+          • последний элемент можно менять как <code>grades[4] = 5</code> или <code>grades[-1] = 5</code><br>
+          • третий элемент — <code>grades[2] = 4</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Замени последний элемент на <code>5</code>, а третий (индекс 2) — на <code>4</code>.</p>
         <textarea id="code-task-4">grades = [5, 4, 3, 5, 2]
 print("Было:", grades)
 
@@ -844,7 +914,7 @@ print("Стало:", grades)</textarea>
       </div>
     </div>
 
-    <!-- СЛАЙД 6 — ОПЕРАЦИИ С МАССИВОМ (FLIP-КАРТОЧКИ) -->
+    <!-- СЛАЙД 6 — ОПЕРАЦИИ С МАССИВОМ -->
     <div class="slide" data-slide="6">
       <div class="slide-num">Слайд 6 · Операции</div>
       <h2>Полезные команды 🛠️</h2>
@@ -891,17 +961,18 @@ print("Стало:", grades)</textarea>
 
       <h3>Задание 5. Примени методы на практике</h3>
       <div class="editor-box" id="box-task-5">
+        <button class="editor-hint" onclick="toggleHint('hint-task-5')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 5
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши код: добавь в массив <code>pets</code> ещё одного питомца через <code>.append()</code>
-          и выведи количество питомцев через <code>len()</code>.
-          <br>
-          💡 Подсказка: `pets.append("хомяк")` добавит хомяка в конец.
-        </p>
+        <div class="hint-popup" id="hint-task-5">
+          💡 <b>Подсказка:</b><br>
+          • добавить в конец → <code>pets.append("хомяк")</code><br>
+          • количество элементов → <code>len(pets)</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши код: добавь хомяка в массив <code>pets</code> и выведи количество питомцев.</p>
         <textarea id="code-task-5">pets = ["кошка", "собака"]
 
 # 1. Добавь хомяка в конец массива
@@ -945,16 +1016,19 @@ print("Всего:", ?)</textarea>
 
       <h3>Задание 6. Пройдись по массиву</h3>
       <div class="editor-box" id="box-task-6">
+        <button class="editor-hint" onclick="toggleHint('hint-task-6')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 6
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши цикл, чтобы вывести каждый элемент массива на отдельной строке.
-          <br>
-          💡 Подсказка: используй <code>for x in nums:</code> и <code>print(x)</code>.
-        </p>
+        <div class="hint-popup" id="hint-task-6">
+          💡 <b>Подсказка:</b><br>
+          <code>for x in nums:</code><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<code>print(x)</code><br>
+          Цикл сам берёт каждый элемент массива.
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши цикл, чтобы вывести каждый элемент на отдельной строке.</p>
         <textarea id="code-task-6">nums = [10, 25, 7, 42, 15]
 
 # Пройдись по каждому элементу и выведи его
@@ -989,7 +1063,7 @@ for x in ?:
           <b>Как это читается:</b><br>
           • <code>len(nums)</code> — сколько элементов (3)<br>
           • <code>range(3)</code> — числа 0, 1, 2<br>
-          • На каждой итерации <code>i</code> становится индексом, а <code>nums[i]</code> — элементом.
+          • <code>i</code> — индекс, <code>nums[i]</code> — элемент
         </div>
       </div>
 
@@ -1003,16 +1077,19 @@ for x in ?:
 
       <h3>Задание 7. Перебор по индексам</h3>
       <div class="editor-box" id="box-task-7">
+        <button class="editor-hint" onclick="toggleHint('hint-task-7')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 7
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши <code>print</code>, чтобы вывести индекс и значение в формате <code>0: 5</code>, <code>1: 3</code>.
-          <br>
-          💡 Подсказка: индекс — <code>i</code>, значение — <code>numbers[i]</code>.
-        </p>
+        <div class="hint-popup" id="hint-task-7">
+          💡 <b>Подсказка:</b><br>
+          • индекс — <code>i</code><br>
+          • значение — <code>numbers[i]</code><br>
+          Хотим формат: <code>0 : 5</code>, <code>1 : 3</code> и так далее.
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши <code>print</code>, чтобы вывести индекс и значение через двоеточие.</p>
         <textarea id="code-task-7">numbers = [5, 3, 8, 1, 9]
 
 for i in range(len(numbers)):
@@ -1046,14 +1123,18 @@ for i in range(len(numbers)):
 
       <h3>Задание 8. Сумма и среднее</h3>
       <div class="editor-box" id="box-task-8">
+        <button class="editor-hint" onclick="toggleHint('hint-task-8')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 8
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Найди среднее арифметическое температур. И выведи, сколько раз встречается 20.
-        </p>
+        <div class="hint-popup" id="hint-task-8">
+          💡 <b>Подсказка:</b><br>
+          • среднее: <code>avg = sum(temps) / len(temps)</code><br>
+          • сколько раз встречается 20: <code>temps.count(20)</code>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Найди среднее арифметическое температур и подсчитай, сколько раз встречается 20.</p>
         <textarea id="code-task-8">temps = [18, 20, 17, 22, 19, 21, 20]
 
 # 1. Найди сумму
@@ -1078,21 +1159,23 @@ print("Двадцаток:", temps.?)</textarea>
       <h2>Напиши код сама ✍️</h2>
       <p>Это задание — полностью самостоятельное. Используй всё, что узнала.</p>
 
-      <div class="note love">
-        <div class="icon">🌟</div>
-        <div><b>Задача:</b> дан массив оценок за четверть. Найди и выведи:
-          <br>• <b>сумму</b> всех оценок — используй <code>sum()</code>;
-          <br>• <b>средний балл</b> — сумма ÷ количество (<code>len()</code>);
-          <br>• <b>количество пятёрок</b> — используй <code>.count(5)</code>.
-        </div>
-      </div>
-
       <div class="editor-box" id="box-task-9">
+        <button class="editor-hint" onclick="toggleHint('hint-task-9')" title="Подсказка">?</button>
         <div class="editor-title">
           Задание 9
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
+        <div class="hint-popup" id="hint-task-9">
+          💡 <b>Подсказка:</b><br>
+          <code>total = sum(grades)</code><br>
+          <code>avg = sum(grades) / len(grades)</code><br>
+          <code>fives = grades.count(5)</code><br>
+          И выведи каждое через <code>print</code>.
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Найди и выведи: сумму, средний балл и количество пятёрок.
+        </p>
         <textarea id="code-task-9" style="min-height: 180px;">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5]
 
 # 1. Найди сумму и выведи её
@@ -1101,7 +1184,6 @@ print("Двадцаток:", temps.?)</textarea>
 </textarea>
         <button class="btn" onclick="runTask('task-9', 9, checkTask9)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-9')">↺ Сбросить</button>
-        <button class="btn mint" onclick="showHint9()">💡 Подсказка</button>
         <div class="output" id="out-task-9">Здесь появится результат ✨</div>
       </div>
     </div>
@@ -1123,7 +1205,7 @@ print("Двадцаток:", temps.?)</textarea>
 
       <h3>Финальная проверка 🎯</h3>
       <div class="quiz" data-correct="1">
-        <div class="question">Какой индекс у последнего элемента массива из 5 элементов? (Выбери <b>все</b> правильные варианты)</div>
+        <div class="question">Какой индекс у последнего элемента массива из 5 элементов?</div>
         <div class="options">
           <button class="quiz-option" data-i="0"><span class="letter">A</span> Только 5</button>
           <button class="quiz-option" data-i="1"><span class="letter">B</span> 4 или -1</button>
@@ -1182,7 +1264,8 @@ let progress = {
   task1: false, task2: false, task3: false,
   task4: false, task5: false, task6: false,
   task7: false, task8: false, task9: false,
-  task10: false, task11: false, task12: false
+  task10: false, task11: false, task12: false,
+  task13: false, task14: false, task15: false
 };
 
 function loadProgress() {
@@ -1194,14 +1277,14 @@ function saveProgress() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e) {}
 }
 function countFlowers() {
-  return ['task1','task2','task3','task4','task5','task6',
-          'task7','task8','task9','task10','task11','task12']
+  return ['task1','task2','task3','task4','task5','task6','task7','task8','task9',
+          'task10','task11','task12','task13','task14','task15']
     .filter(k => progress[k]).length;
 }
 function updateFlowerUI() {
   const n = countFlowers();
   document.getElementById('flowersIcons').innerHTML = n ? '🌸'.repeat(n) : '—';
-  document.getElementById('flowersCount').textContent = `${n} / 12`;
+  document.getElementById('flowersCount').textContent = `${n} / 15`;
   document.getElementById('avatarLetter').textContent = progress.name ? progress.name.charAt(0).toUpperCase() : '?';
   document.getElementById('studentName').textContent = progress.name || '—';
   document.querySelectorAll('.task-item').forEach(el => {
@@ -1324,6 +1407,18 @@ function updateFinalSlide() {
 }
 
 /* ==========================================================
+   ПОДСКАЗКИ
+   ========================================================== */
+function toggleHint(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('visible');
+  // Меняем вид кнопки
+  const btn = event && event.currentTarget;
+  if (btn) btn.classList.toggle('opened');
+}
+
+/* ==========================================================
    QUIZ
    ========================================================== */
 document.querySelectorAll('.quiz').forEach(quiz => {
@@ -1353,18 +1448,25 @@ function runCodeRaw(code) {
   let buffer = '';
   const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
 
+  // Убираем строки и комментарии, ищем "?" только в коде
+  const codeNoStrings = code
+    .split('\n')
+    .map(l => l.split('#')[0])
+    .join('\n')
+    .replace(/"[^"]*"/g, '""')
+    .replace(/'[^']*'/g, "''");
+
+  if (codeNoStrings.includes('?')) {
+    return {
+      output: buffer,
+      error: 'Похоже, ты ещё не вписала значение вместо знака вопроса «?». Впиши и нажми «Запустить» ещё раз.'
+    };
+  }
+
   // Пустое поле?
   const codeStripped = code.split('\n').map(l => l.split('#')[0]).join('').trim();
   if (!codeStripped) {
     return { output: '', error: null, empty: true };
-  }
-
-  // Остались знаки вопроса?
-  if (/\[\s*\?\s*\]/.test(code) || /if\s*\?/.test(code) || /print\s*\(\s*\?/.test(code) || /\.\?\s*\(/.test(code) || /=\s*\?(?!\w)/.test(code)) {
-    return {
-      output: buffer,
-      error: 'Похоже, ты ещё не вписала значение вместо знака вопроса «?». Впиши и попробуй снова.'
-    };
   }
 
   try {
@@ -1389,14 +1491,6 @@ function runCodeRaw(code) {
         const idx = i < 0 ? arr.length + i : i;
         arr[idx] = val;
         return val;
-      };
-      const __slice = (arr, a, b) => {
-        if (typeof a === 'number' && typeof b === 'number') {
-          let start = a < 0 ? arr.length + a : a;
-          let end = b < 0 ? arr.length + b : b;
-          return arr.slice(start, end);
-        }
-        return arr.slice(a, b);
       };
       const __range = (...a) => {
         let start=0, stop, step=1;
@@ -1434,6 +1528,18 @@ function translatePython(code) {
     if (line.trim() === '') continue;
     const indent = line.match(/^\s*/)[0].length; let t = line.trim();
     while (stack.length && indent <= stack[stack.length-1]) { js += '}\n'; stack.pop(); }
+
+    // ==================================================
+    // ВАЖНО: for ... in ... обрабатываем РАНЬШЕ оператора in
+    // ==================================================
+    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
+    if (mFor) {
+      js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`;
+      stack.push(indent);
+      continue;
+    }
+
+    // Дальше — обычная обработка
     t = t.replace(/\bprint\s*\(/g, '__print(');
     t = t.replace(/\blen\s*\(/g, '__len(');
     t = t.replace(/\bsum\s*\(/g, '__sum(');
@@ -1465,8 +1571,6 @@ function translatePython(code) {
     t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
     t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
 
-    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
-    if (mFor) { js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`; stack.push(indent); continue; }
     let mWhile = t.match(/^while\s+(.+):$/);
     if (mWhile) { js += ' '.repeat(indent) + `while (__truthy(${mWhile[1]})) {\n`; stack.push(indent); continue; }
     let mIf = t.match(/^if\s+(.+):$/);
@@ -1501,18 +1605,20 @@ function runTask(taskId, taskNum, checker) {
   const out = document.getElementById('out-' + taskId);
   const box = document.getElementById('box-' + taskId);
   const result = runCodeRaw(code);
+
   if (result.empty) {
     out.textContent = 'Сначала напиши код, а потом нажми «Запустить» ✍️';
-    out.classList.remove('error','success');
+    out.classList.remove('error','success','hint');
     return;
   }
   if (result.error) {
-    out.textContent = result.output + '\n❌ ' + result.error;
-    out.classList.add('error'); out.classList.remove('success');
+    out.textContent = '❌ ' + result.error;
+    out.classList.add('error');
+    out.classList.remove('success','hint');
     return;
   }
   out.textContent = result.output;
-  out.classList.remove('error');
+  out.classList.remove('error','hint');
   if (isInIframe) return;
   if (checker) {
     const ok = checker(code, result.output);
@@ -1532,12 +1638,12 @@ function resetTask(taskId) {
   if (taskDefaults[num]) el.value = taskDefaults[num];
   const out = document.getElementById('out-' + taskId);
   out.textContent = 'Здесь появится результат ✨';
-  out.classList.remove('error','success');
-  // Не убираем class 'completed', если задание уже было выполнено
+  out.classList.remove('error','success','hint');
+  // класс 'completed' НЕ убираем — задание остаётся выполненным
 }
 
 /* ==========================================================
-   ПРОВЕРКИ ЗАДАНИЙ 1–9 (ОСЛАБЛЕННЫЕ)
+   ПРОВЕРКИ ЗАДАНИЙ 1–9 (МЯГКИЕ)
    ========================================================== */
 function cleanOutput(output) {
   return output.replace(/\s+/g, '').toLowerCase();
@@ -1566,15 +1672,13 @@ function checkTask2(code, output) {
 function checkTask3(code, output) {
   const o = cleanOutput(output);
   if (/\[\s*\?\s*\]/.test(code)) return false;
-  // Ожидаем вывод: 50 (последний), 40 (предпоследний), 30 (третий с конца)
   const has50 = /(^|[^\d])50([^\d]|$)/.test(o);
   const has40 = /(^|[^\d])40([^\d]|$)/.test(o);
   const has30 = /(^|[^\d])30([^\d]|$)/.test(o);
-  // Хотя бы один из них использовал отрицательный индекс
-  const hasMinus1 = /nums\s*\[\s*-\s*1\s*\]/.test(code);
-  const hasMinus2 = /nums\s*\[\s*-\s*2\s*\]/.test(code);
-  const hasMinus3 = /nums\s*\[\s*-\s*3\s*\]/.test(code);
-  return has50 && has40 && has30 && hasMinus1 && hasMinus2 && hasMinus3;
+  const hasM1 = /nums\s*\[\s*-\s*1\s*\]/.test(code);
+  const hasM2 = /nums\s*\[\s*-\s*2\s*\]/.test(code);
+  const hasM3 = /nums\s*\[\s*-\s*3\s*\]/.test(code);
+  return has50 && has40 && has30 && hasM1 && hasM2 && hasM3;
 }
 
 function checkTask4(code, output) {
@@ -1590,32 +1694,29 @@ function checkTask4(code, output) {
 
 function checkTask5(code, output) {
   const o = cleanOutput(output);
-  if (/\.\?\s*\(/.test(code) || /print\s*\([^)]*\?/.test(code)) return false;
+  if (/\.\?\s*\(/.test(code)) return false;
   const hasAppend = /\.append\s*\(/.test(code);
   const hasLen = /len\s*\(\s*pets\s*\)/.test(code);
-  const has3 = /3/.test(o);
+  const has3 = /(^|[^\d])3([^\d]|$)/.test(o);
   const hasHamster = o.includes('хомяк');
   return hasAppend && hasLen && has3 && hasHamster;
 }
 
 function checkTask6(code, output) {
-  if (/for\s+x\s+in\s+\?/.test(code) || /print\s*\(\s*\?\s*\)/.test(code)) return false;
+  if (/for\s+\w+\s+in\s+\?/.test(code) || /print\s*\(\s*\?\s*\)/.test(code)) return false;
   const o = cleanOutput(output);
-  // Должны вывестись все 5 чисел
   const hasAll = ['10','25','7','42','15'].every(n => o.includes(n));
   const hasFor = /for\s+\w+\s+in\s+nums/.test(code);
   return hasAll && hasFor;
 }
 
 function checkTask7(code, output) {
-  if (/print\s*\(\s*\?\s*,\s*"?\s*:?\s*"?\s*,\s*\?\s*\)/.test(code)) return false;
+  if (/print\s*\(\s*\?\s*,\s*":"?\s*,\s*\?\s*\)/.test(code)) return false;
   const lines = output.trim().split('\n').filter(l => l.trim());
   if (lines.length < 5) return false;
   const o = cleanOutput(output);
-  // Должны быть все индексы 0-4 и все значения 5,3,8,1,9
   const hasAllIdx = ['0','1','2','3','4'].every(n => o.includes(n));
   const hasAllNums = ['5','3','8','1','9'].every(n => o.includes(n));
-  // И двоеточия
   const hasColon = /:/.test(output);
   return hasAllIdx && hasAllNums && hasColon;
 }
@@ -1623,7 +1724,6 @@ function checkTask7(code, output) {
 function checkTask8(code, output) {
   if (/avg\s*=\s*\?\s*\/\s*\?/.test(code) || /temps\.\?/.test(code)) return false;
   const o = cleanOutput(output);
-  // temps = [18, 20, 17, 22, 19, 21, 20] → сумма 137, среднее ≈ 19.57, count(20)=2
   const hasSum = /137/.test(o);
   const hasAvg = /19[.,]5/.test(o);
   const hasCount20 = /(^|[^\d])2([^\d]|$)/.test(o);
@@ -1641,7 +1741,6 @@ function checkTask9(code, output) {
     .replace(/\s+/g, '');
   if (codeOnly.length < 40) return false;
   const o = cleanOutput(output);
-  // grades = [5,4,3,5,2,4,5,3,4,5] → сумма 45, среднее 4.5, пятёрок 4
   const has45 = /(^|[^\d])45([^\d]|$)/.test(o);
   const hasAvg = /4[.,]5/.test(o);
   const hasFives = /(^|[^\d])4([^\d]|$)/.test(o);
@@ -1649,24 +1748,13 @@ function checkTask9(code, output) {
   return count >= 3;
 }
 
-function showHint9() {
-  const out = document.getElementById('out-task-9');
-  out.textContent = '💡 Подсказка:\n\n' +
-    'total = sum(grades)\n' +
-    'avg = sum(grades) / len(grades)\n' +
-    'fives = grades.count(5)\n' +
-    'print("Сумма:", total)\n' +
-    'print("Средний:", avg)\n' +
-    'print("Пятёрок:", fives)';
-  out.classList.remove('error','success');
-}
-
 /* ==========================================================
-   ВИЗУАЛИЗАТОР ИНДЕКСОВ (положительные)
+   ВИЗУАЛИЗАТОРЫ
    ========================================================== */
 const idxData = [5, 4, 3, 5, 2];
 (function buildIdxDemo() {
   const box = document.getElementById('idx-demo');
+  if (!box) return;
   idxData.forEach((v, i) => {
     const c = document.createElement('div');
     c.className = 'cell';
@@ -1680,9 +1768,6 @@ const idxData = [5, 4, 3, 5, 2];
   });
 })();
 
-/* ==========================================================
-   ВИЗУАЛИЗАТОР ИНДЕКСОВ (положительные + отрицательные)
-   ========================================================== */
 (function buildIdxDemo2() {
   const box = document.getElementById('idx-demo-2');
   if (!box) return;
@@ -1701,9 +1786,7 @@ const idxData = [5, 4, 3, 5, 2];
   });
 })();
 
-/* ==========================================================
-   ВИЗУАЛИЗАТОР ПЕРЕБОРА (по элементам)
-   ========================================================== */
+/* Перебор 1 */
 let loopArr = [5, 3, 4];
 let loopPos = -1;
 function renderLoop(highlight=-1) {
@@ -1732,9 +1815,7 @@ function loopReset() {
 }
 if (document.getElementById('loop-viz')) renderLoop();
 
-/* ==========================================================
-   ВИЗУАЛИЗАТОР ПЕРЕБОРА (по индексам)
-   ========================================================== */
+/* Перебор 2 */
 let loopArr2 = [5, 3, 8];
 let loopPos2 = -1;
 function renderLoop2(highlight=-1) {
