@@ -104,7 +104,6 @@
     60% { transform: scale(1.4); }
     100% { transform: scale(1); }
   }
-
   .progress-wrap {
     display: flex; align-items: center; gap: 10px;
     font-size: 0.8em; color: #8a7ab0;
@@ -518,9 +517,7 @@
 </head>
 <body>
 
-<!-- ==========================================================
-     МОДАЛКА ВВОДА ИМЕНИ (появляется, если имени нет)
-     ========================================================== -->
+<!-- МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ -->
 <div class="modal-bg hidden" id="nameModal">
   <div class="modal">
     <div class="flower-deco">🌸</div>
@@ -559,7 +556,7 @@
 
   <div class="slide-viewport" id="viewport">
 
-    <!-- ===== СЛАЙД 1 ===== -->
+    <!-- СЛАЙД 1 -->
     <div class="slide active" data-slide="1">
       <div class="slide-num">Слайд 1 · Введение</div>
       <h2>Что такое массив и зачем он нужен 💫</h2>
@@ -609,7 +606,7 @@
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 2 ===== -->
+    <!-- СЛАЙД 2 -->
     <div class="slide" data-slide="2">
       <div class="slide-num">Слайд 2 · Теория</div>
       <h2>Что такое массив</h2>
@@ -654,7 +651,7 @@ print("Всего элементов:", len(my_numbers))</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 3 ===== -->
+    <!-- СЛАЙД 3 -->
     <div class="slide" data-slide="3">
       <div class="slide-num">Слайд 3 · Индексы</div>
       <h2>Индексы: номер каждой ячейки 🔢</h2>
@@ -715,7 +712,7 @@ print(fruits[?])</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 4 ===== -->
+    <!-- СЛАЙД 4 -->
     <div class="slide" data-slide="4">
       <div class="slide-num">Слайд 4 · Изменение</div>
       <h2>Изменяем элементы местами 🔄</h2>
@@ -755,7 +752,7 @@ print("Стало:", grades)</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 5 ===== -->
+    <!-- СЛАЙД 5 -->
     <div class="slide" data-slide="5">
       <div class="slide-num">Слайд 5 · Перебор</div>
       <h2>Как пройтись по всем элементам? 🚶‍♀️</h2>
@@ -800,7 +797,7 @@ for i in range(len(numbers)):
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 6 ===== -->
+    <!-- СЛАЙД 6 -->
     <div class="slide" data-slide="6">
       <div class="slide-num">Слайд 6 · Практика</div>
       <h2>Сумма и среднее значение ➕</h2>
@@ -846,7 +843,7 @@ print("Среднее:", avg)</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 7 ===== -->
+    <!-- СЛАЙД 7 -->
     <div class="slide" data-slide="7">
       <div class="slide-num">Слайд 7 · Самостоятельно</div>
       <h2>Задание 6. Напиши код сама ✍️</h2>
@@ -882,7 +879,7 @@ print("Среднее:", avg)</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 8 ===== -->
+    <!-- СЛАЙД 8 -->
     <div class="slide" data-slide="8">
       <div class="slide-num">Слайд 8 · Итоги</div>
       <h2>Что мы узнали на уроке 1 🌟</h2>
@@ -919,7 +916,7 @@ print("Среднее:", avg)</textarea>
       </div>
     </div>
 
-    <!-- ===== СЛАЙД 9 ===== -->
+    <!-- СЛАЙД 9 -->
     <div class="slide" data-slide="9">
       <div class="slide-num">Слайд 9 · Финал</div>
       <h2>Урок 1 завершён 🌸</h2>
@@ -1038,7 +1035,6 @@ function closeNameModal() {
   document.getElementById('nameModal').classList.add('hidden');
 }
 
-// реакция на ввод имени
 document.getElementById('nameInput').addEventListener('input', e => {
   document.getElementById('startBtn').disabled = !e.target.value.trim();
 });
@@ -1046,16 +1042,11 @@ document.getElementById('nameInput').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.value.trim()) startLesson();
 });
 
-/* ==========================================================
-   ЛОГИКА ПРИ ЗАГРУЗКЕ
-   ========================================================== */
 loadProgress();
 if (progress.name) {
-  // имя уже есть → обновляем шапку, модалку НЕ показываем
   updateFlowerUI();
   closeNameModal();
 } else {
-  // имени нет → показываем модалку поверх всего
   openNameModal();
 }
 
@@ -1263,47 +1254,96 @@ function resetTask(taskId) {
 }
 
 /* ==========================================================
-   ПРОВЕРКИ ЗАДАНИЙ 1–6
+   ПРОВЕРКИ ЗАДАНИЙ 1–6 (ОСЛАБЛЕННЫЕ)
    ========================================================== */
+
+function cleanOutput(output) {
+  return output.replace(/\s+/g, '').toLowerCase();
+}
+
 function checkTask1(code, output) {
-  const clean = code.replace(/\s+/g,'');
-  const hasList = /my_numbers=\[[\d,\s]+\]/.test(clean);
-  const hasLen = /len\(my_numbers\)/.test(clean);
-  const hasPrint = /print/.test(clean);
-  return hasList && hasLen && hasPrint;
+  const o = cleanOutput(output);
+  // Есть переменная my_numbers с массивом из 3+ чисел
+  const hasArray = /my_numbers\s*=\s*\[\s*-?\d+(\s*,\s*-?\d+){2,}\s*\]/.test(code);
+  // Есть len(my_numbers) — с любыми пробелами
+  const hasLen = /len\s*\(\s*my_numbers\s*\)/.test(code);
+  // Есть print
+  const hasPrint = /print\s*\(/.test(code);
+  // В выводе есть числа
+  const hasNumbers = /\d/.test(o);
+  return hasArray && hasLen && hasPrint && hasNumbers;
 }
+
 function checkTask2(code, output) {
-  const clean = code.replace(/\s+/g,'');
-  if (clean.includes('[?]')) return false;
-  return /fruits\[2\]/.test(clean) && /fruits\[-1\]/.test(clean)
-    && output.includes('яблоко') && output.includes('вишня') && output.includes('слива');
+  const o = cleanOutput(output);
+  // Нет знаков вопроса
+  if (/\[\s*\?\s*\]/.test(code)) return false;
+  // Есть вывод яблоко, вишня, слива
+  const hasApple = o.includes('яблоко');
+  const hasCherry = o.includes('вишня');
+  const hasPlum = o.includes('слива');
+  // Есть обращение к индексу 2 и к последнему (через -1 или 4)
+  const hasIdx2 = /fruits\s*\[\s*2\s*\]/.test(code);
+  const hasLast = /fruits\s*\[\s*-\s*1\s*\]/.test(code) || /fruits\s*\[\s*4\s*\]/.test(code);
+  return hasApple && hasCherry && hasPlum && hasIdx2 && hasLast;
 }
+
 function checkTask3(code, output) {
-  const clean = code.replace(/\s+/g,'');
-  if (clean.includes('[?]')) return false;
-  return /grades\[4\]=5/.test(clean) && /grades\[2\]=4/.test(clean)
-    && /\[5,4,4,5,5\]/.test(output.replace(/\s+/g,''));
+  if (/\[\s*\?\s*\]/.test(code)) return false;
+  const o = cleanOutput(output);
+  // В выводе итоговый массив [5, 4, 4, 5, 5] — гибко к пробелам
+  const hasFinal = /\[5\s*,\s*4\s*,\s*4\s*,\s*5\s*,\s*5\s*\]/.test(output) ||
+                   o.includes('[5,4,4,5,5]');
+  // Есть присваивания по индексам
+  const hasAssign4to5 = /grades\s*\[\s*4\s*\]\s*=\s*5/.test(code) ||
+                        /grades\s*\[\s*-\s*1\s*\]\s*=\s*5/.test(code);
+  const hasAssign2to4 = /grades\s*\[\s*2\s*\]\s*=\s*4/.test(code);
+  return hasFinal && (hasAssign4to5 || hasAssign2to4);
 }
+
 function checkTask4(code, output) {
-  if (/\?\s*,\s*\?/.test(code) || /print\(\?/.test(code)) return false;
-  const lines = output.trim().split('\n');
+  if (/print\s*\(\s*\?\s*,\s*\?\s*\)/.test(code)) return false;
+  const lines = output.trim().split('\n').filter(l => l.trim());
   if (lines.length < 5) return false;
-  const first = lines[0], second = lines[1];
-  return /\b0\b/.test(first) && /\b5\b/.test(first) && /\b1\b/.test(second) && /\b3\b/.test(second);
+  const o = cleanOutput(output);
+  // Есть все 5 чисел и все индексы 0–4
+  const hasAllNums = ['5','3','8','1','9'].every(n => o.includes(n));
+  const hasAllIdx = ['0','1','2','3','4'].every(n => o.includes(n));
+  return hasAllNums && hasAllIdx;
 }
+
 function checkTask5(code, output) {
-  const clean = code.replace(/\s+/g,'');
-  if (clean.includes('?') || /avg=\/\//.test(clean)) return false;
-  const outClean = output.replace(/\s+/g,'');
-  return /sum\(temps\)/.test(clean) && /len\(temps\)/.test(clean)
-    && outClean.includes('140') && outClean.includes('20');
+  if (/avg\s*=\s*\?\s*\/\s*\?/.test(code)) return false;
+  const o = cleanOutput(output);
+  // Есть sum(temps) и len(temps)
+  const hasSum = /sum\s*\(\s*temps\s*\)/.test(code);
+  const hasLen = /len\s*\(\s*temps\s*\)/.test(code);
+  // В выводе есть 140 и 20 (число может быть 20 или 20.0)
+  const has140 = /140/.test(o);
+  const has20 = /20(\.0)?/.test(o);
+  return hasSum && hasLen && has140 && has20;
 }
+
 function checkTask6(code, output) {
-  const clean = code.replace(/\s+/g,'');
-  if (clean.length < 40 || clean.includes('?')) return false;
-  const outClean = output.replace(/\s+/g,'');
-  return outClean.includes('45') && outClean.includes('4.5') && outClean.includes('4');
+  // Проверяем, что код написан — убираем комментарии
+  const codeOnly = code
+    .split('\n')
+    .map(line => line.split('#')[0])
+    .join('')
+    .replace(/\s+/g, '');
+  if (codeOnly.length < 30) return false;
+
+  const o = cleanOutput(output);
+  // Ищем 45 (сумма), 4.5 (среднее), 4 (количество пятёрок)
+  const has45 = /45/.test(o);
+  const hasAvg = /4\.5|4,5/.test(o);
+  // Ищем число 4 (пятёрки) — как отдельное число
+  const hasFives = /(^|[^\d])4([^\d]|$)/.test(o);
+  // Засчитываем, если хотя бы 2 из 3 совпали — тогда точно старалась
+  const count = [has45, hasAvg, hasFives].filter(Boolean).length;
+  return count >= 2;
 }
+
 function showHint6() {
   const out = document.getElementById('out-task-6');
   out.textContent = '💡 Подсказка:\n\n' +
