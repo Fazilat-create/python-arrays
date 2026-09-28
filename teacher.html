@@ -28,7 +28,9 @@
   body::before { width: 400px; height: 400px; background: #d5b3ff; top: -100px; left: -100px; }
   body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
 
-  /* ЭКРАН ВХОДА */
+  /* ==========================================================
+     ЭКРАН ВХОДА
+     ========================================================== */
   .login-screen {
     position: fixed; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -118,7 +120,9 @@
     color: #a99cd0; font-style: italic;
   }
 
-  /* ПАНЕЛЬ УЧИТЕЛЯ */
+  /* ==========================================================
+     ПАНЕЛЬ УЧИТЕЛЯ
+     ========================================================== */
   #teacherPanel {
     height: 100vh;
     display: flex;
@@ -260,7 +264,6 @@
     box-shadow: 0 8px 18px rgba(255,138,149,0.3);
   }
 
-  /* IFRAME — растягивается на всю оставшуюся высоту */
   .lesson-frame {
     width: 100%;
     flex: 1;
@@ -270,7 +273,9 @@
     position: relative; z-index: 1;
   }
 
-  /* МОДАЛКА «ОТКРЫТЬ УРОК 2» */
+  /* ==========================================================
+     МОДАЛКА «ОТКРЫТЬ УРОК 2»
+     ========================================================== */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -446,7 +451,7 @@
     </div>
   </div>
 
-  <iframe id="lessonFrame" src="urok1.html" class="lesson-frame" 
+  <iframe id="lessonFrame" src="urok1.html" class="lesson-frame"
           title="Урок" scrolling="yes"></iframe>
 </div>
 
@@ -494,7 +499,7 @@ function checkAuth() {
 function showTeacherPanel() {
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('teacherPanel').style.display = 'flex';
-  updateTimer();
+  updateTimerDisplay();
 }
 
 function showLoginScreen() {
@@ -566,7 +571,7 @@ const LESSON_DURATION = 45 * 60;
 let timerSeconds = LESSON_DURATION;
 let timerInterval = null;
 
-function updateTimer() {
+function updateTimerDisplay() {
   const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
   const s = String(timerSeconds % 60).padStart(2, '0');
   document.getElementById('timerDisplay').textContent = `${m}:${s}`;
@@ -578,24 +583,34 @@ function updateTimer() {
 
 function toggleTimer() {
   const btn = document.getElementById('timerBtn');
-  if (timerInterval) {
+
+  // Защита от двойного клика в течение 150мс
+  if (btn.dataset.locked === '1') return;
+  btn.dataset.locked = '1';
+  setTimeout(() => { btn.dataset.locked = '0'; }, 150);
+
+  if (timerInterval !== null) {
+    // Пауза
     clearInterval(timerInterval);
     timerInterval = null;
     btn.textContent = 'Продолжить';
-  } else {
-    timerInterval = setInterval(() => {
-      if (timerSeconds <= 0) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        btn.textContent = 'Готово';
-        document.getElementById('timerDisplay').textContent = '00:00';
-        return;
-      }
-      timerSeconds--;
-      updateTimer();
-    }, 1000);
-    btn.textContent = 'Пауза';
+    return;
   }
+
+  // Старт
+  btn.textContent = 'Пауза';
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) {
+      timerSeconds = 0;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      btn.textContent = 'Готово';
+      updateTimerDisplay();
+      return;
+    }
+    updateTimerDisplay();
+  }, 1000);
 }
 
 function resetTimer() {
@@ -603,7 +618,7 @@ function resetTimer() {
   timerInterval = null;
   timerSeconds = LESSON_DURATION;
   document.getElementById('timerBtn').textContent = 'Старт';
-  updateTimer();
+  updateTimerDisplay();
 }
 
 /* ==========================================================
@@ -703,6 +718,7 @@ function showToast(text) {
 
 /* ==========================================================
    ГОРЯЧИЕ КЛАВИШИ
+   (без пробела — чтобы не конфликтовало с таймером)
    ========================================================== */
 document.addEventListener('keydown', e => {
   if (!document.getElementById('loginScreen').classList.contains('hidden')) return;
@@ -723,11 +739,12 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     resetTimer();
   }
-  if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-    e.preventDefault();
-    toggleTimer();
-  }
 });
+
+/* ==========================================================
+   ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ
+   ========================================================== */
+updateTimerDisplay();
 </script>
 
 </body>
