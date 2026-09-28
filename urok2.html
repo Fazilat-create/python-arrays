@@ -99,12 +99,6 @@
     color: #8a7ab0; font-size: 0.78em; font-weight: 600;
     margin-left: 6px; font-variant-numeric: tabular-nums;
   }
-  .flowers .flower { animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1); }
-  @keyframes pop {
-    0% { transform: scale(0); }
-    60% { transform: scale(1.4); }
-    100% { transform: scale(1); }
-  }
   .progress-wrap {
     display: flex; align-items: center; gap: 10px;
     font-size: 0.8em; color: #8a7ab0;
@@ -120,7 +114,27 @@
     border-radius: 10px; transition: width 0.5s; width: 0%;
   }
 
-  /* ============ МОДАЛКА ИМЕНИ ============ */
+  /* ============ РЕЖИМ УЧИТЕЛЯ ============ */
+  body.teacher-mode .student-badge,
+  body.teacher-mode .flowers,
+  body.teacher-mode .progress-wrap,
+  body.teacher-mode .nav-home,
+  body.teacher-mode .modal-bg,
+  body.teacher-mode .bouquet,
+  body.teacher-mode .cert-actions,
+  body.teacher-mode .certificate,
+  body.teacher-mode .task-list,
+  body.teacher-mode .editor-title .task-badge,
+  body.teacher-mode .editor-title .done-badge,
+  body.teacher-mode #btn-back-to-main {
+    display: none !important;
+  }
+  body.teacher-mode .editor-box {
+    border-style: solid;
+    border-color: #d9c8ff;
+  }
+
+  /* ============ МОДАЛКА ============ */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -210,6 +224,7 @@
   .code-block .str { color: #4aa87a; }
   .code-block .com { color: #a99cd0; font-style: italic; }
   .code-block .var { color: #5a4a7a; }
+  .code-block .hl  { background: rgba(255,232,176,0.6); padding: 1px 4px; border-radius: 4px; }
 
   /* ============ ВИЗУАЛИЗАТОР ============ */
   .array-viz {
@@ -250,6 +265,41 @@
     100% { transform: translateY(-8px) rotate(0deg); }
   }
 
+  /* ============ СХЕМА СДВИГА ============ */
+  .shift-scheme {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 14px;
+    align-items: center;
+    margin: 16px 0;
+    padding: 18px;
+    background: #fdfbff;
+    border: 2px solid #e8dfff;
+    border-radius: 16px;
+  }
+  .shift-scheme .side {
+    text-align: center;
+    font-family: 'Consolas', monospace;
+    font-size: 1.1em;
+    color: #5a4a7a;
+    font-weight: 700;
+  }
+  .shift-scheme .arrow {
+    font-size: 1.8em;
+    color: #b8a8e8;
+  }
+  .shift-scheme .label {
+    font-size: 0.75em;
+    color: #8a7ab0;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    margin-top: 6px;
+  }
+  @media (max-width: 500px) {
+    .shift-scheme { grid-template-columns: 1fr; }
+    .shift-scheme .arrow { transform: rotate(90deg); }
+  }
+
   /* ============ КНОПКИ ============ */
   .btn {
     background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
@@ -282,6 +332,10 @@
   .editor-box.completed {
     border-style: solid; border-color: var(--mint-deep);
     background: linear-gradient(135deg, #f8fffc, #f0fff8);
+  }
+  body.teacher-mode .editor-box.completed {
+    border-color: #d9c8ff;
+    background: #fff;
   }
   .editor-title {
     display: flex; align-items: center; gap: 8px;
@@ -325,43 +379,6 @@
     background: linear-gradient(135deg, #f0fff8, #e8fff4);
     border-color: var(--mint-deep); color: #2a6a4a;
     animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1);
-  }
-
-  /* ============ КАРТОЧКИ ============ */
-  .cards {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 14px; margin: 18px 0;
-  }
-  .flip-card { perspective: 1000px; height: 130px; cursor: pointer; }
-  .flip-inner {
-    position: relative; width: 100%; height: 100%;
-    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
-  .flip-front, .flip-back {
-    position: absolute; width: 100%; height: 100%;
-    backface-visibility: hidden; border-radius: 18px;
-    padding: 18px; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; text-align: center;
-    box-shadow: 0 8px 20px rgba(180,150,220,0.2);
-  }
-  .flip-front {
-    background: linear-gradient(135deg, #fff, #f8f4ff);
-    border: 2px solid #e0d8f0;
-  }
-  .flip-front .emoji { font-size: 2.2em; margin-bottom: 8px; }
-  .flip-front .label { font-weight: 700; color: #5a4a8a; font-size: 0.95em; }
-  .flip-front .hint { font-size: 0.72em; color: #a99cd0; margin-top: 4px; }
-  .flip-back {
-    background: linear-gradient(135deg, #d9c8ff, #ffd6e8);
-    transform: rotateY(180deg); color: #4a3a7a;
-    font-size: 0.88em; font-weight: 600; padding: 15px; line-height: 1.55;
-  }
-  .flip-back code {
-    background: rgba(255,255,255,0.7); padding: 3px 8px;
-    border-radius: 8px; font-family: 'Consolas',monospace;
-    color: #6a4a9a; margin-top: 6px; display: inline-block;
   }
 
   /* ============ QUIZ ============ */
@@ -764,7 +781,7 @@
 
       <div class="note idea">
         <div class="icon">🧠</div>
-        <div>Вспомни, что мы уже знаем: индексы, <code>len</code>, изменение элементов, цикл <code>for</code>, сумму. Сегодня — на ступеньку выше!</div>
+        <div>Вспомни, что мы уже знаем: индексы (обычные и отрицательные), <code>len</code>, изменение элементов, цикл <code>for</code>, <code>sum()</code>, <code>count()</code>. Сегодня — на ступеньку выше!</div>
       </div>
 
       <h3>Что нас ждёт на уроке</h3>
@@ -788,7 +805,7 @@
     <div class="slide" data-slide="2">
       <div class="slide-num">Слайд 2 · Поиск</div>
       <h2>Поиск элемента 🔍</h2>
-      <p>Как найти нужное значение в массиве? Есть два способа: свой цикл или встроенные средства Python.</p>
+      <p>Как найти нужное значение в массиве? Есть два способа: написать цикл или использовать готовые средства Python.</p>
 
       <h3>Способ 1: перебор с проверкой</h3>
       <div class="code-block">
@@ -800,11 +817,26 @@
         <span class="line">        <span class="fn">print</span>(<span class="str">"Найдено на позиции"</span>, <span class="var">i</span>)</span>
         <span class="line">        <span class="kw">break</span></span>
       </div>
+      <p style="font-size:0.92em;color:#5a5a7a;">
+        Мы проходим по индексам и сравниваем каждый элемент с искомым.
+        Как только нашли — выводим позицию и <code>break</code> — прерываем цикл, чтобы не искать дальше.
+      </p>
 
-      <h3>Способ 2: коротко, по-питоновски</h3>
+      <h3>Способ 2: с оператором in</h3>
+      <p>Оператор <code>in</code> проверяет, есть ли значение в массиве. Возвращает <b>True</b> или <b>False</b>.</p>
       <div class="code-block">
         <span class="line"><span class="kw">if</span> <span class="var">target</span> <span class="kw">in</span> <span class="var">nums</span>:</span>
-        <span class="line">    <span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">index</span>(<span class="var">target</span>))</span>
+        <span class="line">    <span class="fn">print</span>(<span class="str">"Число есть в массиве"</span>)</span>
+      </div>
+
+      <p>А метод <code>.index(x)</code> возвращает номер (индекс) элемента <code>x</code>:</p>
+      <div class="code-block">
+        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">index</span>(<span class="num">16</span>))  <span class="com"># 3</span></span>
+      </div>
+
+      <div class="note tip">
+        <div class="icon">💡</div>
+        <div>Коротко можно так: <code>if target in nums: print(nums.index(target))</code> — проверяем, что число есть, и сразу выводим его индекс.</div>
       </div>
 
       <h3>🎬 Визуализатор поиска</h3>
@@ -825,7 +857,12 @@
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие, чтобы программа нашла число <code>16</code> и вывела его позицию. Используй <code>if</code> и <code>break</code>.</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши условие, чтобы программа нашла число <code>16</code> и вывела его позицию.
+          <br><br>
+          💡 <b>Подсказка:</b> сравни <code>nums[i]</code> с <code>target</code> через <code>==</code>.
+          Не забудь <code>break</code> — он уже есть в коде.
+        </p>
         <textarea id="code-task-7">nums = [4, 8, 15, 16, 23, 42]
 target = 16
 
@@ -844,7 +881,7 @@ for i in range(len(nums)):
     <div class="slide" data-slide="3">
       <div class="slide-num">Слайд 3 · Фильтрация</div>
       <h2>Фильтрация: отбираем лучшее ✨</h2>
-      <p>Иногда нужно оставить только те элементы, которые подходят под условие. Например, только положительные числа.</p>
+      <p>Иногда нужно оставить только те элементы, которые подходят под условие. Например — только положительные числа.</p>
 
       <div class="code-block">
         <span class="line"><span class="var">nums</span> = [<span class="num">3</span>, <span class="num">-1</span>, <span class="num">7</span>, <span class="num">-5</span>, <span class="num">10</span>, <span class="num">-2</span>, <span class="num">8</span>]</span>
@@ -857,6 +894,11 @@ for i in range(len(nums)):
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="fn">print</span>(<span class="var">positive</span>)</span>
         <span class="line"><span class="com"># [3, 7, 10, 8]</span></span>
+      </div>
+
+      <div class="note idea">
+        <div class="icon">💡</div>
+        <div><b>Как это работает:</b> создаём пустой массив, проходим по старому, и если элемент подходит под условие — <code>.append()</code> добавляет его в новый.</div>
       </div>
 
       <h3>🎛️ Интерактивный фильтр</h3>
@@ -874,7 +916,12 @@ for i in range(len(nums)):
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие и добавление в новый массив, чтобы остались только <b>чётные</b> числа.</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши условие и добавление в новый массив, чтобы остались только <b>чётные</b> числа.
+          <br><br>
+          💡 <b>Подсказка:</b> число чётное, если при делении на 2 остатка нет — <code>x % 2 == 0</code>.
+          Чтобы добавить в массив, используй <code>evens.append(x)</code>.
+        </p>
         <textarea id="code-task-8">nums = [3, -1, 7, -5, 10, -2, 8]
 
 evens = []
@@ -895,9 +942,9 @@ print("Чётные:", evens)</textarea>
     <div class="slide" data-slide="4">
       <div class="slide-num">Слайд 4 · Сортировка</div>
       <h2>Сортировка массива 📊</h2>
-      <p>Отсортировать массив — значит расставить элементы по возрастанию или убыванию. В Python есть готовая сортировка, но интересно узнать, как она работает внутри.</p>
+      <p>Отсортировать массив — значит расставить элементы по возрастанию или убыванию.</p>
 
-      <h3>Встроенная сортировка</h3>
+      <h3>Встроенная сортировка — один вызов</h3>
       <div class="code-block">
         <span class="line"><span class="var">nums</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>]</span>
         <span class="line blank">&nbsp;</span>
@@ -913,8 +960,39 @@ print("Чётные:", evens)</textarea>
       </div>
 
       <h3>Как работает «пузырьковая» сортировка</h3>
-      <p>Алгоритм сравнивает соседние элементы и меняет их местами, если они стоят в неправильном порядке.</p>
+      <p>Идея: <b>сравниваем два соседних элемента</b>. Если они стоят не по порядку — меняем местами. Повторяем много раз, пока массив не станет отсортированным.</p>
 
+      <h4 style="font-size:0.98em;color:#7a5aa8;margin:14px 0 8px;">Один проход — на примере:</h4>
+      <div class="code-block">
+        <span class="line"><span class="com"># Было: [5, 2, 9, 1]</span></span>
+        <span class="line"><span class="com"># Сравниваем 5 и 2 → 5 &gt; 2, меняем местами → [2, 5, 9, 1]</span></span>
+        <span class="line"><span class="com"># Сравниваем 5 и 9 → 5 &lt; 9, оставляем     → [2, 5, 9, 1]</span></span>
+        <span class="line"><span class="com"># Сравниваем 9 и 1 → 9 &gt; 1, меняем местами → [2, 5, 1, 9]</span></span>
+        <span class="line"><span class="com"># 9 «всплыл» в конец — самый большой на месте</span></span>
+      </div>
+
+      <h4 style="font-size:0.98em;color:#7a5aa8;margin:14px 0 8px;">Как это записать в коде:</h4>
+      <div class="code-block">
+        <span class="line"><span class="var">arr</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>]</span>
+        <span class="line"><span class="var">n</span> = <span class="fn">len</span>(<span class="var">arr</span>)</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span> - <span class="num">1</span>):</span>
+        <span class="line">    <span class="kw">for</span> <span class="var">j</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span> - <span class="num">1</span> - <span class="var">i</span>):</span>
+        <span class="line">        <span class="kw">if</span> <span class="var">arr</span>[<span class="var">j</span>] > <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>]:</span>
+        <span class="line">            <span class="var">arr</span>[<span class="var">j</span>], <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>] = <span class="var">arr</span>[<span class="var">j</span> + <span class="num">1</span>], <span class="var">arr</span>[<span class="var">j</span>]</span>
+      </div>
+
+      <div class="note idea">
+        <div class="icon">🫧</div>
+        <div>Большие числа как будто «всплывают» в конец массива — как пузырьки в воде. Отсюда название — <b>пузырьковая сортировка</b>.</div>
+      </div>
+
+      <div class="note warn">
+        <div class="icon">📌</div>
+        <div>Эта сортировка медленная для больших массивов, но её хорошо понимать — она показывает саму <b>идею сортировки</b>. В реальных программах используют встроенный <code>.sort()</code>.</div>
+      </div>
+
+      <h3>🎬 Смотрим сортировку по шагам</h3>
       <div class="array-viz" id="bubble-viz"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn" onclick="bubbleSortVisual()">▶ Запустить сортировку</button>
@@ -929,7 +1007,11 @@ print("Чётные:", evens)</textarea>
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Допиши вызов сортировки, чтобы массив стал <code>[1, 2, 5, 7, 9]</code>.</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши вызов метода сортировки, чтобы массив стал <code>[1, 2, 5, 7, 9]</code>.
+          <br><br>
+          💡 <b>Подсказка:</b> нужен метод <code>.sort()</code> без параметров (по возрастанию).
+        </p>
         <textarea id="code-task-9">nums = [5, 2, 9, 1, 7]
 
 # Вызови сортировку по возрастанию
@@ -946,23 +1028,46 @@ print("Отсортировано:", nums)</textarea>
     <div class="slide" data-slide="5">
       <div class="slide-num">Слайд 5 · Сдвиг</div>
       <h2>Сдвиг элементов массива 🎠</h2>
-      <p>Сдвиг влево на одну позицию: первый элемент перемещается в конец, остальные сдвигаются влево.</p>
+      <p>Сдвиг влево — каждый элемент перемещается на одну позицию влево, а первый элемент оказывается в конце.</p>
 
+      <h3>Что происходит 🔍</h3>
+      <div class="shift-scheme">
+        <div class="side">
+          [1, 2, 3, 4, 5]
+          <div class="label">было</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="side">
+          [2, 3, 4, 5, 1]
+          <div class="label">стало</div>
+        </div>
+      </div>
+
+      <h3>Как это сделать в коде</h3>
       <div class="code-block">
         <span class="line"><span class="var">arr</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Запоминаем первый элемент</span></span>
+        <span class="line"><span class="com"># 1. Запоминаем первый элемент, иначе он потеряется</span></span>
         <span class="line"><span class="var">first</span> = <span class="var">arr</span>[<span class="num">0</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Сдвигаем все элементы влево</span></span>
+        <span class="line"><span class="com"># 2. Сдвигаем каждый элемент влево</span></span>
         <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">arr</span>) - <span class="num">1</span>):</span>
         <span class="line">    <span class="var">arr</span>[<span class="var">i</span>] = <span class="var">arr</span>[<span class="var">i</span> + <span class="num">1</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Записываем первый в конец</span></span>
-        <span class="line"><span class="var">arr</span>[<span class="num">-1</span>] = <span class="var">first</span></span>
+        <span class="line"><span class="com"># 3. Возвращаем первый элемент в конец</span></span>
+        <span class="line"><span class="var">arr</span>[<span class="var">-1</span>] = <span class="var">first</span></span>
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="fn">print</span>(<span class="var">arr</span>)</span>
         <span class="line"><span class="com"># [2, 3, 4, 5, 1]</span></span>
+      </div>
+
+      <div class="note idea">
+        <div class="icon">💡</div>
+        <div>Разбираем по шагам:<br>
+          • <code>first = arr[0]</code> — сохраняем первый элемент (1)<br>
+          • Цикл: <code>arr[0] = arr[1]</code> (2), <code>arr[1] = arr[2]</code> (3), <code>arr[2] = arr[3]</code> (4), <code>arr[3] = arr[4]</code> (5)<br>
+          • <code>arr[-1] = first</code> — возвращаем сохранённый элемент в конец
+        </div>
       </div>
 
       <h3>🎬 Смотрим сдвиг по шагам</h3>
@@ -980,7 +1085,11 @@ print("Отсортировано:", nums)</textarea>
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Допиши тело цикла — присвой элементу <code>arr[i]</code> значение следующего элемента.</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши тело цикла — присвой элементу <code>arr[i]</code> значение следующего элемента.
+          <br><br>
+          💡 <b>Подсказка:</b> «следующий» — это <code>arr[i + 1]</code>. Получится <code>arr[i] = arr[i + 1]</code>.
+        </p>
         <textarea id="code-task-10">arr = [1, 2, 3, 4, 5]
 first = arr[0]
 
@@ -1000,15 +1109,17 @@ print("После сдвига:", arr)</textarea>
     <div class="slide" data-slide="6">
       <div class="slide-num">Слайд 6 · Мини-проект</div>
       <h2>Мини-проект: статистика результатов 📊</h2>
-      <p>Представь, что у тебя есть массив результатов забега на 100 метров. Нужно посчитать статистику.</p>
+      <p>У тебя есть массив результатов забега на 100 метров. Посчитаем статистику.</p>
 
       <div class="note idea">
         <div class="icon">🎯</div>
-        <div><b>Задача:</b> дан массив результатов в секундах. Нужно:
-          <br>• отсортировать его по возрастанию;
-          <br>• вывести лучший и худший результат;
-          <br>• найти среднее время;
-          <br>• посчитать, сколько спортсменов показали результат лучше среднего.</div>
+        <div><b>Что нужно сделать:</b>
+          <br>1. <b>Отсортировать</b> массив — <code>results.sort()</code>
+          <br>2. Вывести <b>лучший</b> результат — <code>results[0]</code>
+          <br>3. Вывести <b>худший</b> результат — <code>results[-1]</code>
+          <br>4. Найти <b>среднее время</b> — <code>sum(results) / len(results)</code>
+          <br>5. Посчитать, сколько результатов <b>лучше среднего</b> — цикл + счётчик
+        </div>
       </div>
 
       <div class="editor-box" id="box-task-11">
@@ -1017,15 +1128,17 @@ print("После сдвига:", arr)</textarea>
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Напиши код полностью сама. Подсказка: используй <code>.sort()</code>, <code>sum()</code>, <code>len()</code>, цикл <code>for</code>.</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Напиши код полностью сама по шагам выше. Каждый шаг — отдельный <code>print()</code>.
+        </p>
         <textarea id="code-task-11" style="min-height: 200px;"># Результаты забега на 100 метров (в секундах)
 results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
 
-# Напиши свой код здесь:
 # 1. Отсортируй массив
-# 2. Выведи лучший и худший результат
-# 3. Найди среднее время
-# 4. Посчитай, сколько результатов лучше среднего</textarea>
+# 2. Выведи лучший результат (results[0])
+# 3. Выведи худший результат (results[-1])
+# 4. Найди среднее время
+# 5. Посчитай, сколько результатов лучше среднего</textarea>
         <button class="btn" onclick="runTask('task-11', 11, checkTask11)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-11')">↺ Сбросить</button>
         <button class="btn mint" onclick="showHint11()">💡 Подсказка</button>
@@ -1037,7 +1150,7 @@ results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
     <div class="slide" data-slide="7">
       <div class="slide-num">Слайд 7 · Творческая задача</div>
       <h2>Задание 12. Своя программа 🎨</h2>
-      <p>Это творческое задание. Придумай свой массив и обработай его — используй всё, что узнала на двух уроках.</p>
+      <p>Придумай свой массив и обработай его — используй то, что узнала на двух уроках.</p>
 
       <div class="note love">
         <div class="icon">🌟</div>
@@ -1045,7 +1158,18 @@ results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
           <br>• массив любимых фильмов — отсортировать по алфавиту;
           <br>• массив температур за месяц — найти среднее и максимум;
           <br>• массив цен на товары — посчитать сумму и отфильтровать дорогие;
-          <br>• придумай свою тему!</div>
+          <br>• придумай свою тему!
+        </div>
+      </div>
+
+      <div class="note tip">
+        <div class="icon">✅</div>
+        <div><b>Что должно быть в программе:</b>
+          <br>• свой массив (минимум 5 элементов)
+          <br>• минимум <b>две</b> изученные операции — например, <code>.sort()</code> и <code>sum()</code>, или фильтрация и <code>max()</code>
+          <br>• минимум три <code>print()</code> с результатами
+          <br>• код должен работать без ошибок
+        </div>
       </div>
 
       <div class="editor-box" id="box-task-12">
@@ -1054,7 +1178,9 @@ results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">Напиши свою программу с массивом. Она должна использовать хотя бы <b>две</b> изученные операции (поиск, фильтрацию, сортировку, сдвиг, сумму, счётчик).</p>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Пиши свою программу. Главное — чтобы она работала и использовала хотя бы две операции из курса.
+        </p>
         <textarea id="code-task-12" style="min-height: 220px;"># Придумай свой массив и обработай его
 # Например: температуры за месяц
 
@@ -1074,11 +1200,11 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
       <h2>Итоги двух уроков 🌟</h2>
 
       <div class="code-block" style="border-color:#a8e6cf;">
-        <span class="line">🌸  Создание массива и работа с индексами</span>
-        <span class="line">🌸  Изменение, добавление, удаление элементов</span>
+        <span class="line">🌸  Создание массива и работа с индексами (обычными и с конца)</span>
+        <span class="line">🌸  Изменение элементов</span>
         <span class="line">🌸  Перебор массива циклом for</span>
         <span class="line">🌸  Сумма, среднее, максимум, минимум</span>
-        <span class="line">🌸  Поиск элемента в массиве</span>
+        <span class="line">🌸  Поиск элемента (in, .index())</span>
         <span class="line">🌸  Фильтрация по условию</span>
         <span class="line">🌸  Сортировка (встроенная и пузырьковая)</span>
         <span class="line">🌸  Сдвиг элементов массива</span>
@@ -1106,7 +1232,7 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
       </div>
     </div>
 
-    <!-- СЛАЙД 9 — ФИНАЛ С БУКЕТОМ И СЕРТИФИКАТОМ -->
+    <!-- СЛАЙД 9 — ФИНАЛ -->
     <div class="slide" data-slide="9">
       <div class="slide-num">Слайд 9 · Финал</div>
       <h2>Ты справилась! 🎉</h2>
@@ -1176,7 +1302,7 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
       </div>
 
       <div style="text-align:center;margin-top:20px;">
-        <a href="index.html" class="btn rose" style="text-decoration:none;display:inline-block;">Вернуться на главную →</a>
+        <a href="index.html" class="btn rose" id="btn-back-to-main" style="text-decoration:none;display:inline-block;">Вернуться на главную →</a>
       </div>
     </div>
 
@@ -1193,7 +1319,16 @@ temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
 
 <script>
 /* ==========================================================
-   ПРОГРЕСС + LOCALSTORAGE
+   РЕЖИМ УЧИТЕЛЯ (если открыт в iframe)
+   ========================================================== */
+const isInIframe = (() => {
+  try { return window.self !== window.top; }
+  catch (e) { return true; }
+})();
+if (isInIframe) document.body.classList.add('teacher-mode');
+
+/* ==========================================================
+   ПРОГРЕСС
    ========================================================== */
 const STORAGE_KEY = 'python_arrays_progress';
 let progress = {
@@ -1205,9 +1340,11 @@ let progress = {
 };
 
 function loadProgress() {
+  if (isInIframe) return;
   try { const s = localStorage.getItem(STORAGE_KEY); if (s) Object.assign(progress, JSON.parse(s)); } catch(e) {}
 }
 function saveProgress() {
+  if (isInIframe) return;
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e) {}
 }
 function countFlowers() {
@@ -1239,7 +1376,7 @@ function markTask(n) {
 }
 
 /* ==========================================================
-   МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ
+   МОДАЛКА
    ========================================================== */
 function startLesson() {
   const name = document.getElementById('nameInput').value.trim();
@@ -1251,6 +1388,7 @@ function startLesson() {
 }
 
 function openNameModal() {
+  if (isInIframe) return;
   const modal = document.getElementById('nameModal');
   const input = document.getElementById('nameInput');
   const btn = document.getElementById('startBtn');
@@ -1286,7 +1424,9 @@ document.getElementById('nameInput').addEventListener('keydown', e => {
 });
 
 loadProgress();
-if (progress.name) {
+if (isInIframe) {
+  closeNameModal();
+} else if (progress.name) {
   updateFlowerUI();
   closeNameModal();
 } else {
@@ -1294,7 +1434,7 @@ if (progress.name) {
 }
 
 /* ==========================================================
-   НАВИГАЦИЯ ПО СЛАЙДАМ
+   НАВИГАЦИЯ
    ========================================================== */
 let currentSlide = 1;
 const totalSlides = document.querySelectorAll('.slide').length;
@@ -1329,7 +1469,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ==========================================================
-   ФИНАЛЬНЫЙ ЭКРАН С БУКЕТОМ И СЕРТИФИКАТОМ
+   ФИНАЛ
    ========================================================== */
 function updateFinalSlide() {
   const n = countFlowers();
@@ -1341,37 +1481,22 @@ function updateFinalSlide() {
   document.getElementById('finalPercent').textContent = `${pct}% заданий выполнено`;
 
   let msg = '';
-  if (n >= 12) {
-    msg = '🏆 Превосходно! Ты выполнила все задания и собрала полный букет! Теперь ты умеешь работать с массивами в Python. Это только начало — впереди ещё много интересного!';
-  } else if (n >= 9) {
-    msg = '🌟 Отличный результат! Ты освоила почти все темы. Осталось совсем чуть-чуть, чтобы собрать полный букет.';
-  } else if (n >= 6) {
-    msg = '💪 Хороший прогресс! Ты уже уверенно работаешь с массивами. Попробуй вернуться к пропущенным заданиям.';
-  } else if (n >= 3) {
-    msg = '🌱 Хорошее начало! Осталось ещё несколько заданий — вернись и собери свой букет!';
-  } else {
-    msg = '🌸 Всё только начинается — вернись к заданиям и собери свой букет!';
-  }
+  if (n >= 12) msg = '🏆 Превосходно! Ты выполнила все задания и собрала полный букет!';
+  else if (n >= 9) msg = '🌟 Отличный результат! Ты освоила почти все темы.';
+  else if (n >= 6) msg = '💪 Хороший прогресс! Ты уже уверенно работаешь с массивами.';
+  else if (n >= 3) msg = '🌱 Хорошее начало! Осталось ещё несколько заданий.';
+  else msg = '🌸 Всё только начинается — вернись к заданиям!';
   document.getElementById('finalMessage').textContent = msg;
   saveProgress();
 
-  // Заполняем сертификат
   fillCertificate();
-
-  // Автопразднование при полном букете
-  if (n >= 12) {
-    setTimeout(launchFireworks, 800);
-  }
+  if (n >= 12) setTimeout(launchFireworks, 800);
 }
 
-/* ==========================================================
-   СЕРТИФИКАТ: ЗАПОЛНЕНИЕ ДАННЫМИ
-   ========================================================== */
 function fillCertificate() {
   const n = countFlowers();
   const pct = Math.round((n / 12) * 100);
   const name = progress.name || 'Ученица';
-
   document.getElementById('certName').textContent = name;
   document.getElementById('certScore').textContent = n;
   document.getElementById('certPercent').textContent = pct + '%';
@@ -1406,39 +1531,35 @@ function downloadCertificate() {
     return;
   }
 
-  html2canvas(cert, {
-    backgroundColor: '#fffef8',
-    scale: 2,
-    useCORS: true
-  }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = `Сертификат_${name}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }).catch(err => {
-    console.error('Ошибка создания сертификата:', err);
-    window.print();
-  });
+  html2canvas(cert, { backgroundColor: '#fffef8', scale: 2, useCORS: true })
+    .then(canvas => {
+      const link = document.createElement('a');
+      link.download = `Сертификат_${name}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    })
+    .catch(err => {
+      console.error(err);
+      window.print();
+    });
 }
 
 /* ==========================================================
-   ЦВЕТОЧНЫЙ САЛЮТ
+   САЛЮТ
    ========================================================== */
 let fireworksAnimationId = null;
-
 function launchFireworks() {
   const canvas = document.getElementById('fireworksCanvas');
   canvas.classList.add('active');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-
   const flowers = ['🌸', '🌺', '🌷', '🌼', '💮', '🏵️', '🌻', '💐'];
   const particles = [];
   const PARTICLE_COUNT = 60;
   const waves = [0, 400, 900, 1500];
 
-  waves.forEach((delay) => {
+  waves.forEach(delay => {
     setTimeout(() => {
       const cx = canvas.width * (0.3 + Math.random() * 0.4);
       const cy = canvas.height * (0.25 + Math.random() * 0.3);
@@ -1449,8 +1570,7 @@ function launchFireworks() {
           x: cx, y: cy,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          life: 1,
-          decay: 0.012 + Math.random() * 0.01,
+          life: 1, decay: 0.012 + Math.random() * 0.01,
           size: 18 + Math.random() * 16,
           rotation: Math.random() * Math.PI * 2,
           rotationSpeed: (Math.random() - 0.5) * 0.15,
@@ -1468,36 +1588,24 @@ function launchFireworks() {
     const elapsed = now - startTime;
     const dt = Math.min((now - lastTime) / 16.67, 2);
     lastTime = now;
-
     ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
-      p.vy += 0.08 * dt;
-      p.vx *= 0.99;
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
+      p.vy += 0.08 * dt; p.vx *= 0.99;
+      p.x += p.vx * dt; p.y += p.vy * dt;
       p.rotation += p.rotationSpeed * dt;
       p.life -= p.decay * dt;
-
-      if (p.life <= 0 || p.y > canvas.height + 60) {
-        particles.splice(i, 1);
-        continue;
-      }
-
+      if (p.life <= 0 || p.y > canvas.height + 60) { particles.splice(i, 1); continue; }
       ctx.save();
       ctx.globalAlpha = Math.max(p.life, 0);
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rotation);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
       ctx.font = `${p.size}px serif`;
       ctx.fillText(p.emoji, 0, 0);
       ctx.restore();
     }
-
     if (elapsed < TOTAL_DURATION || particles.length > 0) {
       fireworksAnimationId = requestAnimationFrame(animate);
     } else {
@@ -1506,7 +1614,6 @@ function launchFireworks() {
       fireworksAnimationId = null;
     }
   }
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (fireworksAnimationId) cancelAnimationFrame(fireworksAnimationId);
   fireworksAnimationId = requestAnimationFrame(animate);
@@ -1536,7 +1643,7 @@ document.querySelectorAll('.quiz').forEach(quiz => {
 });
 
 /* ==========================================================
-   ИНТЕРПРЕТАТОР PYTHON-ПОДОБНОГО КОДА
+   ИНТЕРПРЕТАТОР
    ========================================================== */
 function fmt(v) {
   if (Array.isArray(v)) return '[' + v.map(x => typeof x === 'string' ? `'${x}'` : fmt(x)).join(', ') + ']';
@@ -1655,6 +1762,7 @@ function runTask(taskId, taskNum, checker) {
   }
   out.textContent = result.output;
   out.classList.remove('error');
+  if (isInIframe) return;
   if (checker) {
     const ok = checker(code, result.output);
     if (ok) {
@@ -1679,33 +1787,25 @@ function resetTask(taskId) {
 /* ==========================================================
    ПРОВЕРКИ ЗАДАНИЙ 7–12 (ОСЛАБЛЕННЫЕ)
    ========================================================== */
-
 function cleanOutput(output) {
   return output.replace(/\s+/g, '').toLowerCase();
 }
 
 function checkTask7(code, output) {
   const o = cleanOutput(output);
-  // Нет знаков вопроса
   if (/if\s*\?/.test(code)) return false;
-  // Есть сравнение nums[i] == target в любом виде
   const hasCompare = /nums\s*\[\s*i\s*\]\s*==\s*target/.test(code) ||
                      /target\s*==\s*nums\s*\[\s*i\s*\]/.test(code);
-  // Есть break
   const hasBreak = /\bbreak\b/.test(code);
-  // В выводе есть слово "найдено" и число 3
-  const has3 = /найдено/i.test(output) && /3/.test(o);
-  return hasCompare && hasBreak && has3;
+  const hasFound = /найдено/i.test(output) && /\b3\b/.test(o);
+  return hasCompare && hasBreak && hasFound;
 }
 
 function checkTask8(code, output) {
   if (/if\s*\?/.test(code) || /append\s*\(\s*\?\s*\)/.test(code)) return false;
   const o = cleanOutput(output);
-  // Есть проверка на чётность — % 2 == 0 или % 2 != 1
   const hasMod = /%\s*2\s*==\s*0/.test(code) || /%\s*2\s*!=\s*1/.test(code);
-  // Есть append
   const hasAppend = /\.append\s*\(/.test(code);
-  // В выводе есть 10, -2, 8 (чётные из исходного)
   const has10 = /10/.test(o);
   const hasMinus2 = /-2/.test(o);
   const has8 = /(^|[^\d])8([^\d]|$)/.test(o);
@@ -1714,9 +1814,7 @@ function checkTask8(code, output) {
 
 function checkTask9(code, output) {
   const o = cleanOutput(output);
-  // Есть вызов .sort() — гибко
   const hasSort = /\.sort\s*\(\s*\)/.test(code);
-  // В выводе массив [1, 2, 5, 7, 9]
   const hasSorted = /\[1\s*,\s*2\s*,\s*5\s*,\s*7\s*,\s*9\s*\]/.test(output) ||
                     o.includes('[1,2,5,7,9]');
   return hasSort && hasSorted;
@@ -1725,10 +1823,8 @@ function checkTask9(code, output) {
 function checkTask10(code, output) {
   if (/=\s*\?/.test(code)) return false;
   const o = cleanOutput(output);
-  // Есть arr[i] = arr[i + 1] в любом виде
   const hasShift = /arr\s*\[\s*i\s*\]\s*=\s*arr\s*\[\s*i\s*\+\s*1\s*\]/.test(code) ||
                    /arr\s*\[\s*i\s*\]\s*=\s*arr\s*\[\s*1\s*\+\s*i\s*\]/.test(code);
-  // В выводе массив [2, 3, 4, 5, 1]
   const hasResult = /\[2\s*,\s*3\s*,\s*4\s*,\s*5\s*,\s*1\s*\]/.test(output) ||
                     o.includes('[2,3,4,5,1]');
   return hasShift && hasResult;
@@ -1758,7 +1854,9 @@ function checkTask12(code, output) {
     .replace(/\s+/g, '');
   if (codeOnly.length < 50) return false;
   const o = cleanOutput(output);
-  return o.length > 5 && !o.includes('ошибка');
+  // Хотя бы 3 разных print и вывод есть
+  const printCount = (code.match(/print\s*\(/g) || []).length;
+  return o.length > 5 && printCount >= 2 && !o.includes('ошибка');
 }
 
 function showHint11() {
@@ -1834,7 +1932,7 @@ function filterDemo(val) {
 filterDemo(5);
 
 /* ==========================================================
-   ВИЗУАЛИЗАТОР ПУЗЫРЬКА
+   ПУЗЫРЁК
    ========================================================== */
 let bubbleData = [5, 2, 9, 1, 7];
 function renderBubble(highlight=-1, swapPair=null) {
@@ -1876,7 +1974,7 @@ async function bubbleSortVisual() {
 renderBubble();
 
 /* ==========================================================
-   ВИЗУАЛИЗАТОР СДВИГА
+   СДВИГ
    ========================================================== */
 let shiftOriginal = [1, 2, 3, 4, 5];
 let shiftData = [...shiftOriginal];
