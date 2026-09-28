@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Урок 2 · Обработка массивов в Python 🌸</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --lavender: #b8a8e8;
+    --lavender-soft: #d9c8ff;
+    --mint: #a8e6cf;
+    --mint-deep: #7ed9b8;
+    --peach: #ffd3b6;
+    --rose: #ffaaa5;
+    --rose-deep: #ff8a95;
+    --sky: #a8d8ea;
+    --cream: #fff8f0;
+    --ink: #5a4a7a;
+    --ink-soft: #8a7ab0;
+    --line: #ece4ff;
+  }
+  body {
+    font-family: 'Comfortaa', 'Segoe UI', 'Verdana', sans-serif;
+    background: linear-gradient(135deg, #fef6ff 0%, #e8f4fd 50%, #fff5e6 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 18px 10px;
+    line-height: 1.6;
+  }
+  body::before, body::after {
+    content: ""; position: fixed; border-radius: 50%;
+    filter: blur(60px); opacity: 0.35; pointer-events: none; z-index: -1;
+  }
+  body::before { width: 400px; height: 400px; background: #d5b3ff; top: -100px; left: -100px; }
+  body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
+
+  .container {
+    max-width: 1100px; margin: 0 auto;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(180,150,220,0.25), 0 0 0 1px rgba(255,255,255,0.6) inset;
+    overflow: hidden; min-height: 92vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    background: linear-gradient(135deg, #d9c8ff 0%, #ffd6e8 50%, #c8ecff 100%);
+    padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 15px; flex-wrap: wrap;
+  }
+  header .left { display: flex; align-items: center; gap: 12px; }
+  header .logo { font-size: 2em; animation: float 3s ease-in-out infinite; }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+  }
+  header h1 { font-size: 1.2em; color: #5a4a8a; font-weight: 700; }
+  header .subtitle { font-size: 0.8em; color: #8a7ab0; }
+
+  header .right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .nav-home {
+    text-decoration: none; padding: 6px 14px;
+    background: rgba(255,255,255,0.8); color: #7a5aa8;
+    border-radius: 20px; font-size: 0.8em; font-weight: 600;
+    transition: 0.25s;
+  }
+  .nav-home:hover { background: #fff; transform: translateY(-2px); }
+
+  .student-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.8); padding: 6px 14px;
+    border-radius: 20px; font-size: 0.85em; font-weight: 600;
+    color: #5a4a8a;
+    transition: 0.25s;
+  }
+  .student-badge:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(180,150,220,0.2);
+  }
+  .student-badge .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: 700;
+  }
+  .flowers {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.8); padding: 6px 14px;
+    border-radius: 20px; font-size: 0.95em;
+    min-width: 130px;
+  }
+  .flowers .count {
+    color: #8a7ab0; font-size: 0.78em; font-weight: 600;
+    margin-left: 6px; font-variant-numeric: tabular-nums;
+  }
+  .flowers .flower { animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1); }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+  }
+  .progress-wrap {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.8em; color: #8a7ab0;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    width: 110px; height: 10px; background: rgba(255,255,255,0.7);
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 2px 6px rgba(180,150,220,0.25) inset;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #b8a8e8, #ff8a95);
+    border-radius: 10px; transition: width 0.5s; width: 0%;
+  }
+
+  /* ============ МОДАЛКА ИМЕНИ ============ */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
+  }
+  .modal-bg.hidden { display: none; }
+  .modal {
+    background: #fff; border-radius: 24px; padding: 38px 40px;
+    max-width: 460px; width: 100%; text-align: center;
+    box-shadow: 0 25px 70px rgba(180,150,220,0.3);
+    border: 2px solid #f0eaff;
+    animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal .flower-deco { font-size: 3em; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+  .modal h2 {
+    font-size: 1.5em; margin-bottom: 8px;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .modal p { color: #8a7ab0; margin-bottom: 22px; font-size: 0.95em; }
+  .modal input {
+    width: 100%; padding: 14px 18px;
+    border: 2px solid #ece4ff; border-radius: 14px;
+    font-family: inherit; font-size: 1em;
+    text-align: center; color: var(--ink); outline: none;
+    transition: 0.25s; background: #fdfbff;
+  }
+  .modal input:focus {
+    border-color: #b8a8e8;
+    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
+  }
+  .modal .btn-start {
+    margin-top: 18px; width: 100%;
+    padding: 14px; background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; border: none; border-radius: 14px;
+    font-family: inherit; font-size: 1.05em; font-weight: 700;
+    cursor: pointer; transition: 0.25s;
+    box-shadow: 0 8px 20px rgba(184,168,232,0.4);
+  }
+  .modal .btn-start:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(184,168,232,0.55);
+  }
+  .modal .btn-start:disabled {
+    background: #e0d8f0; cursor: not-allowed; box-shadow: none;
+  }
+
+  /* ============ СЛАЙДЫ ============ */
+  .slide-viewport { flex: 1; padding: 32px 42px; }
+  .slide { display: none; animation: slideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+  .slide.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .slide-num {
+    display: inline-block;
+    background: linear-gradient(135deg, #b8a8e8, #ffaaa5);
+    color: #fff; padding: 4px 14px; border-radius: 20px;
+    font-size: 0.72em; font-weight: 700; margin-bottom: 12px;
+    letter-spacing: 0.4px;
+  }
+  h2 { color: #5a4a8a; font-size: 1.6em; margin-bottom: 10px; line-height: 1.25; font-weight: 700; }
+  h3 { color: #7a5aa8; margin: 20px 0 10px; font-size: 1.08em; font-weight: 700; }
+  p { line-height: 1.7; margin-bottom: 12px; color: #5a5a7a; }
+
+  /* ============ КОД ============ */
+  .code-block {
+    background: #fdfbff; border: 2px solid #e8dfff;
+    border-radius: 16px; padding: 18px 22px;
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 0.9em; line-height: 1.9; color: #5a4a7a;
+    margin: 14px 0; overflow-x: auto;
+  }
+  .code-block .line { display: block; padding: 1px 0; white-space: pre; }
+  .code-block .line.blank { height: 0.6em; }
+  .code-block .kw  { color: #b45ad8; font-weight: 600; }
+  .code-block .fn  { color: #3a9ad8; }
+  .code-block .num { color: #e07a5f; }
+  .code-block .str { color: #4aa87a; }
+  .code-block .com { color: #a99cd0; font-style: italic; }
+  .code-block .var { color: #5a4a7a; }
+
+  /* ============ ВИЗУАЛИЗАТОР ============ */
+  .array-viz {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0;
+    justify-content: center; padding: 18px;
+    background: #fdfbff; border-radius: 18px;
+    border: 2px dashed #d9c8ff;
+  }
+  .cell {
+    width: 64px; height: 68px; display: flex; flex-direction: column;
+    background: #fff; border: 2.5px solid #b8a8e8; border-radius: 14px;
+    overflow: hidden; transition: 0.35s cubic-bezier(0.4, 1.6, 0.6, 1);
+    box-shadow: 0 4px 10px rgba(184,168,232,0.2); cursor: pointer;
+  }
+  .cell:hover { transform: translateY(-4px) scale(1.05); }
+  .cell .idx {
+    background: linear-gradient(135deg, #d9c8ff, #c8b8f0);
+    color: #5a4a8a; font-size: 11px; text-align: center;
+    padding: 3px; font-weight: 700;
+  }
+  .cell .val {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 17px; color: #5a4a8a;
+  }
+  .cell.highlight {
+    transform: translateY(-8px) scale(1.15);
+    border-color: #ffb84d;
+    box-shadow: 0 0 0 4px rgba(255,184,77,0.25), 0 8px 20px rgba(255,184,77,0.35);
+  }
+  .cell.highlight .idx { background: linear-gradient(135deg, #ffd966, #ffb84d); color: #7a4a00; }
+  .cell.found { border-color: var(--mint-deep); background: #f0fff8; }
+  .cell.found .idx { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #2a6a4a; }
+  .cell.swap { animation: swapAnim 0.6s ease; }
+  @keyframes swapAnim {
+    0%   { transform: translateY(-8px) rotate(0deg); }
+    40%  { transform: translateY(-20px) rotate(-8deg); }
+    60%  { transform: translateY(-20px) rotate(8deg); }
+    100% { transform: translateY(-8px) rotate(0deg); }
+  }
+
+  /* ============ КНОПКИ ============ */
+  .btn {
+    background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
+    color: #fff; border: none;
+    padding: 11px 22px; border-radius: 22px;
+    cursor: pointer; font-size: 0.92em; font-weight: 600;
+    font-family: inherit; margin: 8px 6px 0 0;
+    transition: 0.25s;
+    box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(184,168,232,0.55); }
+  .btn:active { transform: translateY(0); }
+  .btn.rose { background: linear-gradient(135deg, #ffaaa5, #ff8a95); box-shadow: 0 6px 15px rgba(255,170,165,0.5); }
+  .btn.rose:hover { box-shadow: 0 10px 22px rgba(255,170,165,0.7); }
+  .btn.mint { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #3a7a5a; box-shadow: 0 6px 15px rgba(168,230,207,0.5); }
+  .btn.mint:hover { box-shadow: 0 10px 22px rgba(168,230,207,0.7); }
+  .btn.ghost {
+    background: #fff; color: #7a5aa8;
+    border: 2px solid #ece4ff; box-shadow: none;
+  }
+  .btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
+  .btn.small { padding: 7px 16px; font-size: 0.82em; }
+
+  /* ============ РЕДАКТОР ============ */
+  .editor-box {
+    background: #fff; border: 2px dashed #b8a8e8;
+    border-radius: 20px; padding: 18px; margin: 16px 0;
+    transition: 0.3s;
+  }
+  .editor-box.completed {
+    border-style: solid; border-color: var(--mint-deep);
+    background: linear-gradient(135deg, #f8fffc, #f0fff8);
+  }
+  .editor-title {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; color: #7a5aa8; margin-bottom: 12px;
+    font-size: 0.95em; flex-wrap: wrap;
+  }
+  .editor-title .task-badge {
+    background: linear-gradient(135deg, #ffe8b0, #ffd966);
+    color: #7a4a00; padding: 3px 12px; border-radius: 12px;
+    font-size: 0.72em; font-weight: 700;
+  }
+  .editor-title .done-badge {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #2a6a4a; padding: 3px 12px; border-radius: 12px;
+    font-size: 0.72em; font-weight: 700; display: none;
+  }
+  .editor-box.completed .done-badge { display: inline-block; }
+  .editor-box.completed .task-badge { display: none; }
+
+  textarea {
+    width: 100%; min-height: 140px;
+    padding: 14px 16px; border: 2px solid #ece4ff;
+    border-radius: 12px; font-family: 'Consolas','Menlo',monospace;
+    font-size: 13.5px; resize: vertical;
+    background: #fdfbff; color: #5a4a7a;
+    line-height: 1.9; transition: 0.2s;
+  }
+  textarea:focus {
+    outline: none; border-color: #b8a8e8;
+    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
+  }
+  .output {
+    background: #f4fffa; border: 2px solid #a8e6cf;
+    color: #3a7a5a; padding: 14px 16px;
+    border-radius: 12px; font-family: 'Consolas',monospace;
+    font-size: 12.5px; min-height: 45px; margin-top: 12px;
+    white-space: pre-wrap; word-break: break-word; line-height: 1.7;
+  }
+  .output.error { background: #fff0f0; border-color: #ffaaa5; color: #c04a4a; }
+  .output.success {
+    background: linear-gradient(135deg, #f0fff8, #e8fff4);
+    border-color: var(--mint-deep); color: #2a6a4a;
+    animation: pop 0.5s cubic-bezier(0.4,1.6,0.6,1);
+  }
+
+  /* ============ КАРТОЧКИ ============ */
+  .cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px; margin: 18px 0;
+  }
+  .flip-card { perspective: 1000px; height: 130px; cursor: pointer; }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; border-radius: 18px;
+    padding: 18px; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    box-shadow: 0 8px 20px rgba(180,150,220,0.2);
+  }
+  .flip-front {
+    background: linear-gradient(135deg, #fff, #f8f4ff);
+    border: 2px solid #e0d8f0;
+  }
+  .flip-front .emoji { font-size: 2.2em; margin-bottom: 8px; }
+  .flip-front .label { font-weight: 700; color: #5a4a8a; font-size: 0.95em; }
+  .flip-front .hint { font-size: 0.72em; color: #a99cd0; margin-top: 4px; }
+  .flip-back {
+    background: linear-gradient(135deg, #d9c8ff, #ffd6e8);
+    transform: rotateY(180deg); color: #4a3a7a;
+    font-size: 0.88em; font-weight: 600; padding: 15px; line-height: 1.55;
+  }
+  .flip-back code {
+    background: rgba(255,255,255,0.7); padding: 3px 8px;
+    border-radius: 8px; font-family: 'Consolas',monospace;
+    color: #6a4a9a; margin-top: 6px; display: inline-block;
+  }
+
+  /* ============ QUIZ ============ */
+  .quiz {
+    background: linear-gradient(135deg, #fff8f0, #fef6ff);
+    border: 2px solid #ffd3b6; border-radius: 18px;
+    padding: 20px; margin: 16px 0;
+  }
+  .quiz .question {
+    font-weight: 700; color: #7a5aa8;
+    margin-bottom: 14px; font-size: 1em;
+  }
+  .quiz .question code {
+    background: rgba(255,255,255,0.7); padding: 2px 8px;
+    border-radius: 6px; font-family: 'Consolas',monospace;
+    color: #6a4a9a;
+  }
+  .quiz .options { display: grid; gap: 10px; }
+  .quiz-option {
+    background: #fff; border: 2px solid #ece4ff;
+    border-radius: 14px; padding: 12px 18px;
+    cursor: pointer; text-align: left;
+    font-family: inherit; font-size: 0.93em; color: #5a4a7a;
+    transition: 0.25s; display: flex; align-items: center; gap: 10px;
+  }
+  .quiz-option:hover { border-color: #b8a8e8; transform: translateX(5px); }
+  .quiz-option.correct {
+    background: linear-gradient(135deg, #e0fff0, #c8f5dd);
+    border-color: var(--mint-deep); color: #2a6a4a;
+  }
+  .quiz-option.wrong {
+    background: linear-gradient(135deg, #ffe8e8, #ffd6d6);
+    border-color: var(--rose); color: #a04a4a;
+  }
+  .quiz-option .letter {
+    background: linear-gradient(135deg, #d9c8ff, #b8a8e8);
+    color: #fff; width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.82em; flex-shrink: 0;
+  }
+  .quiz-option.correct .letter { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); }
+  .quiz-option.wrong .letter { background: linear-gradient(135deg, #ffaaa5, #ff8a95); }
+
+  /* ============ NOTE ============ */
+  .note {
+    padding: 16px 20px; border-radius: 16px; margin: 14px 0;
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 0.93em; line-height: 1.65;
+  }
+  .note .icon { font-size: 1.4em; flex-shrink: 0; line-height: 1.4; }
+  .note.tip  { background: linear-gradient(135deg, #e8fff5, #d0f5e4); border-left: 5px solid var(--mint-deep); color: #2a6a4a; }
+  .note.warn { background: linear-gradient(135deg, #fff8e6, #ffefcc); border-left: 5px solid #ffb84d; color: #7a5a1a; }
+  .note.idea { background: linear-gradient(135deg, #f4ebff, #e8d8ff); border-left: 5px solid #b8a8e8; color: #5a4a8a; }
+  .note.love { background: linear-gradient(135deg, #ffe8f0, #ffd6e8); border-left: 5px solid #ff8a95; color: #8a3a5a; }
+  .note code {
+    background: rgba(255,255,255,0.7); padding: 1px 7px;
+    border-radius: 5px; font-family: 'Consolas',monospace;
+  }
+
+  /* ============ ФИНАЛЬНЫЙ БУКЕТ ============ */
+  .bouquet {
+    text-align: center; padding: 38px 24px;
+    background: linear-gradient(135deg, #fff8f0, #fef6ff, #e8f4fd);
+    border-radius: 24px; margin: 20px 0;
+    border: 2px solid #f0eaff;
+    box-shadow: 0 12px 30px rgba(180,150,220,0.15);
+  }
+  .bouquet .flowers-big {
+    font-size: 3em; line-height: 1.3; margin: 16px 0;
+    animation: pop 0.6s cubic-bezier(0.4,1.6,0.6,1);
+    word-break: break-all;
+  }
+  .bouquet h2 {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; font-size: 1.55em;
+  }
+  .bouquet .score-big {
+    font-size: 2.6em; font-weight: 800; margin: 14px 0 4px;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bouquet .score-label { color: #8a7ab0; font-size: 0.9em; }
+  .bouquet .subtitle-final {
+    font-size: 1em; color: #8a7ab0; margin-bottom: 12px;
+  }
+
+  /* ============ СПИСОК ЗАДАНИЙ ============ */
+  .task-list {
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-radius: 18px; padding: 18px 22px;
+    margin: 16px 0; border: 2px solid #f0eaff;
+  }
+  .task-list h4 { font-size: 0.92em; color: #7a5aa8; margin-bottom: 12px; }
+  .task-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; font-size: 0.88em; color: #8a7ab0;
+    border-bottom: 1px dashed #f0eaff;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-item.done { color: #2a6a4a; font-weight: 600; }
+  .task-item .check {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid #ece4ff; display: flex; align-items: center;
+    justify-content: center; font-size: 0.72em; color: #fff;
+    background: #fff; flex-shrink: 0;
+  }
+  .task-item.done .check {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    border-color: var(--mint-deep);
+  }
+
+  /* ============ ЧИПЫ ============ */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .chip {
+    background: #fff; border: 2px solid #ece4ff; color: #7a5aa8;
+    padding: 7px 16px; border-radius: 20px; font-size: 0.85em;
+    font-weight: 600; cursor: pointer; transition: 0.25s;
+    font-family: inherit;
+  }
+  .chip:hover { background: linear-gradient(135deg, #f4ebff, #e8d8ff); border-color: #b8a8e8; transform: translateY(-2px); }
+  .chip.active { background: linear-gradient(135deg, #b8a8e8, #9a8ad8); color: #fff; border-color: transparent; }
+
+  /* ============ СЛАЙДЕР ============ */
+  .slider-wrap {
+    background: #fdfbff; border: 2px solid #e8dfff;
+    border-radius: 16px; padding: 18px; margin: 12px 0;
+  }
+  input[type="range"] {
+    width: 100%; -webkit-appearance: none; height: 8px;
+    border-radius: 8px; background: linear-gradient(90deg, #d9c8ff, #ffd6e8);
+    outline: none; margin: 14px 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 26px; height: 26px;
+    border-radius: 50%; background: linear-gradient(135deg, #b8a8e8, #ffaaa5);
+    cursor: pointer; box-shadow: 0 4px 10px rgba(184,168,232,0.5);
+    border: 3px solid #fff;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, #b8a8e8, #ffaaa5);
+    cursor: pointer; border: 3px solid #fff;
+  }
+
+  /* ============ НАВИГАЦИЯ ============ */
+  .nav-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 30px;
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-top: 1px solid rgba(180,150,220,0.2);
+    flex-wrap: wrap; gap: 10px;
+  }
+  .nav-btn {
+    background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
+    color: #fff; border: none;
+    padding: 12px 26px; border-radius: 30px;
+    font-size: 0.95em; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 6px 15px rgba(180,150,220,0.4);
+    transition: 0.25s; display: flex; align-items: center; gap: 8px;
+  }
+  .nav-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 22px rgba(180,150,220,0.55);
+  }
+  .nav-btn:disabled { background: #e0e0ec; color: #aaa; box-shadow: none; cursor: not-allowed; }
+  .nav-btn.next {
+    background: linear-gradient(135deg, #ffaaa5, #ff8a95);
+    box-shadow: 0 6px 15px rgba(255,170,165,0.5);
+  }
+  .nav-btn.next:hover:not(:disabled) { box-shadow: 0 10px 22px rgba(255,170,165,0.7); }
+  .dots { display: flex; gap: 8px; align-items: center; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e0d8f0; cursor: pointer;
+    transition: 0.3s; border: none; padding: 0;
+  }
+  .dot:hover { transform: scale(1.4); background: #b8a8e8; }
+  .dot.active {
+    width: 26px; border-radius: 6px;
+    background: linear-gradient(90deg, #b8a8e8, #ffaaa5);
+  }
+  .dot.completed { background: var(--mint-deep); }
+
+  @media (max-width: 700px) {
+    .slide-viewport { padding: 20px 18px; }
+    header { padding: 14px 16px; flex-direction: column; text-align: center; }
+    h2 { font-size: 1.3em; }
+    .cell { width: 52px; height: 58px; }
+    .cell .val { font-size: 14px; }
+    .nav-bar { padding: 12px 16px; }
+    .modal { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+     МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ
+     ========================================================== -->
+<div class="modal-bg hidden" id="nameModal">
+  <div class="modal">
+    <div class="flower-deco">🌸</div>
+    <h2 id="modalTitle">Добро пожаловать!</h2>
+    <p id="modalText">Введи своё имя, чтобы начать урок.<br>За каждое выполненное задание ты будешь получать цветочек 🌸</p>
+    <input type="text" id="nameInput" placeholder="Твоё имя" maxlength="30" autocomplete="off">
+    <button class="btn-start" id="startBtn" disabled onclick="startLesson()">Начать урок</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- ==========================================================
+       HEADER
+       ========================================================== -->
+  <header>
+    <div class="left">
+      <a href="index.html" class="nav-home">← На главную</a>
+      <div class="logo">🌸</div>
+      <div>
+        <h1>Урок 2 · Обработка массивов</h1>
+        <div class="subtitle">Поиск · Фильтрация · Сортировка · Сдвиг</div>
+      </div>
+    </div>
+    <div class="right">
+      <a href="urok1.html" class="nav-home">← Урок 1</a>
+      <div class="student-badge" onclick="openNameModal()" style="cursor:pointer;" title="Нажми, чтобы сменить имя">
+        <div class="avatar" id="avatarLetter">?</div>
+        <span id="studentName">—</span>
+      </div>
+      <div class="flowers" id="flowersBox">
+        <span id="flowersIcons">—</span>
+        <span class="count" id="flowersCount">0 / 12</span>
+      </div>
+      <div class="progress-wrap">
+        <span id="slide-counter">1 / 9</span>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="slide-viewport" id="viewport">
+
+    <!-- ==========================================================
+         СЛАЙД 1 — ВВЕДЕНИЕ В УРОК 2
+         ========================================================== -->
+    <div class="slide active" data-slide="1">
+      <div class="slide-num">Слайд 1 · Введение</div>
+      <h2>Второй урок: обработка массивов 🎨</h2>
+      <p>На первом уроке мы научились создавать массивы, работать с индексами и перебирать элементы. Сегодня — следующий шаг: настоящие алгоритмы обработки.</p>
+
+      <div class="note idea">
+        <div class="icon">🧠</div>
+        <div>Вспомни, что мы уже знаем: индексы, <code>len</code>, изменение элементов, цикл <code>for</code>, сумму. Сегодня — на ступеньку выше!</div>
+      </div>
+
+      <h3>Что нас ждёт на уроке</h3>
+      <div class="task-list">
+        <h4>Задания урока — за каждое даётся цветочек 🌸</h4>
+        <div class="task-item" data-task="7"><div class="check">✓</div> Дописать поиск элемента</div>
+        <div class="task-item" data-task="8"><div class="check">✓</div> Дописать фильтрацию</div>
+        <div class="task-item" data-task="9"><div class="check">✓</div> Дописать сортировку</div>
+        <div class="task-item" data-task="10"><div class="check">✓</div> Дописать сдвиг массива</div>
+        <div class="task-item" data-task="11"><div class="check">✓</div> Мини-проект: статистика</div>
+        <div class="task-item" data-task="12"><div class="check">✓</div> Своя программа (творческая)</div>
+      </div>
+
+      <div class="note love">
+        <div class="icon">💖</div>
+        <div>Твой прогресс с первого урока сохранён — цветочки, которые ты собрала, никуда не делись. В финале мы соберём общий букет!</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 2 — ПОИСК ЭЛЕМЕНТА
+         ========================================================== -->
+    <div class="slide" data-slide="2">
+      <div class="slide-num">Слайд 2 · Поиск</div>
+      <h2>Поиск элемента 🔍</h2>
+      <p>Как найти нужное значение в массиве? Есть два способа: свой цикл или встроенные средства Python.</p>
+
+      <h3>Способ 1: перебор с проверкой</h3>
+      <div class="code-block">
+        <span class="line"><span class="var">nums</span> = [<span class="num">4</span>, <span class="num">8</span>, <span class="num">15</span>, <span class="num">16</span>, <span class="num">23</span>, <span class="num">42</span>]</span>
+        <span class="line"><span class="var">target</span> = <span class="num">16</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">nums</span>)):</span>
+        <span class="line">    <span class="kw">if</span> <span class="var">nums</span>[<span class="var">i</span>] == <span class="var">target</span>:</span>
+        <span class="line">        <span class="fn">print</span>(<span class="str">"Найдено на позиции"</span>, <span class="var">i</span>)</span>
+        <span class="line">        <span class="kw">break</span></span>
+      </div>
+
+      <h3>Способ 2: коротко, по-питоновски</h3>
+      <div class="code-block">
+        <span class="line"><span class="kw">if</span> <span class="var">target</span> <span class="kw">in</span> <span class="var">nums</span>:</span>
+        <span class="line">    <span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">index</span>(<span class="var">target</span>))</span>
+      </div>
+
+      <h3>🎬 Визуализатор поиска</h3>
+      <p>Нажми на число — увидишь, как Python ищет его в массиве.</p>
+      <div class="array-viz" id="search-viz"></div>
+      <div class="chips">
+        <button class="chip" onclick="startSearch(15)">Искать 15</button>
+        <button class="chip" onclick="startSearch(42)">Искать 42</button>
+        <button class="chip" onclick="startSearch(7)">Искать 7</button>
+        <button class="chip" onclick="startSearch(100)">Искать 100 (нет в массиве)</button>
+      </div>
+      <div class="output" id="search-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Выбери число для поиска</div>
+
+      <h3>Задание 7. Дописать поиск</h3>
+      <div class="editor-box" id="box-task-7">
+        <div class="editor-title">
+          Задание 7
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие, чтобы программа нашла число <code>16</code> и вывела его позицию. Используй <code>if</code> и <code>break</code>.</p>
+        <textarea id="code-task-7">nums = [4, 8, 15, 16, 23, 42]
+target = 16
+
+for i in range(len(nums)):
+    # Впиши условие: если nums[i] равен target
+    if ?:
+        print("Найдено на позиции", i)
+        break</textarea>
+        <button class="btn" onclick="runTask('task-7', 7, checkTask7)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-7')">↺ Сбросить</button>
+        <div class="output" id="out-task-7">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 3 — ФИЛЬТРАЦИЯ
+         ========================================================== -->
+    <div class="slide" data-slide="3">
+      <div class="slide-num">Слайд 3 · Фильтрация</div>
+      <h2>Фильтрация: отбираем лучшее ✨</h2>
+      <p>Иногда нужно оставить только те элементы, которые подходят под условие. Например, только положительные числа.</p>
+
+      <div class="code-block">
+        <span class="line"><span class="var">nums</span> = [<span class="num">3</span>, <span class="num">-1</span>, <span class="num">7</span>, <span class="num">-5</span>, <span class="num">10</span>, <span class="num">-2</span>, <span class="num">8</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Оставляем только положительные числа</span></span>
+        <span class="line"><span class="var">positive</span> = []</span>
+        <span class="line"><span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">nums</span>:</span>
+        <span class="line">    <span class="kw">if</span> <span class="var">x</span> > <span class="num">0</span>:</span>
+        <span class="line">        <span class="var">positive</span>.<span class="fn">append</span>(<span class="var">x</span>)</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">positive</span>)</span>
+        <span class="line"><span class="com"># [3, 7, 10, 8]</span></span>
+      </div>
+
+      <h3>🎛️ Интерактивный фильтр</h3>
+      <div class="slider-wrap">
+        <label style="font-weight:600;color:#7a5aa8;">Показывать числа больше: <span id="filter-val" style="color:#e07a5f;">5</span></label>
+        <input type="range" min="0" max="20" value="5" oninput="filterDemo(this.value)">
+        <div class="array-viz" id="filter-viz" style="margin-top:8px;"></div>
+        <div class="output" id="filter-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Двигай ползунок — увидишь подходящие элементы</div>
+      </div>
+
+      <h3>Задание 8. Дописать фильтр</h3>
+      <div class="editor-box" id="box-task-8">
+        <div class="editor-title">
+          Задание 8
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши условие и добавление в новый массив, чтобы остались только <b>чётные</b> числа.</p>
+        <textarea id="code-task-8">nums = [3, -1, 7, -5, 10, -2, 8]
+
+evens = []
+for x in nums:
+    # Впиши условие: если x чётное
+    if ?:
+        # Добавь x в массив evens
+        evens.append(?)
+
+print("Чётные:", evens)</textarea>
+        <button class="btn" onclick="runTask('task-8', 8, checkTask8)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-8')">↺ Сбросить</button>
+        <div class="output" id="out-task-8">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 4 — СОРТИРОВКА
+         ========================================================== -->
+    <div class="slide" data-slide="4">
+      <div class="slide-num">Слайд 4 · Сортировка</div>
+      <h2>Сортировка массива 📊</h2>
+      <p>Отсортировать массив — значит расставить элементы по возрастанию или убыванию. В Python есть готовая сортировка, но интересно узнать, как она работает внутри.</p>
+
+      <h3>Встроенная сортировка</h3>
+      <div class="code-block">
+        <span class="line"><span class="var">nums</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># По возрастанию</span></span>
+        <span class="line"><span class="var">nums</span>.<span class="fn">sort</span>()</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)</span>
+        <span class="line"><span class="com"># [1, 2, 5, 7, 9]</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># По убыванию</span></span>
+        <span class="line"><span class="var">nums</span>.<span class="fn">sort</span>(reverse=<span class="kw">True</span>)</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">nums</span>)</span>
+        <span class="line"><span class="com"># [9, 7, 5, 2, 1]</span></span>
+      </div>
+
+      <h3>Как работает «пузырьковая» сортировка</h3>
+      <p>Алгоритм сравнивает соседние элементы и меняет их местами, если они стоят в неправильном порядке.</p>
+
+      <div class="array-viz" id="bubble-viz"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="bubbleSortVisual()">▶ Запустить сортировку</button>
+        <button class="btn ghost small" onclick="resetBubble()">↺ Сбросить</button>
+      </div>
+      <div class="output" id="bubble-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Запустить сортировку»</div>
+
+      <h3>Задание 9. Дописать сортировку</h3>
+      <div class="editor-box" id="box-task-9">
+        <div class="editor-title">
+          Задание 9
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши вызов сортировки, чтобы массив стал <code>[1, 2, 5, 7, 9]</code>.</p>
+        <textarea id="code-task-9">nums = [5, 2, 9, 1, 7]
+
+# Вызови сортировку по возрастанию
+nums.?
+
+print("Отсортировано:", nums)</textarea>
+        <button class="btn" onclick="runTask('task-9', 9, checkTask9)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-9')">↺ Сбросить</button>
+        <div class="output" id="out-task-9">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 5 — СДВИГ
+         ========================================================== -->
+    <div class="slide" data-slide="5">
+      <div class="slide-num">Слайд 5 · Сдвиг</div>
+      <h2>Сдвиг элементов массива 🎠</h2>
+      <p>Сдвиг влево на одну позицию: первый элемент перемещается в конец, остальные сдвигаются влево.</p>
+
+      <div class="code-block">
+        <span class="line"><span class="var">arr</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Запоминаем первый элемент</span></span>
+        <span class="line"><span class="var">first</span> = <span class="var">arr</span>[<span class="num">0</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Сдвигаем все элементы влево</span></span>
+        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">arr</span>) - <span class="num">1</span>):</span>
+        <span class="line">    <span class="var">arr</span>[<span class="var">i</span>] = <span class="var">arr</span>[<span class="var">i</span> + <span class="num">1</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Записываем первый в конец</span></span>
+        <span class="line"><span class="var">arr</span>[<span class="num">-1</span>] = <span class="var">first</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">arr</span>)</span>
+        <span class="line"><span class="com"># [2, 3, 4, 5, 1]</span></span>
+      </div>
+
+      <h3>🎬 Смотрим сдвиг по шагам</h3>
+      <div class="array-viz" id="shift-viz"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="shiftStep()">▶ Выполнить сдвиг</button>
+        <button class="btn ghost small" onclick="shiftReset()">↺ Вернуть как было</button>
+      </div>
+      <div class="output" id="shift-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Выполнить сдвиг»</div>
+
+      <h3>Задание 10. Дописать сдвиг</h3>
+      <div class="editor-box" id="box-task-10">
+        <div class="editor-title">
+          Задание 10
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Допиши тело цикла — присвой элементу <code>arr[i]</code> значение следующего элемента.</p>
+        <textarea id="code-task-10">arr = [1, 2, 3, 4, 5]
+first = arr[0]
+
+for i in range(len(arr) - 1):
+    # Присвой arr[i] значение следующего элемента
+    arr[i] = ?
+
+arr[-1] = first
+print("После сдвига:", arr)</textarea>
+        <button class="btn" onclick="runTask('task-10', 10, checkTask10)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-10')">↺ Сбросить</button>
+        <div class="output" id="out-task-10">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 6 — МИНИ-ПРОЕКТ
+         ========================================================== -->
+    <div class="slide" data-slide="6">
+      <div class="slide-num">Слайд 6 · Мини-проект</div>
+      <h2>Мини-проект: статистика результатов 📊</h2>
+      <p>Представь, что у тебя есть массив результатов забега на 100 метров. Нужно посчитать статистику.</p>
+
+      <div class="note idea">
+        <div class="icon">🎯</div>
+        <div><b>Задача:</b> дан массив результатов в секундах. Нужно:
+          <br>• отсортировать его по возрастанию;
+          <br>• вывести лучший и худший результат;
+          <br>• найти среднее время;
+          <br>• посчитать, сколько спортсменов показали результат лучше среднего.</div>
+      </div>
+
+      <div class="editor-box" id="box-task-11">
+        <div class="editor-title">
+          Задание 11
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Напиши код полностью сама. Подсказка: используй <code>.sort()</code>, <code>sum()</code>, <code>len()</code>, цикл <code>for</code>.</p>
+        <textarea id="code-task-11" style="min-height: 200px;"># Результаты забега на 100 метров (в секундах)
+results = [14.2, 15.8, 13.9, 16.1, 14.7, 15.2, 13.5]
+
+# Напиши свой код здесь:
+# 1. Отсортируй массив
+# 2. Выведи лучший и худший результат
+# 3. Найди среднее время
+# 4. Посчитай, сколько результатов лучше среднего</textarea>
+        <button class="btn" onclick="runTask('task-11', 11, checkTask11)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-11')">↺ Сбросить</button>
+        <button class="btn mint" onclick="showHint11()">💡 Подсказка</button>
+        <div class="output" id="out-task-11">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 7 — ТВОРЧЕСКАЯ ЗАДАЧА
+         ========================================================== -->
+    <div class="slide" data-slide="7">
+      <div class="slide-num">Слайд 7 · Творческая задача</div>
+      <h2>Задание 12. Своя программа 🎨</h2>
+      <p>Это творческое задание. Придумай свой массив и обработай его — используй всё, что узнала на двух уроках.</p>
+
+      <div class="note love">
+        <div class="icon">🌟</div>
+        <div><b>Идеи для программы:</b>
+          <br>• массив любимых фильмов — отсортировать по алфавиту;
+          <br>• массив температур за месяц — найти среднее и максимум;
+          <br>• массив цен на товары — посчитать сумму и отфильтровать дорогие;
+          <br>• придумай свою тему!</div>
+      </div>
+
+      <div class="editor-box" id="box-task-12">
+        <div class="editor-title">
+          Задание 12
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">Напиши свою программу с массивом. Она должна использовать хотя бы <b>две</b> изученные операции (поиск, фильтрацию, сортировку, сдвиг, сумму, счётчик).</p>
+        <textarea id="code-task-12" style="min-height: 220px;"># Придумай свой массив и обработай его
+# Например: температуры за месяц
+
+temperatures = [12, 15, 18, 14, 20, 22, 19, 16, 21, 17]
+
+# Твой код здесь
+</textarea>
+        <button class="btn" onclick="runTask('task-12', 12, checkTask12)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-12')">↺ Сбросить</button>
+        <div class="output" id="out-task-12">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 8 — ИТОГИ
+         ========================================================== -->
+    <div class="slide" data-slide="8">
+      <div class="slide-num">Слайд 8 · Итоги</div>
+      <h2>Итоги двух уроков 🌟</h2>
+
+      <div class="code-block" style="border-color:#a8e6cf;">
+        <span class="line">🌸  Создание массива и работа с индексами</span>
+        <span class="line">🌸  Изменение, добавление, удаление элементов</span>
+        <span class="line">🌸  Перебор массива циклом for</span>
+        <span class="line">🌸  Сумма, среднее, максимум, минимум</span>
+        <span class="line">🌸  Поиск элемента в массиве</span>
+        <span class="line">🌸  Фильтрация по условию</span>
+        <span class="line">🌸  Сортировка (встроенная и пузырьковая)</span>
+        <span class="line">🌸  Сдвиг элементов массива</span>
+      </div>
+
+      <h3>Финальная проверка 🎯</h3>
+      <div class="quiz" data-correct="1">
+        <div class="question">Что делает метод <code>arr.sort()</code>?</div>
+        <div class="options">
+          <button class="quiz-option" data-i="0"><span class="letter">A</span> Создаёт новый отсортированный массив</button>
+          <button class="quiz-option" data-i="1"><span class="letter">B</span> Сортирует исходный массив на месте</button>
+          <button class="quiz-option" data-i="2"><span class="letter">C</span> Удаляет повторяющиеся элементы</button>
+          <button class="quiz-option" data-i="3"><span class="letter">D</span> Переворачивает массив</button>
+        </div>
+      </div>
+
+      <div class="quiz" data-correct="2">
+        <div class="question">Как отобрать только положительные элементы из массива arr?</div>
+        <div class="options">
+          <button class="quiz-option" data-i="0"><span class="letter">A</span> arr.positive()</button>
+          <button class="quiz-option" data-i="1"><span class="letter">B</span> arr.filter()</button>
+          <button class="quiz-option" data-i="2"><span class="letter">C</span> Создать новый массив и добавлять нужные через append</button>
+          <button class="quiz-option" data-i="3"><span class="letter">D</span> arr &gt; 0</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         СЛАЙД 9 — ФИНАЛ С БУКЕТОМ
+         ========================================================== -->
+    <div class="slide" data-slide="9">
+      <div class="slide-num">Слайд 9 · Финал</div>
+      <h2>Ты справилась! 🎉</h2>
+      <p>Вот твой итоговый букет за два урока:</p>
+
+      <div class="bouquet">
+        <div class="subtitle-final">🌸 Финал курса 🌸</div>
+        <h2 id="finalName">Молодец!</h2>
+        <div class="flowers-big" id="finalBouquet">🌸</div>
+        <div class="score-big" id="finalScore">0 / 12</div>
+        <div class="score-label" id="finalPercent">0% выполнено</div>
+        <div id="finalMessage" style="margin-top: 24px; font-size: 1.05em; color: #5a5a7a; line-height: 1.7;"></div>
+      </div>
+
+      <div class="note tip">
+        <div class="icon">🎓</div>
+        <div><b>Что дальше?</b> Двумерные массивы (матрицы), словари, работа со строками как с массивами символов — всё это продолжение массивов.</div>
+      </div>
+
+      <div style="text-align:center;margin-top:20px;">
+        <a href="index.html" class="btn rose" style="text-decoration:none;display:inline-block;">Вернуться на главную →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==========================================================
+       НАВИГАЦИЯ
+       ========================================================== -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="prev-btn" onclick="prevSlide()">← Назад</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn next" id="next-btn" onclick="nextSlide()">Вперёд →</button>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   ПРОГРЕСС + LOCALSTORAGE
+   ========================================================== */
+const STORAGE_KEY = 'python_arrays_progress';
+let progress = {
+  name: '',
+  task1: false, task2: false, task3: false,
+  task4: false, task5: false, task6: false,
+  task7: false, task8: false, task9: false,
+  task10: false, task11: false, task12: false
+};
+
+function loadProgress() {
+  try { const s = localStorage.getItem(STORAGE_KEY); if (s) Object.assign(progress, JSON.parse(s)); } catch(e) {}
+}
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e) {}
+}
+function countFlowers() {
+  return ['task1','task2','task3','task4','task5','task6',
+          'task7','task8','task9','task10','task11','task12']
+    .filter(k => progress[k]).length;
+}
+function updateFlowerUI() {
+  const n = countFlowers();
+  document.getElementById('flowersIcons').innerHTML = n ? '🌸'.repeat(n) : '—';
+  document.getElementById('flowersCount').textContent = `${n} / 12`;
+  document.getElementById('avatarLetter').textContent = progress.name ? progress.name.charAt(0).toUpperCase() : '?';
+  document.getElementById('studentName').textContent = progress.name || '—';
+  document.querySelectorAll('.task-item').forEach(el => {
+    const t = 'task' + el.dataset.task;
+    el.classList.toggle('done', progress[t]);
+  });
+  document.querySelectorAll('.editor-box[id^="box-task-"]').forEach(el => {
+    const m = el.id.match(/task-(\d+)/);
+    if (m && progress['task' + m[1]]) el.classList.add('completed');
+  });
+}
+function markTask(n) {
+  const key = 'task' + n;
+  if (progress[key]) return;
+  progress[key] = true;
+  saveProgress();
+  updateFlowerUI();
+}
+
+/* ==========================================================
+   МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ
+   ========================================================== */
+function startLesson() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) return;
+  progress.name = name;
+  saveProgress();
+  updateFlowerUI();
+  closeNameModal();
+}
+
+function openNameModal() {
+  const modal = document.getElementById('nameModal');
+  const input = document.getElementById('nameInput');
+  const btn = document.getElementById('startBtn');
+  const title = document.getElementById('modalTitle');
+  const text = document.getElementById('modalText');
+
+  input.value = progress.name || '';
+  btn.disabled = !input.value.trim();
+
+  if (progress.name) {
+    title.textContent = 'Смена имени';
+    text.innerHTML = 'Введи новое имя и нажми «Сохранить».<br>Прогресс и цветочки останутся с тобой 🌸';
+    btn.textContent = 'Сохранить';
+  } else {
+    title.textContent = 'Добро пожаловать!';
+    text.innerHTML = 'Введи своё имя, чтобы начать урок.<br>За каждое выполненное задание ты будешь получать цветочек 🌸';
+    btn.textContent = 'Начать урок';
+  }
+
+  modal.classList.remove('hidden');
+  setTimeout(() => input.focus(), 100);
+}
+
+function closeNameModal() {
+  document.getElementById('nameModal').classList.add('hidden');
+}
+
+document.getElementById('nameInput').addEventListener('input', e => {
+  document.getElementById('startBtn').disabled = !e.target.value.trim();
+});
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.value.trim()) startLesson();
+});
+
+/* ==========================================================
+   ЛОГИКА ПРИ ЗАГРУЗКЕ
+   ========================================================== */
+loadProgress();
+if (progress.name) {
+  updateFlowerUI();
+  closeNameModal();
+} else {
+  openNameModal();
+}
+
+/* ==========================================================
+   НАВИГАЦИЯ ПО СЛАЙДАМ
+   ========================================================== */
+let currentSlide = 1;
+const totalSlides = document.querySelectorAll('.slide').length;
+
+function buildDots() {
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for (let i = 1; i <= totalSlides; i++) {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === currentSlide ? ' active' : '');
+    d.onclick = () => goToSlide(i);
+    dots.appendChild(d);
+  }
+}
+function updateNav() {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.slide[data-slide="${currentSlide}"]`).classList.add('active');
+  document.getElementById('prev-btn').disabled = currentSlide === 1;
+  document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === currentSlide));
+  document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+  document.getElementById('progress-fill').style.width = ((currentSlide / totalSlides) * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (currentSlide === totalSlides) updateFinalSlide();
+}
+function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; updateNav(); } }
+function prevSlide() { if (currentSlide > 1) { currentSlide--; updateNav(); } }
+function goToSlide(n) { currentSlide = n; updateNav(); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+/* ==========================================================
+   ФИНАЛЬНЫЙ ЭКРАН С БУКЕТОМ
+   ========================================================== */
+function updateFinalSlide() {
+  const n = countFlowers();
+  const pct = Math.round((n / 12) * 100);
+  const name = progress.name || 'Умница';
+  document.getElementById('finalName').textContent = `${name}, вот твой букет!`;
+  document.getElementById('finalBouquet').textContent = '🌸'.repeat(n) || '🌱';
+  document.getElementById('finalScore').textContent = `${n} / 12`;
+  document.getElementById('finalPercent').textContent = `${pct}% заданий выполнено`;
+
+  let msg = '';
+  if (n >= 12) {
+    msg = '🏆 Превосходно! Ты выполнила все задания и собрала полный букет! Теперь ты умеешь работать с массивами в Python. Это только начало — впереди ещё много интересного!';
+  } else if (n >= 9) {
+    msg = '🌟 Отличный результат! Ты освоила почти все темы. Осталось совсем чуть-чуть, чтобы собрать полный букет.';
+  } else if (n >= 6) {
+    msg = '💪 Хороший прогресс! Ты уже уверенно работаешь с массивами. Попробуй вернуться к пропущенным заданиям.';
+  } else if (n >= 3) {
+    msg = '🌱 Хорошее начало! Осталось ещё несколько заданий — вернись и собери свой букет!';
+  } else {
+    msg = '🌸 Всё только начинается — вернись к заданиям и собери свой букет!';
+  }
+  document.getElementById('finalMessage').textContent = msg;
+  saveProgress();
+}
+
+/* ==========================================================
+   QUIZ
+   ========================================================== */
+document.querySelectorAll('.quiz').forEach(quiz => {
+  const correct = parseInt(quiz.dataset.correct);
+  quiz.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.onclick = () => {
+      const i = parseInt(opt.dataset.i);
+      quiz.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('correct','wrong'));
+      opt.classList.add(i === correct ? 'correct' : 'wrong');
+      if (i !== correct) quiz.querySelector(`.quiz-option[data-i="${correct}"]`).classList.add('correct');
+    };
+  });
+});
+
+/* ==========================================================
+   ИНТЕРПРЕТАТОР PYTHON-ПОДОБНОГО КОДА
+   ========================================================== */
+function fmt(v) {
+  if (Array.isArray(v)) return '[' + v.map(x => typeof x === 'string' ? `'${x}'` : fmt(x)).join(', ') + ']';
+  if (typeof v === 'number' && !Number.isInteger(v)) return Math.round(v * 1000) / 1000;
+  if (typeof v === 'boolean') return v ? 'True' : 'False';
+  if (v === null || v === undefined) return 'None';
+  return String(v);
+}
+function runCodeRaw(code) {
+  let buffer = '';
+  const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
+  try {
+    const js = translatePython(code);
+    const wrapped = `
+      const __print = (...a) => __out(...a);
+      const __len = x => (Array.isArray(x) || typeof x === 'string') ? x.length : Object.keys(x).length;
+      const __sum = x => Array.isArray(x) ? x.reduce((a,b)=>a+b, 0) : 0;
+      const __min = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.min(...a[0]) : Math.min(...a);
+      const __max = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.max(...a[0]) : Math.max(...a);
+      const __sorted = (arr) => [...arr].sort((a,b)=> a<b?-1:a>b?1:0);
+      const __round = (x, n=0) => { const p = Math.pow(10, n); return Math.round(x*p)/p; };
+      const __range = (...a) => {
+        let start=0, stop, step=1;
+        if (a.length===1) stop=a[0];
+        else if (a.length===2) [start, stop]=a;
+        else [start, stop, step]=a;
+        const r=[]; if (step>0) for(let i=start;i<stop;i+=step) r.push(i); else for(let i=start;i>stop;i+=step) r.push(i);
+        return r;
+      };
+      const __iter = x => Array.isArray(x) ? x : (typeof x==='string' ? x.split('') : Object.values(x));
+      const __in = (x, arr) => Array.isArray(arr) ? arr.includes(x) : (typeof arr==='string' ? arr.includes(x) : false);
+      const __truthy = x => Array.isArray(x) ? x.length>0 : (typeof x==='string' ? x.length>0 : !!x);
+      const __append = (arr, x) => { arr.push(x); };
+      const __pop = (arr, i) => i===undefined ? arr.pop() : arr.splice(i,1)[0];
+      const __insert = (arr, i, x) => { arr.splice(i, 0, x); };
+      const __remove = (arr, x) => { const i=arr.indexOf(x); if(i>=0) arr.splice(i,1); };
+      const __index = (arr, x) => arr.indexOf(x);
+      const __count = (arr, x) => arr.filter(v=>v===x).length;
+      const __sort = (arr, kw) => { arr.sort((a,b)=> a<b?-1:a>b?1:0); if (kw && kw.reverse) arr.reverse(); };
+      const __reverse = arr => { arr.reverse(); };
+      ${js}
+    `;
+    const fn = new Function('__out', wrapped);
+    fn(__out);
+    return { output: buffer || '(нет вывода)', error: null };
+  } catch (e) {
+    return { output: buffer, error: e.message };
+  }
+}
+function translatePython(code) {
+  const lines = code.split('\n'); let js = ''; const stack = [];
+  for (let raw of lines) {
+    const ci = raw.indexOf('#'); let line = ci >= 0 ? raw.slice(0, ci) : raw;
+    if (line.trim() === '') continue;
+    const indent = line.match(/^\s*/)[0].length; let t = line.trim();
+    while (stack.length && indent <= stack[stack.length-1]) { js += '}\n'; stack.pop(); }
+    t = t.replace(/\bprint\s*\(/g, '__print(');
+    t = t.replace(/\blen\s*\(/g, '__len(');
+    t = t.replace(/\bsum\s*\(/g, '__sum(');
+    t = t.replace(/\bmin\s*\(/g, '__min(');
+    t = t.replace(/\bmax\s*\(/g, '__max(');
+    t = t.replace(/\bsorted\s*\(/g, '__sorted(');
+    t = t.replace(/\bround\s*\(/g, '__round(');
+    t = t.replace(/\brange\s*\(/g, '__range(');
+    t = t.replace(/\bTrue\b/g, 'true'); t = t.replace(/\bFalse\b/g, 'false'); t = t.replace(/\bNone\b/g, 'null');
+    t = t.replace(/\band\b/g, '&&'); t = t.replace(/\bor\b/g, '||'); t = t.replace(/\bnot\s+/g, '!');
+    t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+not\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '!__in($1, $2)');
+    t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '__in($1, $2)');
+    t = t.replace(/([A-Za-z_]\w*)\.append\s*\(/g, '__append($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.pop\s*\(([^)]*)\)/g, '__pop($1, $2)');
+    t = t.replace(/([A-Za-z_]\w*)\.insert\s*\(/g, '__insert($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.remove\s*\(/g, '__remove($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.index\s*\(/g, '__index($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.count\s*\(/g, '__count($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
+    t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
+    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
+    if (mFor) { js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`; stack.push(indent); continue; }
+    let mWhile = t.match(/^while\s+(.+):$/);
+    if (mWhile) { js += ' '.repeat(indent) + `while (__truthy(${mWhile[1]})) {\n`; stack.push(indent); continue; }
+    let mIf = t.match(/^if\s+(.+):$/);
+    if (mIf) { js += ' '.repeat(indent) + `if (__truthy(${mIf[1]})) {\n`; stack.push(indent); continue; }
+    let mElif = t.match(/^elif\s+(.+):$/);
+    if (mElif) { js += ' '.repeat(indent) + `} else if (__truthy(${mElif[1]})) {\n`; continue; }
+    if (t === 'else:') { js += ' '.repeat(indent) + `} else {\n`; continue; }
+    if (t === 'break') { js += ' '.repeat(indent) + 'break;\n'; continue; }
+    if (t === 'continue') { js += ' '.repeat(indent) + 'continue;\n'; continue; }
+    if (t === 'pass') { js += ' '.repeat(indent) + ';\n'; continue; }
+    js += ' '.repeat(indent) + t + ';\n';
+  }
+  while (stack.length) { js += '}\n'; stack.pop(); }
+  return js;
+}
+
+/* ==========================================================
+   ЗАПУСК ЗАДАНИЙ
+   ========================================================== */
+const taskDefaults = {};
+function saveDefaults() {
+  for (let i = 7; i <= 12; i++) {
+    const el = document.getElementById('code-task-' + i);
+    if (el) taskDefaults[i] = el.value;
+  }
+}
+saveDefaults();
+
+function runTask(taskId, taskNum, checker) {
+  const code = document.getElementById('code-' + taskId).value;
+  const out = document.getElementById('out-' + taskId);
+  const box = document.getElementById('box-' + taskId);
+  const result = runCodeRaw(code);
+  if (result.error) {
+    out.textContent = result.output + '\n❌ Ошибка: ' + result.error;
+    out.classList.add('error'); out.classList.remove('success');
+    return;
+  }
+  out.textContent = result.output;
+  out.classList.remove('error');
+  if (checker) {
+    const ok = checker(code, result.output);
+    if (ok) {
+      out.classList.add('success');
+      out.textContent += '\n\n🌸 Задание выполнено! Цветочек добавлен в букет.';
+      box.classList.add('completed');
+      markTask(taskNum);
+    } else {
+      out.classList.remove('success');
+    }
+  }
+}
+function resetTask(taskId) {
+  const num = taskId.split('-')[1];
+  const el = document.getElementById('code-' + taskId);
+  if (taskDefaults[num]) el.value = taskDefaults[num];
+  const out = document.getElementById('out-' + taskId);
+  out.textContent = 'Здесь появится результат ✨';
+  out.classList.remove('error','success');
+}
+
+/* ==========================================================
+   ПРОВЕРКИ ЗАДАНИЙ 7–12
+   ========================================================== */
+function checkTask7(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  if (clean.includes('[?]') || clean.includes('if?')) return false;
+  return /nums\[i\]==target/.test(clean) && /break/.test(clean)
+    && output.replace(/\s+/g,'').includes('3');
+}
+function checkTask8(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  if (clean.includes('?')) return false;
+  const outClean = output.replace(/\s+/g,'');
+  return /\.append/.test(clean) && /x%2==0/.test(clean)
+    && (outClean.includes('[10,-2,8]') || outClean.includes('10,-2,8'));
+}
+function checkTask9(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  if (clean.includes('?') || clean.includes('nums.?')) return false;
+  const outClean = output.replace(/\s+/g,'');
+  return /\.sort\(\)/.test(clean) && outClean.includes('[1,2,5,7,9]');
+}
+function checkTask10(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  if (clean.includes('?')) return false;
+  return /arr\[i\]=arr\[i\+1\]/.test(clean)
+    && output.replace(/\s+/g,'').includes('[2,3,4,5,1]');
+}
+function checkTask11(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  if (clean.length < 80 || clean.includes('?')) return false;
+  const outClean = output.replace(/\s+/g,'');
+  return outClean.length > 30 && /13\.5/.test(outClean) && /16\.1/.test(outClean);
+}
+function checkTask12(code, output) {
+  const clean = code.replace(/\s+/g,'');
+  const codeOnly = clean.split('#').join('');
+  if (codeOnly.length < 60) return false;
+  const outClean = output.replace(/\s+/g,'');
+  return outClean.length > 5 && !outClean.includes('Ошибка');
+}
+function showHint11() {
+  const out = document.getElementById('out-task-11');
+  out.textContent = '💡 Подсказка:\n\n' +
+    'results.sort()\n' +
+    'print("Лучший:", results[0])\n' +
+    'print("Худший:", results[-1])\n' +
+    'avg = sum(results) / len(results)\n' +
+    'print("Средний:", round(avg, 2))\n\n' +
+    'better = 0\n' +
+    'for t in results:\n' +
+    '    if t < avg:\n' +
+    '        better += 1\n' +
+    'print("Лучше среднего:", better)';
+  out.classList.remove('error','success');
+}
+
+/* ==========================================================
+   ВИЗУАЛИЗАТОР ПОИСКА
+   ========================================================== */
+const searchData = [4, 8, 15, 16, 23, 42];
+(function initSearch() {
+  const box = document.getElementById('search-viz');
+  box.innerHTML = '';
+  searchData.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'cell';
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
+    box.appendChild(c);
+  });
+})();
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function startSearch(target) {
+  const cells = document.querySelectorAll('#search-viz .cell');
+  const out = document.getElementById('search-output');
+  cells.forEach(c => c.classList.remove('highlight', 'found'));
+  for (let i = 0; i < searchData.length; i++) {
+    cells.forEach(c => c.classList.remove('highlight'));
+    cells[i].classList.add('highlight');
+    out.textContent = `Проверяем arr[${i}] = ${searchData[i]}. Совпадает с ${target}? ${searchData[i] === target ? 'Да' : 'Нет'}`;
+    await sleep(650);
+    if (searchData[i] === target) {
+      cells[i].classList.remove('highlight');
+      cells[i].classList.add('found');
+      out.textContent = `✅ Значение ${target} найдено на позиции ${i}`;
+      return;
+    }
+  }
+  out.textContent = `❌ Значение ${target} в массиве не найдено`;
+}
+
+/* ==========================================================
+   СЛАЙДЕР-ФИЛЬТР
+   ========================================================== */
+const filterData = [3, -1, 7, -5, 10, -2, 8, 15, 0, 6];
+function filterDemo(val) {
+  val = Number(val);
+  document.getElementById('filter-val').textContent = val;
+  const box = document.getElementById('filter-viz');
+  box.innerHTML = '';
+  const passing = [];
+  filterData.forEach((v, i) => {
+    const ok = v > val;
+    if (ok) passing.push(v);
+    const c = document.createElement('div');
+    c.className = 'cell' + (ok ? ' found' : '');
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
+    box.appendChild(c);
+  });
+  document.getElementById('filter-output').textContent = `Числа больше ${val}: [${passing.join(', ')}]`;
+}
+filterDemo(5);
+
+/* ==========================================================
+   ВИЗУАЛИЗАТОР ПУЗЫРЬКА
+   ========================================================== */
+let bubbleData = [5, 2, 9, 1, 7];
+function renderBubble(highlight=-1, swapPair=null) {
+  const box = document.getElementById('bubble-viz');
+  box.innerHTML = '';
+  bubbleData.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'cell';
+    if (i === highlight) c.classList.add('highlight');
+    if (swapPair && (i === swapPair[0] || i === swapPair[1])) c.classList.add('swap');
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
+    box.appendChild(c);
+  });
+}
+function resetBubble() {
+  bubbleData = [5, 2, 9, 1, 7];
+  renderBubble();
+  document.getElementById('bubble-output').textContent = 'Нажми «Запустить сортировку»';
+}
+async function bubbleSortVisual() {
+  const out = document.getElementById('bubble-output');
+  const n = bubbleData.length;
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - 1 - i; j++) {
+      renderBubble(j, [j, j+1]);
+      out.textContent = `Сравниваем arr[${j}]=${bubbleData[j]} и arr[${j+1}]=${bubbleData[j+1]}`;
+      await sleep(550);
+      if (bubbleData[j] > bubbleData[j+1]) {
+        [bubbleData[j], bubbleData[j+1]] = [bubbleData[j+1], bubbleData[j]];
+        renderBubble(-1, [j, j+1]);
+        out.textContent = `↔ Меняем местами: [${bubbleData.join(', ')}]`;
+        await sleep(550);
+      }
+    }
+  }
+  renderBubble();
+  out.textContent = `✅ Отсортировано: [${bubbleData.join(', ')}]`;
+}
+renderBubble();
+
+/* ==========================================================
+   ВИЗУАЛИЗАТОР СДВИГА
+   ========================================================== */
+let shiftOriginal = [1, 2, 3, 4, 5];
+let shiftData = [...shiftOriginal];
+let shiftStage = 0;
+function renderShift() {
+  const box = document.getElementById('shift-viz');
+  box.innerHTML = '';
+  shiftData.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'cell';
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
+    box.appendChild(c);
+  });
+}
+function shiftStep() {
+  const out = document.getElementById('shift-output');
+  if (shiftStage === 0) {
+    const first = shiftData[0];
+    for (let i = 0; i < shiftData.length - 1; i++) shiftData[i] = shiftData[i+1];
+    shiftData[shiftData.length-1] = first;
+    shiftStage = 1;
+    renderShift();
+    out.textContent = `Первый элемент (${first}) перемещён в конец.\nРезультат: [${shiftData.join(', ')}]`;
+  } else {
+    shiftData = [...shiftOriginal];
+    shiftStage = 0;
+    renderShift();
+    out.textContent = '↺ Массив возвращён в исходное состояние';
+  }
+}
+function shiftReset() {
+  shiftData = [...shiftOriginal];
+  shiftStage = 0;
+  renderShift();
+  document.getElementById('shift-output').textContent = 'Нажми «Выполнить сдвиг»';
+}
+renderShift();
+
+/* ==========================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ========================================================== */
+buildDots();
+updateNav();
+</script>
+
+</body>
+</html>
