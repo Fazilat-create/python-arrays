@@ -76,6 +76,7 @@
     border-radius: 20px; font-size: 0.85em; font-weight: 600;
     color: #5a4a8a;
     transition: 0.25s;
+    max-width: 200px;
   }
   .student-badge:hover {
     background: #fff;
@@ -86,7 +87,12 @@
     width: 26px; height: 26px; border-radius: 50%;
     background: linear-gradient(135deg, #b8a8e8, #ff8a95);
     color: #fff; display: flex; align-items: center; justify-content: center;
-    font-size: 0.85em; font-weight: 700;
+    font-size: 0.85em; font-weight: 700; flex-shrink: 0;
+  }
+  .student-badge span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .flowers {
     display: flex; align-items: center; gap: 4px;
@@ -227,7 +233,6 @@
   .code-block .str { color: #4aa87a; }
   .code-block .com { color: #a99cd0; font-style: italic; }
   .code-block .var { color: #5a4a7a; }
-  .code-block .hl  { background: rgba(255,232,176,0.6); padding: 1px 4px; border-radius: 4px; }
 
   /* ============ ВИЗУАЛИЗАТОР ============ */
   .array-viz {
@@ -263,8 +268,6 @@
   }
   .cell.highlight .idx { background: linear-gradient(135deg, #ffd966, #ffb84d); color: #7a4a00; }
   .cell.highlight .idx .neg { color: #7a4a00; }
-  .cell.found { border-color: var(--mint-deep); background: #f0fff8; }
-  .cell.found .idx { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #2a6a4a; }
 
   /* ============ КНОПКИ ============ */
   .btn {
@@ -299,6 +302,11 @@
     border-style: solid; border-color: var(--mint-deep);
     background: linear-gradient(135deg, #f8fffc, #f0fff8);
   }
+  .editor-box.practice {
+    border: 2px solid #e8dfff;
+    background: linear-gradient(135deg, #fef9ff, #fdfbff);
+    border-style: solid;
+  }
   .editor-title {
     display: flex; align-items: center; gap: 8px;
     font-weight: 700; color: #7a5aa8; margin-bottom: 12px;
@@ -307,6 +315,11 @@
   .editor-title .task-badge {
     background: linear-gradient(135deg, #ffe8b0, #ffd966);
     color: #7a4a00; padding: 3px 12px; border-radius: 12px;
+    font-size: 0.72em; font-weight: 700;
+  }
+  .editor-title .practice-badge {
+    background: linear-gradient(135deg, #d9c8ff, #c8b8f0);
+    color: #5a4a8a; padding: 3px 12px; border-radius: 12px;
     font-size: 0.72em; font-weight: 700;
   }
   .editor-title .done-badge {
@@ -367,7 +380,7 @@
     border: 2px solid #e0d8f0;
   }
   .flip-front .emoji { font-size: 2.2em; margin-bottom: 8px; }
-  .flip-front .label { font-weight: 700; color: #5a4a8a; font-size: 0.95em; }
+  .flip-front .label { font-weight: 700; color: #5a4a8a; font-size: 0.95em; font-family: 'Consolas', monospace; }
   .flip-front .hint { font-size: 0.72em; color: #a99cd0; margin-top: 4px; }
   .flip-back {
     background: linear-gradient(135deg, #d9c8ff, #ffd6e8);
@@ -437,6 +450,31 @@
     border-radius: 5px; font-family: 'Consolas',monospace;
   }
 
+  /* ============ СПИСОК ЗАДАНИЙ ============ */
+  .task-list {
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-radius: 18px; padding: 18px 22px;
+    margin: 16px 0; border: 2px solid #f0eaff;
+  }
+  .task-list h4 { font-size: 0.92em; color: #7a5aa8; margin-bottom: 12px; }
+  .task-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; font-size: 0.88em; color: #8a7ab0;
+    border-bottom: 1px dashed #f0eaff;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-item.done { color: #2a6a4a; font-weight: 600; }
+  .task-item .check {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid #ece4ff; display: flex; align-items: center;
+    justify-content: center; font-size: 0.72em; color: #fff;
+    background: #fff; flex-shrink: 0;
+  }
+  .task-item.done .check {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    border-color: var(--mint-deep);
+  }
+
   /* ============ ФИНАЛЬНЫЙ БУКЕТ ============ */
   .bouquet {
     text-align: center; padding: 38px 24px;
@@ -462,31 +500,6 @@
     background-clip: text;
   }
   .bouquet .score-label { color: #8a7ab0; font-size: 0.9em; }
-
-  /* ============ СПИСОК ЗАДАНИЙ ============ */
-  .task-list {
-    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
-    border-radius: 18px; padding: 18px 22px;
-    margin: 16px 0; border: 2px solid #f0eaff;
-  }
-  .task-list h4 { font-size: 0.92em; color: #7a5aa8; margin-bottom: 12px; }
-  .task-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 0; font-size: 0.88em; color: #8a7ab0;
-    border-bottom: 1px dashed #f0eaff;
-  }
-  .task-item:last-child { border-bottom: none; }
-  .task-item.done { color: #2a6a4a; font-weight: 600; }
-  .task-item .check {
-    width: 20px; height: 20px; border-radius: 50%;
-    border: 2px solid #ece4ff; display: flex; align-items: center;
-    justify-content: center; font-size: 0.72em; color: #fff;
-    background: #fff; flex-shrink: 0;
-  }
-  .task-item.done .check {
-    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
-    border-color: var(--mint-deep);
-  }
 
   /* ============ НАВИГАЦИЯ ============ */
   .nav-bar {
@@ -536,12 +549,13 @@
     .cell .val { font-size: 14px; }
     .nav-bar { padding: 12px 16px; }
     .modal { padding: 28px 24px; }
+    .student-badge { max-width: 140px; }
   }
 </style>
 </head>
 <body>
 
-<!-- МОДАЛКА ВВОДА / СМЕНЫ ИМЕНИ -->
+<!-- МОДАЛКА -->
 <div class="modal-bg hidden" id="nameModal">
   <div class="modal">
     <div class="flower-deco">🌸</div>
@@ -572,7 +586,7 @@
         <span class="count" id="flowersCount">0 / 12</span>
       </div>
       <div class="progress-wrap">
-        <span id="slide-counter">1 / 9</span>
+        <span id="slide-counter">1 / 11</span>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       </div>
     </div>
@@ -580,90 +594,83 @@
 
   <div class="slide-viewport" id="viewport">
 
-    <!-- СЛАЙД 1 -->
+    <!-- СЛАЙД 1 — ВВЕДЕНИЕ -->
     <div class="slide active" data-slide="1">
       <div class="slide-num">Слайд 1 · Введение</div>
-      <h2>Что такое массив и зачем он нужен 💫</h2>
+      <h2>Что такое массив? 💫</h2>
       <p>Массив — это способ хранить много значений под одним именем. Вместо десяти отдельных переменных — один аккуратный массив.</p>
 
       <div class="note love">
         <div class="icon">💖</div>
-        <div>Нажми на карточки ниже — они переворачиваются и показывают примеры массивов из жизни.</div>
+        <div>Нажми на карточки — они переворачиваются и показывают примеры массивов из жизни.</div>
       </div>
 
       <div class="cards">
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
           <div class="flip-inner">
-            <div class="flip-front"><div class="emoji">📊</div><div class="label">Оценки за контрольную</div><div class="hint">нажми →</div></div>
+            <div class="flip-front"><div class="emoji">📊</div><div class="label">Оценки</div><div class="hint">нажми →</div></div>
             <div class="flip-back">Массив чисел:<br><code>[5, 4, 3, 5, 2]</code></div>
           </div>
         </div>
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
           <div class="flip-inner">
-            <div class="flip-front"><div class="emoji">🌡️</div><div class="label">Температура за неделю</div><div class="hint">нажми →</div></div>
-            <div class="flip-back">Массив чисел:<br><code>[18, 20, 17, 22, 19, 21, 23]</code></div>
+            <div class="flip-front"><div class="emoji">🌡️</div><div class="label">Температура</div><div class="hint">нажми →</div></div>
+            <div class="flip-back">Массив чисел:<br><code>[18, 20, 17, 22, 19]</code></div>
           </div>
         </div>
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
           <div class="flip-inner">
-            <div class="flip-front"><div class="emoji">📚</div><div class="label">Список предметов</div><div class="hint">нажми →</div></div>
-            <div class="flip-back">Массив строк:<br><code>["математика", "физика", "химия"]</code></div>
+            <div class="flip-front"><div class="emoji">📚</div><div class="label">Предметы</div><div class="hint">нажми →</div></div>
+            <div class="flip-back">Массив строк:<br><code>["математика", "физика"]</code></div>
           </div>
         </div>
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
           <div class="flip-inner">
-            <div class="flip-front"><div class="emoji">🏃‍♀️</div><div class="label">Время в пути</div><div class="hint">нажми →</div></div>
-            <div class="flip-back">Массив минут:<br><code>[12, 15, 9, 20, 14]</code></div>
+            <div class="flip-front"><div class="emoji">🐾</div><div class="label">Питомцы</div><div class="hint">нажми →</div></div>
+            <div class="flip-back">Массив строк:<br><code>["кошка", "собака", "хомяк"]</code></div>
           </div>
         </div>
       </div>
 
-      <h3>Что нас ждёт на уроке</h3>
+      <h3>Что мы изучим сегодня</h3>
       <div class="task-list">
         <h4>Задания урока — за каждое даётся цветочек 🌸</h4>
-        <div class="task-item" data-task="1"><div class="check">✓</div> Создать свой первый массив</div>
-        <div class="task-item" data-task="2"><div class="check">✓</div> Вписать индексы в код</div>
-        <div class="task-item" data-task="3"><div class="check">✓</div> Изменить элементы массива</div>
-        <div class="task-item" data-task="4"><div class="check">✓</div> Дописать перебор циклом for</div>
-        <div class="task-item" data-task="5"><div class="check">✓</div> Дописать сумму и среднее</div>
-        <div class="task-item" data-task="6"><div class="check">✓</div> Написать код полностью самой</div>
+        <div class="task-item" data-task="1"><div class="check">✓</div> Создать массив и вывести его длину</div>
+        <div class="task-item" data-task="2"><div class="check">✓</div> Достать элементы по индексам</div>
+        <div class="task-item" data-task="3"><div class="check">✓</div> Использовать отрицательные индексы</div>
+        <div class="task-item" data-task="4"><div class="check">✓</div> Изменить элементы массива</div>
+        <div class="task-item" data-task="5"><div class="check">✓</div> Применить методы массива</div>
+        <div class="task-item" data-task="6"><div class="check">✓</div> Пройтись по массиву циклом</div>
+        <div class="task-item" data-task="7"><div class="check">✓</div> Найти сумму и среднее</div>
+        <div class="task-item" data-task="8"><div class="check">✓</div> Написать код полностью самой</div>
       </div>
     </div>
 
-    <!-- СЛАЙД 2 -->
+    <!-- СЛАЙД 2 — ТЕОРИЯ + ПРАКТИКА -->
     <div class="slide" data-slide="2">
       <div class="slide-num">Слайд 2 · Теория</div>
-      <h2>Что такое массив</h2>
-      <p>Массив — это структура данных, в которой хранится несколько значений одного типа под одним именем. В Python для этого используется <b>список</b> (list).</p>
+      <h2>Создаём первый массив</h2>
+      <p>Массив в Python — это <b>список</b>. Он записывается в квадратных скобках, значения разделяются запятыми.</p>
 
-      <div class="note idea">
-        <div class="icon">🎒</div>
-        <div>Представь пенал с ячейками. В каждой ячейке — карандаш. Чтобы достать нужный, ты знаешь <b>номер ячейки</b>. Этот номер называется <b>индексом</b>.</div>
-      </div>
-
-      <h3>Как создать массив</h3>
       <div class="code-block">
         <span class="line"><span class="com"># Массив оценок</span></span>
         <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Массив названий предметов</span></span>
-        <span class="line"><span class="var">subjects</span> = [<span class="str">"математика"</span>, <span class="str">"физика"</span>, <span class="str">"химия"</span>]</span>
+        <span class="line"><span class="com"># Массив имён питомцев</span></span>
+        <span class="line"><span class="var">pets</span> = [<span class="str">"кошка"</span>, <span class="str">"собака"</span>, <span class="str">"хомяк"</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Пустой массив — заготовка</span></span>
+        <span class="line"><span class="com"># Пустой массив</span></span>
         <span class="line"><span class="var">empty</span> = []</span>
       </div>
 
-      <h3>Задание 1. Первое знакомство</h3>
+      <h3>Задание 1. Создай свой массив</h3>
       <div class="editor-box" id="box-task-1">
         <div class="editor-title">
           Задание 1
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Это <b>разминочное задание</b>. Просто нажми «Запустить» и посмотри,
-          как выглядит код и его результат. В следующих заданиях будешь писать сама 🌸
-        </p>
+        <p style="font-size:0.9em;color:#8a7ab0;">Запусти код — увидишь, как выглядит массив и его длина.</p>
         <textarea id="code-task-1"># Массив из 5 чисел
 my_numbers = [7, 3, 9, 1, 5]
 
@@ -678,13 +685,12 @@ print("Всего элементов:", len(my_numbers))</textarea>
       </div>
     </div>
 
-    <!-- СЛАЙД 3 — ИНДЕКСЫ -->
+    <!-- СЛАЙД 3 — ПОЛОЖИТЕЛЬНЫЕ ИНДЕКСЫ -->
     <div class="slide" data-slide="3">
       <div class="slide-num">Слайд 3 · Индексы</div>
-      <h2>Индексы: номер каждой ячейки 🔢</h2>
+      <h2>Индексы — номер каждой ячейки 🔢</h2>
       <p>У каждого элемента есть свой номер — <b>индекс</b>. В Python отсчёт начинается с нуля!</p>
 
-      <h3>Обычные индексы — считаем с начала</h3>
       <div class="code-block">
         <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>]</span>
         <span class="line blank">&nbsp;</span>
@@ -692,37 +698,18 @@ print("Всего элементов:", len(my_numbers))</textarea>
         <span class="line blank">&nbsp;</span>
         <span class="line"><span class="fn">print</span>(<span class="var">grades</span>[<span class="num">0</span>])   <span class="com"># 5 — первая оценка</span></span>
         <span class="line"><span class="fn">print</span>(<span class="var">grades</span>[<span class="num">2</span>])   <span class="com"># 3 — третья оценка</span></span>
-        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>[<span class="num">4</span>])   <span class="com"># 2 — пятая (последняя) оценка</span></span>
       </div>
 
-      <h3>Отрицательные индексы — считаем с конца 🔄</h3>
-      <p>В Python можно считать не только с начала, но и <b>с конца</b>. Для этого используют <b>отрицательные числа</b>:</p>
-
-      <div class="code-block">
-        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>]</span>
-        <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Обычные:    0    1    2    3    4</span></span>
-        <span class="line"><span class="com"># С конца:   -5   -4   -3   -2   -1</span></span>
-        <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>[<span class="num">-1</span>])  <span class="com"># 2 — последний элемент</span></span>
-        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>[<span class="num">-2</span>])  <span class="com"># 5 — предпоследний</span></span>
-      </div>
-
-      <div class="note idea">
-        <div class="icon">💡</div>
-        <div><b>Правило:</b> <code>-1</code> — последний элемент, <code>-2</code> — предпоследний, <code>-3</code> — третий с конца. Так удобно, когда длина массива заранее неизвестна.</div>
-      </div>
-
-      <h3>Нажми на ячейку — увидишь оба индекса 👇</h3>
+      <h3>Нажми на ячейку — увидишь её индекс 👇</h3>
       <div class="array-viz" id="idx-demo"></div>
-      <div class="output" id="idx-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Кликни на ячейку — увидишь её обычный и отрицательный индекс</div>
+      <div class="output" id="idx-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Кликни на ячейку — увидишь её индекс и значение</div>
 
       <div class="note warn">
         <div class="icon">⚠️</div>
-        <div>Если обратиться к несуществующему индексу (например, <code>grades[10]</code>) — Python скажет <b>IndexError</b>.</div>
+        <div>Если обратиться к несуществующему индексу, например <code>grades[10]</code> — Python скажет <b>IndexError</b>.</div>
       </div>
 
-      <h3>Задание 2. Впиши индексы</h3>
+      <h3>Задание 2. Достань элементы по индексам</h3>
       <div class="editor-box" id="box-task-2">
         <div class="editor-title">
           Задание 2
@@ -731,9 +718,8 @@ print("Всего элементов:", len(my_numbers))</textarea>
         </div>
         <p style="font-size:0.9em;color:#8a7ab0;">
           Впиши индексы, чтобы вывести нужные элементы.
-          <br><br>
-          💡 <b>Подсказка:</b> «вишня» — третий элемент, индекс считается с нуля.
-          Для последнего элемента можно использовать <code>-1</code>.
+          <br>
+          💡 «вишня» — третий элемент (индекс считается с нуля!). «слива» — пятый.
         </p>
         <textarea id="code-task-2">fruits = ["яблоко", "банан", "вишня", "груша", "слива"]
 
@@ -743,7 +729,7 @@ print(fruits[0])
 # 2. Третий элемент — "вишня" (впиши индекс)
 print(fruits[?])
 
-# 3. Последний элемент через отрицательный индекс
+# 3. Пятый элемент — "слива" (впиши индекс)
 print(fruits[?])</textarea>
         <button class="btn" onclick="runTask('task-2', 2, checkTask2)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-2')">↺ Сбросить</button>
@@ -762,29 +748,32 @@ print(fruits[?])</textarea>
       </div>
     </div>
 
-    <!-- СЛАЙД 4 -->
+    <!-- СЛАЙД 4 — ОТРИЦАТЕЛЬНЫЕ ИНДЕКСЫ -->
     <div class="slide" data-slide="4">
-      <div class="slide-num">Слайд 4 · Изменение</div>
-      <h2>Изменяем элементы массива 🔄</h2>
-      <p>По индексу можно не только читать значение, но и <b>записывать</b> новое.</p>
+      <div class="slide-num">Слайд 4 · Считаем с конца</div>
+      <h2>Отрицательные индексы 🔄</h2>
+      <p>Если считать с начала неудобно — можно считать <b>с конца</b>. Для этого используют отрицательные числа!</p>
 
       <div class="code-block">
-        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>]</span>
+        <span class="line"><span class="var">fruits</span> = [<span class="str">"яблоко"</span>, <span class="str">"банан"</span>, <span class="str">"вишня"</span>, <span class="str">"груша"</span>, <span class="str">"слива"</span>]</span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Было: индекс 4 → значение 2</span></span>
-        <span class="line"><span class="com"># Меняем на 4 — теперь в массиве [5, 4, 3, 5, 4]</span></span>
-        <span class="line"><span class="var">grades</span>[<span class="num">4</span>] = <span class="num">4</span></span>
+        <span class="line"><span class="com"># Обычные:    0         1        2        3        4</span></span>
+        <span class="line"><span class="com"># С конца:   -5        -4       -3       -2       -1</span></span>
         <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>)</span>
-        <span class="line"><span class="com"># [5, 4, 3, 5, 4]</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="var">fruits</span>[<span class="num">-1</span>])  <span class="com"># слива  — последний</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="var">fruits</span>[<span class="num">-2</span>])  <span class="com"># груша  — предпоследний</span></span>
       </div>
 
-      <div class="note tip">
+      <div class="note idea">
         <div class="icon">💡</div>
-        <div>Запись <code>arr[i] = x</code> означает: «положи в ячейку с номером <code>i</code> значение <code>x</code>». Старое значение стирается.</div>
+        <div><b>Правило:</b> <code>-1</code> — последний, <code>-2</code> — предпоследний, <code>-3</code> — третий с конца. Удобно, когда длина неизвестна.</div>
       </div>
 
-      <h3>Задание 3. Измени оценки</h3>
+      <h3>Нажми на ячейку — увидишь <b>оба</b> индекса 👇</h3>
+      <div class="array-viz" id="idx-demo-2"></div>
+      <div class="output" id="idx-output-2" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Обычный индекс сверху, отрицательный — под ним</div>
+
+      <h3>Задание 3. Используй отрицательные индексы</h3>
       <div class="editor-box" id="box-task-3">
         <div class="editor-title">
           Задание 3
@@ -792,69 +781,42 @@ print(fruits[?])</textarea>
           <span class="done-badge">✓ Выполнено</span>
         </div>
         <p style="font-size:0.9em;color:#8a7ab0;">
-          В классе исправили оценки. Замени <b>последний</b> элемент на <code>5</code>,
-          а <b>третий</b> (индекс 2) — на <code>4</code>.
-          <br><br>
-          💡 <b>Подсказка:</b> последний элемент можно менять как <code>grades[4]</code> или <code>grades[-1]</code>.
+          Впиши отрицательные индексы: последний, предпоследний и третий с конца.
+          <br>
+          💡 Подсказка: последний = <code>-1</code>, предпоследний = <code>-2</code>, третий с конца = <code>-3</code>.
         </p>
-        <textarea id="code-task-3">grades = [5, 4, 3, 5, 2]
-print("Было:", grades)
+        <textarea id="code-task-3">nums = [10, 20, 30, 40, 50]
 
-# 1. Замени последний элемент на 5
-grades[?] = ?
+# 1. Последний элемент
+print(nums[?])
 
-# 2. Замени элемент с индексом 2 на 4
-grades[?] = ?
+# 2. Предпоследний элемент
+print(nums[?])
 
-print("Стало:", grades)</textarea>
+# 3. Третий с конца
+print(nums[?])</textarea>
         <button class="btn" onclick="runTask('task-3', 3, checkTask3)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-3')">↺ Сбросить</button>
         <div class="output" id="out-task-3">Здесь появится результат ✨</div>
       </div>
     </div>
 
-    <!-- СЛАЙД 5 — ПЕРЕБОР -->
+    <!-- СЛАЙД 5 — ИЗМЕНЕНИЕ ЭЛЕМЕНТОВ -->
     <div class="slide" data-slide="5">
-      <div class="slide-num">Слайд 5 · Перебор</div>
-      <h2>Как пройтись по всем элементам? 🚶‍♀️</h2>
-      <p>Для перебора используют цикл <b>for</b>. Есть два способа — оба важны.</p>
+      <div class="slide-num">Слайд 5 · Изменение</div>
+      <h2>Меняем элементы 🔄</h2>
+      <p>По индексу можно не только читать, но и <b>записывать</b> новое значение. Старое стирается.</p>
 
-      <h3>Способ 1: по элементам (просто и коротко)</h3>
       <div class="code-block">
-        <span class="line"><span class="kw">for</span> <span class="var">grade</span> <span class="kw">in</span> <span class="var">grades</span>:</span>
-        <span class="line">    <span class="fn">print</span>(<span class="var">grade</span>)</span>
-      </div>
-      <p style="font-size:0.92em;color:#5a5a7a;">
-        На каждой итерации <code>grade</code> становится очередным значением массива.
-        Если в массиве 5 элементов — цикл выполнится 5 раз.
-      </p>
-
-      <h3>Способ 2: по индексам (когда нужен номер)</h3>
-      <div class="code-block">
-        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">grades</span>)):</span>
-        <span class="line">    <span class="fn">print</span>(<span class="var">i</span>, <span class="var">grades</span>[<span class="var">i</span>])</span>
+        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Меняем последнюю оценку на 4</span></span>
+        <span class="line"><span class="var">grades</span>[<span class="num">4</span>] = <span class="num">4</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>)   <span class="com"># [5, 4, 3, 5, 4]</span></span>
       </div>
 
-      <div class="note idea">
-        <div class="icon">💡</div>
-        <div>
-          <b>Разбираем по частям:</b><br>
-          • <code>len(grades)</code> — сколько элементов в массиве (например, 5)<br>
-          • <code>range(5)</code> — числа 0, 1, 2, 3, 4 — то есть все допустимые индексы<br>
-          • Значит, <code>for i in range(len(grades))</code> — «пройди по всем индексам от 0 до последнего»
-        </div>
-      </div>
-
-      <h3>🎬 Пошаговое выполнение</h3>
-      <p>Нажми «Следующий шаг» — увидишь, как меняется <code>i</code> и что выводит <code>print</code>.</p>
-      <div class="array-viz" id="loop-viz"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn mint" onclick="loopStep()">▶ Следующий шаг</button>
-        <button class="btn ghost small" onclick="loopReset()">↺ Сначала</button>
-      </div>
-      <div class="output" id="loop-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Следующий шаг», чтобы пройтись по массиву</div>
-
-      <h3>Задание 4. Дополни перебор</h3>
+      <h3>Задание 4. Измени оценки</h3>
       <div class="editor-box" id="box-task-4">
         <div class="editor-title">
           Задание 4
@@ -862,58 +824,72 @@ print("Стало:", grades)</textarea>
           <span class="done-badge">✓ Выполнено</span>
         </div>
         <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши <code>print</code>, чтобы вывести <b>индекс и значение</b> в формате <code>0: 5</code>, <code>1: 3</code> и так далее.
-          <br><br>
-          💡 <b>Подсказка:</b> индекс — это <code>i</code>, значение — это <code>numbers[i]</code>.
+          Замени последний элемент на <code>5</code>, а третий (индекс 2) — на <code>4</code>.
+          <br>
+          💡 Подсказка: последний можно менять через <code>[-1]</code> или <code>[4]</code>.
         </p>
-        <textarea id="code-task-4">numbers = [5, 3, 8, 1, 9]
+        <textarea id="code-task-4">grades = [5, 4, 3, 5, 2]
+print("Было:", grades)
 
-for i in range(len(numbers)):
-    # Впиши, что нужно вывести
-    print(?, ?)</textarea>
+# 1. Замени последний элемент на 5
+grades[?] = ?
+
+# 2. Замени третий элемент (индекс 2) на 4
+grades[?] = ?
+
+print("Стало:", grades)</textarea>
         <button class="btn" onclick="runTask('task-4', 4, checkTask4)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-4')">↺ Сбросить</button>
         <div class="output" id="out-task-4">Здесь появится результат ✨</div>
       </div>
     </div>
 
-    <!-- СЛАЙД 6 -->
+    <!-- СЛАЙД 6 — ОПЕРАЦИИ С МАССИВОМ (FLIP-КАРТОЧКИ) -->
     <div class="slide" data-slide="6">
-      <div class="slide-num">Слайд 6 · Практика</div>
-      <h2>Сумма и среднее значение ➕</h2>
-      <p>Одна из частых задач — найти сумму или среднее элементов массива.</p>
+      <div class="slide-num">Слайд 6 · Операции</div>
+      <h2>Полезные команды 🛠️</h2>
+      <p>Нажми на карточку — она перевернётся и покажет пример работы метода.</p>
 
-      <h3>Сумма — двумя способами</h3>
-      <div class="code-block">
-        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">5</span>]</span>
-        <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Способ 1: вручную через for</span></span>
-        <span class="line"><span class="var">total</span> = <span class="num">0</span></span>
-        <span class="line"><span class="kw">for</span> <span class="var">g</span> <span class="kw">in</span> <span class="var">grades</span>:</span>
-        <span class="line">    <span class="var">total</span> = <span class="var">total</span> + <span class="var">g</span></span>
-        <span class="line"><span class="fn">print</span>(<span class="str">"Сумма:"</span>, <span class="var">total</span>)</span>
-        <span class="line blank">&nbsp;</span>
-        <span class="line"><span class="com"># Способ 2: встроенная функция sum()</span></span>
-        <span class="line"><span class="fn">print</span>(<span class="str">"Быстро:"</span>, <span class="fn">sum</span>(<span class="var">grades</span>))</span>
+      <div class="cards">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">📏</div><div class="label">len(arr)</div><div class="hint">длина массива</div></div>
+            <div class="flip-back"><code>len([1,2,3])</code><br>→ 3</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">➕</div><div class="label">.append(x)</div><div class="hint">добавить в конец</div></div>
+            <div class="flip-back"><code>[1,2].append(3)</code><br>→ [1,2,3]</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">➖</div><div class="label">.pop(i)</div><div class="hint">удалить по индексу</div></div>
+            <div class="flip-back"><code>[1,2,3].pop(0)</code><br>→ [2,3]</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">🔍</div><div class="label">.index(x)</div><div class="hint">найти индекс</div></div>
+            <div class="flip-back"><code>[5,7,9].index(7)</code><br>→ 1</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">🔢</div><div class="label">.count(x)</div><div class="hint">посчитать вхождения</div></div>
+            <div class="flip-back"><code>[1,2,1,1].count(1)</code><br>→ 3</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front"><div class="emoji">↩️</div><div class="label">.reverse()</div><div class="hint">перевернуть</div></div>
+            <div class="flip-back"><code>[1,2,3].reverse()</code><br>→ [3,2,1]</div>
+          </div>
+        </div>
       </div>
 
-      <h3>Среднее арифметическое</h3>
-      <div class="code-block">
-        <span class="line"><span class="com"># Среднее = сумма / количество</span></span>
-        <span class="line"><span class="var">avg</span> = <span class="fn">sum</span>(<span class="var">grades</span>) / <span class="fn">len</span>(<span class="var">grades</span>)</span>
-        <span class="line"><span class="fn">print</span>(<span class="str">"Среднее:"</span>, <span class="var">avg</span>)</span>
-      </div>
-
-      <h3>Считаем количество одинаковых элементов</h3>
-      <p>Метод <code>.count(x)</code> возвращает, сколько раз значение <code>x</code> встречается в массиве.</p>
-      <div class="code-block">
-        <span class="line"><span class="com"># Сколько пятёрок в массиве?</span></span>
-        <span class="line"><span class="var">fives</span> = <span class="var">grades</span>.<span class="fn">count</span>(<span class="num">5</span>)</span>
-        <span class="line"><span class="fn">print</span>(<span class="str">"Пятёрок:"</span>, <span class="var">fives</span>)</span>
-        <span class="line"><span class="com"># Пятёрок: 3</span></span>
-      </div>
-
-      <h3>Задание 5. Сумма и среднее</h3>
+      <h3>Задание 5. Примени методы на практике</h3>
       <div class="editor-box" id="box-task-5">
         <div class="editor-title">
           Задание 5
@@ -921,30 +897,186 @@ for i in range(len(numbers)):
           <span class="done-badge">✓ Выполнено</span>
         </div>
         <p style="font-size:0.9em;color:#8a7ab0;">
-          Допиши формулу, чтобы найти среднее арифметическое температур.
-          <br><br>
-          💡 <b>Подсказка:</b> среднее = сумма всех значений ÷ количество значений.
+          Допиши код: добавь в массив <code>pets</code> ещё одного питомца через <code>.append()</code>
+          и выведи количество питомцев через <code>len()</code>.
+          <br>
+          💡 Подсказка: `pets.append("хомяк")` добавит хомяка в конец.
         </p>
-        <textarea id="code-task-5">temps = [18, 20, 17, 22, 19, 21, 23]
+        <textarea id="code-task-5">pets = ["кошка", "собака"]
 
-# Найди сумму температур
-total = sum(temps)
-print("Сумма:", total)
+# 1. Добавь хомяка в конец массива
+pets.?
 
-# Найди среднее арифметическое — впиши формулу
-avg = ? / ?
-print("Среднее:", avg)</textarea>
+# 2. Выведи массив
+print(pets)
+
+# 3. Выведи количество элементов
+print("Всего:", ?)</textarea>
         <button class="btn" onclick="runTask('task-5', 5, checkTask5)">▶ Запустить</button>
         <button class="btn ghost" onclick="resetTask('task-5')">↺ Сбросить</button>
         <div class="output" id="out-task-5">Здесь появится результат ✨</div>
       </div>
     </div>
 
-    <!-- СЛАЙД 7 -->
+    <!-- СЛАЙД 7 — ПЕРЕБОР ПО ЭЛЕМЕНТАМ -->
     <div class="slide" data-slide="7">
-      <div class="slide-num">Слайд 7 · Самостоятельно</div>
-      <h2>Задание 6. Напиши код сама ✍️</h2>
-      <p>Это задание — полностью самостоятельное. Используй всё, что узнала на уроке.</p>
+      <div class="slide-num">Слайд 7 · Перебор</div>
+      <h2>Проходим по элементам 🚶</h2>
+      <p>Чтобы пройтись по всему массиву, используют цикл <b>for</b>. Самый простой способ — по элементам.</p>
+
+      <div class="code-block">
+        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">3</span>, <span class="num">4</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="kw">for</span> <span class="var">g</span> <span class="kw">in</span> <span class="var">grades</span>:</span>
+        <span class="line">    <span class="fn">print</span>(<span class="var">g</span>)</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># 5</span></span>
+        <span class="line"><span class="com"># 3</span></span>
+        <span class="line"><span class="com"># 4</span></span>
+      </div>
+
+      <h3>🎬 Пошаговое выполнение</h3>
+      <div class="array-viz" id="loop-viz"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn mint" onclick="loopStep()">▶ Следующий шаг</button>
+        <button class="btn ghost small" onclick="loopReset()">↺ Сначала</button>
+      </div>
+      <div class="output" id="loop-output" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Следующий шаг»</div>
+
+      <h3>Задание 6. Пройдись по массиву</h3>
+      <div class="editor-box" id="box-task-6">
+        <div class="editor-title">
+          Задание 6
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши цикл, чтобы вывести каждый элемент массива на отдельной строке.
+          <br>
+          💡 Подсказка: используй <code>for x in nums:</code> и <code>print(x)</code>.
+        </p>
+        <textarea id="code-task-6">nums = [10, 25, 7, 42, 15]
+
+# Пройдись по каждому элементу и выведи его
+for x in ?:
+    print(?)</textarea>
+        <button class="btn" onclick="runTask('task-6', 6, checkTask6)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-6')">↺ Сбросить</button>
+        <div class="output" id="out-task-6">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- СЛАЙД 8 — ПЕРЕБОР ПО ИНДЕКСАМ -->
+    <div class="slide" data-slide="8">
+      <div class="slide-num">Слайд 8 · Перебор по индексам</div>
+      <h2>Перебор с номерами 🔢</h2>
+      <p>Иногда нужен не только элемент, но и его <b>номер</b>. Тогда перебирают по индексам через <code>range(len(...))</code>.</p>
+
+      <div class="code-block">
+        <span class="line"><span class="var">nums</span> = [<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">nums</span>)):</span>
+        <span class="line">    <span class="fn">print</span>(<span class="var">i</span>, <span class="var">nums</span>[<span class="var">i</span>])</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># 0 5</span></span>
+        <span class="line"><span class="com"># 1 3</span></span>
+        <span class="line"><span class="com"># 2 8</span></span>
+      </div>
+
+      <div class="note idea">
+        <div class="icon">💡</div>
+        <div>
+          <b>Как это читается:</b><br>
+          • <code>len(nums)</code> — сколько элементов (3)<br>
+          • <code>range(3)</code> — числа 0, 1, 2<br>
+          • На каждой итерации <code>i</code> становится индексом, а <code>nums[i]</code> — элементом.
+        </div>
+      </div>
+
+      <h3>🎬 Пошаговое выполнение</h3>
+      <div class="array-viz" id="loop-viz-2"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn mint" onclick="loopStep2()">▶ Следующий шаг</button>
+        <button class="btn ghost small" onclick="loopReset2()">↺ Сначала</button>
+      </div>
+      <div class="output" id="loop-output-2" style="background:#f4ebff;border-color:#d9c8ff;color:#5a4a8a;">Нажми «Следующий шаг»</div>
+
+      <h3>Задание 7. Перебор по индексам</h3>
+      <div class="editor-box" id="box-task-7">
+        <div class="editor-title">
+          Задание 7
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Допиши <code>print</code>, чтобы вывести индекс и значение в формате <code>0: 5</code>, <code>1: 3</code>.
+          <br>
+          💡 Подсказка: индекс — <code>i</code>, значение — <code>numbers[i]</code>.
+        </p>
+        <textarea id="code-task-7">numbers = [5, 3, 8, 1, 9]
+
+for i in range(len(numbers)):
+    # Выведи индекс и значение через двоеточие
+    print(?, ":", ?)</textarea>
+        <button class="btn" onclick="runTask('task-7', 7, checkTask7)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-7')">↺ Сбросить</button>
+        <div class="output" id="out-task-7">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- СЛАЙД 9 — СУММА, СРЕДНЕЕ, COUNT -->
+    <div class="slide" data-slide="9">
+      <div class="slide-num">Слайд 9 · Практика</div>
+      <h2>Сумма, среднее, подсчёт ➕</h2>
+      <p>Частые задачи — найти сумму, среднее или посчитать, сколько раз встречается значение.</p>
+
+      <div class="code-block">
+        <span class="line"><span class="var">grades</span> = [<span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">5</span>]</span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Сумма</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="fn">sum</span>(<span class="var">grades</span>))              <span class="com"># 28</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Среднее = сумма / количество</span></span>
+        <span class="line"><span class="var">avg</span> = <span class="fn">sum</span>(<span class="var">grades</span>) / <span class="fn">len</span>(<span class="var">grades</span>)</span>
+        <span class="line"><span class="fn">print</span>(<span class="var">avg</span>)                       <span class="com"># 4.0</span></span>
+        <span class="line blank">&nbsp;</span>
+        <span class="line"><span class="com"># Сколько пятёрок?</span></span>
+        <span class="line"><span class="fn">print</span>(<span class="var">grades</span>.<span class="fn">count</span>(<span class="num">5</span>))         <span class="com"># 3</span></span>
+      </div>
+
+      <h3>Задание 8. Сумма и среднее</h3>
+      <div class="editor-box" id="box-task-8">
+        <div class="editor-title">
+          Задание 8
+          <span class="task-badge">+1 🌸</span>
+          <span class="done-badge">✓ Выполнено</span>
+        </div>
+        <p style="font-size:0.9em;color:#8a7ab0;">
+          Найди среднее арифметическое температур. И выведи, сколько раз встречается 20.
+        </p>
+        <textarea id="code-task-8">temps = [18, 20, 17, 22, 19, 21, 20]
+
+# 1. Найди сумму
+total = sum(temps)
+print("Сумма:", total)
+
+# 2. Найди среднее арифметическое
+avg = ? / ?
+print("Среднее:", avg)
+
+# 3. Посчитай, сколько раз встречается 20
+print("Двадцаток:", temps.?)</textarea>
+        <button class="btn" onclick="runTask('task-8', 8, checkTask8)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-8')">↺ Сбросить</button>
+        <div class="output" id="out-task-8">Здесь появится результат ✨</div>
+      </div>
+    </div>
+
+    <!-- СЛАЙД 10 — САМОСТОЯТЕЛЬНОЕ ЗАДАНИЕ -->
+    <div class="slide" data-slide="10">
+      <div class="slide-num">Слайд 10 · Самостоятельно</div>
+      <h2>Напиши код сама ✍️</h2>
+      <p>Это задание — полностью самостоятельное. Используй всё, что узнала.</p>
 
       <div class="note love">
         <div class="icon">🌟</div>
@@ -955,65 +1087,48 @@ print("Среднее:", avg)</textarea>
         </div>
       </div>
 
-      <div class="editor-box" id="box-task-6">
+      <div class="editor-box" id="box-task-9">
         <div class="editor-title">
-          Задание 6
+          Задание 9
           <span class="task-badge">+1 🌸</span>
           <span class="done-badge">✓ Выполнено</span>
         </div>
-        <p style="font-size:0.9em;color:#8a7ab0;">
-          Поле пустое — напиши код полностью сама.
-          <br><br>
-          💡 <b>Подсказка:</b> у тебя уже есть массив <code>grades</code>.
-          Сначала найди сумму, потом среднее, потом количество пятёрок. Каждое значение выведи через <code>print()</code>.
-        </p>
-        <textarea id="code-task-6" style="min-height: 180px;">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5]
+        <textarea id="code-task-9" style="min-height: 180px;">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5]
 
 # 1. Найди сумму и выведи её
 # 2. Найди средний балл и выведи его
 # 3. Найди количество пятёрок и выведи его
 </textarea>
-        <button class="btn" onclick="runTask('task-6', 6, checkTask6)">▶ Запустить</button>
-        <button class="btn ghost" onclick="resetTask('task-6')">↺ Сбросить</button>
-        <button class="btn mint" onclick="showHint6()">💡 Подсказка</button>
-        <div class="output" id="out-task-6">Здесь появится результат ✨</div>
+        <button class="btn" onclick="runTask('task-9', 9, checkTask9)">▶ Запустить</button>
+        <button class="btn ghost" onclick="resetTask('task-9')">↺ Сбросить</button>
+        <button class="btn mint" onclick="showHint9()">💡 Подсказка</button>
+        <div class="output" id="out-task-9">Здесь появится результат ✨</div>
       </div>
     </div>
 
-    <!-- СЛАЙД 8 -->
-    <div class="slide" data-slide="8">
-      <div class="slide-num">Слайд 8 · Итоги</div>
-      <h2>Что мы узнали на уроке 1 🌟</h2>
+    <!-- СЛАЙД 11 — ИТОГИ И ФИНАЛ -->
+    <div class="slide" data-slide="11">
+      <div class="slide-num">Слайд 11 · Финал</div>
+      <h2>Урок 1 завершён 🌸</h2>
 
       <div class="code-block" style="border-color:#a8e6cf;">
-        <span class="line">🌸  Массив — структура для хранения нескольких значений</span>
-        <span class="line">🌸  Индексы начинаются с нуля: 0, 1, 2, …</span>
-        <span class="line">🌸  Отрицательные индексы: -1 (последний), -2 (предпоследний)</span>
-        <span class="line">🌸  len(arr) — длина массива</span>
-        <span class="line">🌸  arr[i] — получение элемента по индексу</span>
-        <span class="line">🌸  arr[i] = x — изменение элемента</span>
-        <span class="line">🌸  for — перебор элементов</span>
-        <span class="line">🌸  sum(), count() — сумма и подсчёт</span>
+        <span class="line">🌸  Массив — структура для нескольких значений</span>
+        <span class="line">🌸  Индексы с нуля: 0, 1, 2, …</span>
+        <span class="line">🌸  Отрицательные: -1 (последний), -2, -3, …</span>
+        <span class="line">🌸  arr[i] — чтение, arr[i] = x — запись</span>
+        <span class="line">🌸  len, .append, .count — работа с массивом</span>
+        <span class="line">🌸  for — перебор по элементам и по индексам</span>
+        <span class="line">🌸  sum, len — сумма и среднее</span>
       </div>
 
       <h3>Финальная проверка 🎯</h3>
       <div class="quiz" data-correct="1">
-        <div class="question">Какой индекс у последнего элемента массива из 5 элементов?</div>
+        <div class="question">Какой индекс у последнего элемента массива из 5 элементов? (Выбери <b>все</b> правильные варианты)</div>
         <div class="options">
-          <button class="quiz-option" data-i="0"><span class="letter">A</span> 5</button>
+          <button class="quiz-option" data-i="0"><span class="letter">A</span> Только 5</button>
           <button class="quiz-option" data-i="1"><span class="letter">B</span> 4 или -1</button>
-          <button class="quiz-option" data-i="2"><span class="letter">C</span> -5</button>
+          <button class="quiz-option" data-i="2"><span class="letter">C</span> Только -5</button>
           <button class="quiz-option" data-i="3"><span class="letter">D</span> 0</button>
-        </div>
-      </div>
-
-      <div class="quiz" data-correct="2">
-        <div class="question">Что вернёт <code>len([10, 20, 30, 40])</code>?</div>
-        <div class="options">
-          <button class="quiz-option" data-i="0"><span class="letter">A</span> 40</button>
-          <button class="quiz-option" data-i="1"><span class="letter">B</span> 3</button>
-          <button class="quiz-option" data-i="2"><span class="letter">C</span> 4</button>
-          <button class="quiz-option" data-i="3"><span class="letter">D</span> Ошибку</button>
         </div>
       </div>
 
@@ -1026,24 +1141,12 @@ print("Среднее:", avg)</textarea>
           <button class="quiz-option" data-i="3"><span class="letter">D</span> Ошибку</button>
         </div>
       </div>
-    </div>
-
-    <!-- СЛАЙД 9 -->
-    <div class="slide" data-slide="9">
-      <div class="slide-num">Слайд 9 · Финал</div>
-      <h2>Урок 1 завершён 🌸</h2>
-      <p>Ты хорошо поработала! Вот твой букет:</p>
 
       <div class="bouquet">
         <div class="flowers-big" id="end-flowers">🌸</div>
-        <div class="score-big" id="end-score">0 / 6</div>
+        <div class="score-big" id="end-score">0 / 9</div>
         <div class="score-label">выполненных заданий</div>
         <h2 style="margin-top:20px;font-size:1.3em;" id="end-message">Молодец!</h2>
-      </div>
-
-      <div class="note idea">
-        <div class="icon">📌</div>
-        <div>На <b>уроке 2</b> мы продолжим: научимся искать элементы, фильтровать, сортировать и сделаем мини-проект.</div>
       </div>
 
       <div style="text-align:center;margin-top:20px;">
@@ -1062,7 +1165,7 @@ print("Среднее:", avg)</textarea>
 
 <script>
 /* ==========================================================
-   ОПРЕДЕЛЯЕМ РЕЖИМ УЧИТЕЛЯ (if в iframe)
+   РЕЖИМ УЧИТЕЛЯ
    ========================================================== */
 const isInIframe = (() => {
   try { return window.self !== window.top; }
@@ -1071,7 +1174,7 @@ const isInIframe = (() => {
 if (isInIframe) document.body.classList.add('teacher-mode');
 
 /* ==========================================================
-   ПРОГРЕСС + LOCALSTORAGE
+   ПРОГРЕСС
    ========================================================== */
 const STORAGE_KEY = 'python_arrays_progress';
 let progress = {
@@ -1129,7 +1232,6 @@ function startLesson() {
   updateFlowerUI();
   closeNameModal();
 }
-
 function openNameModal() {
   if (isInIframe) return;
   const modal = document.getElementById('nameModal');
@@ -1150,15 +1252,12 @@ function openNameModal() {
     text.innerHTML = 'Введи своё имя, чтобы начать урок.<br>За каждое выполненное задание ты будешь получать цветочек 🌸';
     btn.textContent = 'Начать урок';
   }
-
   modal.classList.remove('hidden');
   setTimeout(() => input.focus(), 100);
 }
-
 function closeNameModal() {
   document.getElementById('nameModal').classList.add('hidden');
 }
-
 document.getElementById('nameInput').addEventListener('input', e => {
   document.getElementById('startBtn').disabled = !e.target.value.trim();
 });
@@ -1212,14 +1311,15 @@ document.addEventListener('keydown', e => {
 });
 
 function updateFinalSlide() {
-  const n = ['task1','task2','task3','task4','task5','task6'].filter(k => progress[k]).length;
+  const n = ['task1','task2','task3','task4','task5','task6','task7','task8','task9']
+    .filter(k => progress[k]).length;
   document.getElementById('end-flowers').textContent = '🌸'.repeat(Math.max(n,1));
-  document.getElementById('end-score').textContent = `${n} / 6`;
+  document.getElementById('end-score').textContent = `${n} / 9`;
   const name = progress.name || 'Умница';
   let msg = `${name}, хорошее начало!`;
-  if (n >= 6) msg = `${name}, ты собрала полный букет! Отличная работа! 🏆`;
-  else if (n >= 4) msg = `${name}, ты почти собрала букет! Осталось совсем немного.`;
-  else if (n >= 2) msg = `${name}, неплохо! Продолжай в том же духе.`;
+  if (n >= 9) msg = `${name}, ты собрала полный букет! Отличная работа! 🏆`;
+  else if (n >= 6) msg = `${name}, ты почти собрала букет! Осталось совсем немного.`;
+  else if (n >= 3) msg = `${name}, неплохо! Продолжай в том же духе.`;
   document.getElementById('end-message').textContent = msg;
 }
 
@@ -1239,7 +1339,7 @@ document.querySelectorAll('.quiz').forEach(quiz => {
 });
 
 /* ==========================================================
-   ИНТЕРПРЕТАТОР PYTHON-ПОДОБНОГО КОДА
+   ИНТЕРПРЕТАТОР
    ========================================================== */
 function fmt(v) {
   if (Array.isArray(v)) return '[' + v.map(x => typeof x === 'string' ? `'${x}'` : fmt(x)).join(', ') + ']';
@@ -1248,9 +1348,25 @@ function fmt(v) {
   if (v === null || v === undefined) return 'None';
   return String(v);
 }
+
 function runCodeRaw(code) {
   let buffer = '';
   const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
+
+  // Пустое поле?
+  const codeStripped = code.split('\n').map(l => l.split('#')[0]).join('').trim();
+  if (!codeStripped) {
+    return { output: '', error: null, empty: true };
+  }
+
+  // Остались знаки вопроса?
+  if (/\[\s*\?\s*\]/.test(code) || /if\s*\?/.test(code) || /print\s*\(\s*\?/.test(code) || /\.\?\s*\(/.test(code) || /=\s*\?(?!\w)/.test(code)) {
+    return {
+      output: buffer,
+      error: 'Похоже, ты ещё не вписала значение вместо знака вопроса «?». Впиши и попробуй снова.'
+    };
+  }
+
   try {
     const js = translatePython(code);
     const wrapped = `
@@ -1261,6 +1377,27 @@ function runCodeRaw(code) {
       const __max = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.max(...a[0]) : Math.max(...a);
       const __sorted = (arr) => [...arr].sort((a,b)=> a<b?-1:a>b?1:0);
       const __round = (x, n=0) => { const p = Math.pow(10, n); return Math.round(x*p)/p; };
+      const __get = (arr, i) => {
+        if (Array.isArray(arr) || typeof arr === 'string') {
+          const idx = i < 0 ? arr.length + i : i;
+          const val = arr[idx];
+          return val === undefined ? null : val;
+        }
+        return null;
+      };
+      const __set = (arr, i, val) => {
+        const idx = i < 0 ? arr.length + i : i;
+        arr[idx] = val;
+        return val;
+      };
+      const __slice = (arr, a, b) => {
+        if (typeof a === 'number' && typeof b === 'number') {
+          let start = a < 0 ? arr.length + a : a;
+          let end = b < 0 ? arr.length + b : b;
+          return arr.slice(start, end);
+        }
+        return arr.slice(a, b);
+      };
       const __range = (...a) => {
         let start=0, stop, step=1;
         if (a.length===1) stop=a[0];
@@ -1289,6 +1426,7 @@ function runCodeRaw(code) {
     return { output: buffer, error: e.message };
   }
 }
+
 function translatePython(code) {
   const lines = code.split('\n'); let js = ''; const stack = [];
   for (let raw of lines) {
@@ -1306,6 +1444,16 @@ function translatePython(code) {
     t = t.replace(/\brange\s*\(/g, '__range(');
     t = t.replace(/\bTrue\b/g, 'true'); t = t.replace(/\bFalse\b/g, 'false'); t = t.replace(/\bNone\b/g, 'null');
     t = t.replace(/\band\b/g, '&&'); t = t.replace(/\bor\b/g, '||'); t = t.replace(/\bnot\s+/g, '!');
+
+    // Индексы: присваивание и чтение
+    if (/([A-Za-z_]\w*)\[[^\]]+\]\s*=/.test(t)) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]\s*=\s*(.+)/g,
+        (m, arr, idx, val) => `__set(${arr}, ${idx}, ${val})`);
+    }
+    if (!t.includes('__get(') && !t.includes('__set(')) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]/g, '__get($1, $2)');
+    }
+
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+not\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '!__in($1, $2)');
     t = t.replace(/([A-Za-z_][\w\.\[\]]*)\s+in\s+([A-Za-z_][\w\.\[\]]*)/g, '__in($1, $2)');
     t = t.replace(/([A-Za-z_]\w*)\.append\s*\(/g, '__append($1, ');
@@ -1316,6 +1464,7 @@ function translatePython(code) {
     t = t.replace(/([A-Za-z_]\w*)\.count\s*\(/g, '__count($1, ');
     t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
     t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
+
     let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
     if (mFor) { js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`; stack.push(indent); continue; }
     let mWhile = t.match(/^while\s+(.+):$/);
@@ -1328,6 +1477,7 @@ function translatePython(code) {
     if (t === 'break') { js += ' '.repeat(indent) + 'break;\n'; continue; }
     if (t === 'continue') { js += ' '.repeat(indent) + 'continue;\n'; continue; }
     if (t === 'pass') { js += ' '.repeat(indent) + ';\n'; continue; }
+
     js += ' '.repeat(indent) + t + ';\n';
   }
   while (stack.length) { js += '}\n'; stack.pop(); }
@@ -1339,7 +1489,7 @@ function translatePython(code) {
    ========================================================== */
 const taskDefaults = {};
 function saveDefaults() {
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 9; i++) {
     const el = document.getElementById('code-task-' + i);
     if (el) taskDefaults[i] = el.value;
   }
@@ -1351,14 +1501,18 @@ function runTask(taskId, taskNum, checker) {
   const out = document.getElementById('out-' + taskId);
   const box = document.getElementById('box-' + taskId);
   const result = runCodeRaw(code);
+  if (result.empty) {
+    out.textContent = 'Сначала напиши код, а потом нажми «Запустить» ✍️';
+    out.classList.remove('error','success');
+    return;
+  }
   if (result.error) {
-    out.textContent = result.output + '\n❌ Ошибка: ' + result.error;
+    out.textContent = result.output + '\n❌ ' + result.error;
     out.classList.add('error'); out.classList.remove('success');
     return;
   }
   out.textContent = result.output;
   out.classList.remove('error');
-  // В режиме учителя — только запускаем код, никаких проверок и наград
   if (isInIframe) return;
   if (checker) {
     const ok = checker(code, result.output);
@@ -1379,10 +1533,11 @@ function resetTask(taskId) {
   const out = document.getElementById('out-' + taskId);
   out.textContent = 'Здесь появится результат ✨';
   out.classList.remove('error','success');
+  // Не убираем class 'completed', если задание уже было выполнено
 }
 
 /* ==========================================================
-   ПРОВЕРКИ ЗАДАНИЙ 1–6 (ОСЛАБЛЕННЫЕ)
+   ПРОВЕРКИ ЗАДАНИЙ 1–9 (ОСЛАБЛЕННЫЕ)
    ========================================================== */
 function cleanOutput(output) {
   return output.replace(/\s+/g, '').toLowerCase();
@@ -1404,59 +1559,98 @@ function checkTask2(code, output) {
   const hasCherry = o.includes('вишня');
   const hasPlum = o.includes('слива');
   const hasIdx2 = /fruits\s*\[\s*2\s*\]/.test(code);
-  const hasLast = /fruits\s*\[\s*-\s*1\s*\]/.test(code) || /fruits\s*\[\s*4\s*\]/.test(code);
-  return hasApple && hasCherry && hasPlum && hasIdx2 && hasLast;
+  const hasIdx4 = /fruits\s*\[\s*4\s*\]/.test(code);
+  return hasApple && hasCherry && hasPlum && hasIdx2 && hasIdx4;
 }
 
 function checkTask3(code, output) {
+  const o = cleanOutput(output);
+  if (/\[\s*\?\s*\]/.test(code)) return false;
+  // Ожидаем вывод: 50 (последний), 40 (предпоследний), 30 (третий с конца)
+  const has50 = /(^|[^\d])50([^\d]|$)/.test(o);
+  const has40 = /(^|[^\d])40([^\d]|$)/.test(o);
+  const has30 = /(^|[^\d])30([^\d]|$)/.test(o);
+  // Хотя бы один из них использовал отрицательный индекс
+  const hasMinus1 = /nums\s*\[\s*-\s*1\s*\]/.test(code);
+  const hasMinus2 = /nums\s*\[\s*-\s*2\s*\]/.test(code);
+  const hasMinus3 = /nums\s*\[\s*-\s*3\s*\]/.test(code);
+  return has50 && has40 && has30 && hasMinus1 && hasMinus2 && hasMinus3;
+}
+
+function checkTask4(code, output) {
   if (/\[\s*\?\s*\]/.test(code)) return false;
   const o = cleanOutput(output);
   const hasFinal = /\[5\s*,\s*4\s*,\s*4\s*,\s*5\s*,\s*5\s*\]/.test(output) ||
                    o.includes('[5,4,4,5,5]');
-  const hasAssign4to5 = /grades\s*\[\s*4\s*\]\s*=\s*5/.test(code) ||
+  const hasAssignLast = /grades\s*\[\s*4\s*\]\s*=\s*5/.test(code) ||
                         /grades\s*\[\s*-\s*1\s*\]\s*=\s*5/.test(code);
-  const hasAssign2to4 = /grades\s*\[\s*2\s*\]\s*=\s*4/.test(code);
-  return hasFinal && hasAssign4to5 && hasAssign2to4;
-}
-
-function checkTask4(code, output) {
-  if (/print\s*\(\s*\?\s*,\s*\?\s*\)/.test(code)) return false;
-  const lines = output.trim().split('\n').filter(l => l.trim());
-  if (lines.length < 5) return false;
-  const o = cleanOutput(output);
-  const hasAllNums = ['5','3','8','1','9'].every(n => o.includes(n));
-  const hasAllIdx = ['0','1','2','3','4'].every(n => o.includes(n));
-  return hasAllNums && hasAllIdx;
+  const hasAssign2 = /grades\s*\[\s*2\s*\]\s*=\s*4/.test(code);
+  return hasFinal && hasAssignLast && hasAssign2;
 }
 
 function checkTask5(code, output) {
-  if (/avg\s*=\s*\?\s*\/\s*\?/.test(code)) return false;
   const o = cleanOutput(output);
-  const hasSum = /sum\s*\(\s*temps\s*\)/.test(code);
-  const hasLen = /len\s*\(\s*temps\s*\)/.test(code);
-  const has140 = /140/.test(o);
-  const has20 = /20(\.0)?/.test(o);
-  return hasSum && hasLen && has140 && has20;
+  if (/\.\?\s*\(/.test(code) || /print\s*\([^)]*\?/.test(code)) return false;
+  const hasAppend = /\.append\s*\(/.test(code);
+  const hasLen = /len\s*\(\s*pets\s*\)/.test(code);
+  const has3 = /3/.test(o);
+  const hasHamster = o.includes('хомяк');
+  return hasAppend && hasLen && has3 && hasHamster;
 }
 
 function checkTask6(code, output) {
+  if (/for\s+x\s+in\s+\?/.test(code) || /print\s*\(\s*\?\s*\)/.test(code)) return false;
+  const o = cleanOutput(output);
+  // Должны вывестись все 5 чисел
+  const hasAll = ['10','25','7','42','15'].every(n => o.includes(n));
+  const hasFor = /for\s+\w+\s+in\s+nums/.test(code);
+  return hasAll && hasFor;
+}
+
+function checkTask7(code, output) {
+  if (/print\s*\(\s*\?\s*,\s*"?\s*:?\s*"?\s*,\s*\?\s*\)/.test(code)) return false;
+  const lines = output.trim().split('\n').filter(l => l.trim());
+  if (lines.length < 5) return false;
+  const o = cleanOutput(output);
+  // Должны быть все индексы 0-4 и все значения 5,3,8,1,9
+  const hasAllIdx = ['0','1','2','3','4'].every(n => o.includes(n));
+  const hasAllNums = ['5','3','8','1','9'].every(n => o.includes(n));
+  // И двоеточия
+  const hasColon = /:/.test(output);
+  return hasAllIdx && hasAllNums && hasColon;
+}
+
+function checkTask8(code, output) {
+  if (/avg\s*=\s*\?\s*\/\s*\?/.test(code) || /temps\.\?/.test(code)) return false;
+  const o = cleanOutput(output);
+  // temps = [18, 20, 17, 22, 19, 21, 20] → сумма 137, среднее ≈ 19.57, count(20)=2
+  const hasSum = /137/.test(o);
+  const hasAvg = /19[.,]5/.test(o);
+  const hasCount20 = /(^|[^\d])2([^\d]|$)/.test(o);
+  const hasSumFn = /sum\s*\(\s*temps\s*\)/.test(code);
+  const hasLen = /len\s*\(\s*temps\s*\)/.test(code);
+  const hasCount = /\.count\s*\(/.test(code);
+  return hasSumFn && hasLen && hasCount && hasSum && hasAvg && hasCount20;
+}
+
+function checkTask9(code, output) {
   const codeOnly = code
     .split('\n')
     .map(line => line.split('#')[0])
     .join('')
     .replace(/\s+/g, '');
-  if (codeOnly.length < 30) return false;
-
+  if (codeOnly.length < 40) return false;
   const o = cleanOutput(output);
-  const has45 = /45/.test(o);
-  const hasAvg = /4\.5|4,5/.test(o);
+  // grades = [5,4,3,5,2,4,5,3,4,5] → сумма 45, среднее 4.5, пятёрок 4
+  const has45 = /(^|[^\d])45([^\d]|$)/.test(o);
+  const hasAvg = /4[.,]5/.test(o);
   const hasFives = /(^|[^\d])4([^\d]|$)/.test(o);
   const count = [has45, hasAvg, hasFives].filter(Boolean).length;
-  return count >= 3;  // требуем все три значения
+  return count >= 3;
 }
 
-function showHint6() {
-  const out = document.getElementById('out-task-6');
+function showHint9() {
+  const out = document.getElementById('out-task-9');
   out.textContent = '💡 Подсказка:\n\n' +
     'total = sum(grades)\n' +
     'avg = sum(grades) / len(grades)\n' +
@@ -1468,7 +1662,7 @@ function showHint6() {
 }
 
 /* ==========================================================
-   ВИЗУАЛИЗАТОР ИНДЕКСОВ (ОБЫЧНЫЙ + ОТРИЦАТЕЛЬНЫЙ)
+   ВИЗУАЛИЗАТОР ИНДЕКСОВ (положительные)
    ========================================================== */
 const idxData = [5, 4, 3, 5, 2];
 (function buildIdxDemo() {
@@ -1476,45 +1670,98 @@ const idxData = [5, 4, 3, 5, 2];
   idxData.forEach((v, i) => {
     const c = document.createElement('div');
     c.className = 'cell';
-    const negIdx = i - idxData.length; // -5..-1
-    c.innerHTML = `<div class="idx">${i}<span class="neg">${negIdx}</span></div><div class="val">${v}</div>`;
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
     c.onclick = () => {
       document.querySelectorAll('#idx-demo .cell').forEach(el => el.classList.remove('highlight'));
       c.classList.add('highlight');
-      document.getElementById('idx-output').textContent =
-        `Значение ${v}: обычный индекс ${i}, отрицательный индекс ${negIdx}`;
+      document.getElementById('idx-output').textContent = `Индекс ${i} → значение ${v}`;
     };
     box.appendChild(c);
   });
 })();
 
 /* ==========================================================
-   ВИЗУАЛИЗАТОР ПЕРЕБОРА
+   ВИЗУАЛИЗАТОР ИНДЕКСОВ (положительные + отрицательные)
    ========================================================== */
-let loopArr = [5, 3, 8, 1, 9];
+(function buildIdxDemo2() {
+  const box = document.getElementById('idx-demo-2');
+  if (!box) return;
+  idxData.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'cell';
+    const negIdx = i - idxData.length;
+    c.innerHTML = `<div class="idx">${i}<span class="neg">${negIdx}</span></div><div class="val">${v}</div>`;
+    c.onclick = () => {
+      document.querySelectorAll('#idx-demo-2 .cell').forEach(el => el.classList.remove('highlight'));
+      c.classList.add('highlight');
+      document.getElementById('idx-output-2').textContent =
+        `Значение ${v}: обычный индекс ${i}, отрицательный ${negIdx}`;
+    };
+    box.appendChild(c);
+  });
+})();
+
+/* ==========================================================
+   ВИЗУАЛИЗАТОР ПЕРЕБОРА (по элементам)
+   ========================================================== */
+let loopArr = [5, 3, 4];
 let loopPos = -1;
 function renderLoop(highlight=-1) {
   const box = document.getElementById('loop-viz');
+  if (!box) return;
   box.innerHTML = '';
   loopArr.forEach((v, i) => {
     const c = document.createElement('div');
     c.className = 'cell' + (i === highlight ? ' highlight' : '');
-    const negIdx = i - loopArr.length;
-    c.innerHTML = `<div class="idx">${i}<span class="neg">${negIdx}</span></div><div class="val">${v}</div>`;
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
     box.appendChild(c);
   });
 }
 function loopStep() {
   loopPos++;
   if (loopPos >= loopArr.length) {
-    document.getElementById('loop-output').textContent = '✅ Массив пройден! Нажми «Сначала» для повтора.';
+    document.getElementById('loop-output').textContent = '✅ Массив пройден!';
     renderLoop(-1); return;
   }
   renderLoop(loopPos);
-  document.getElementById('loop-output').textContent = `Шаг ${loopPos + 1}: i = ${loopPos}, numbers[${loopPos}] = ${loopArr[loopPos]}\nprint → "${loopPos}: ${loopArr[loopPos]}"`;
+  document.getElementById('loop-output').textContent = `x = ${loopArr[loopPos]}\nprint(x) → ${loopArr[loopPos]}`;
 }
-function loopReset() { loopPos = -1; renderLoop(); document.getElementById('loop-output').textContent = 'Нажми «Следующий шаг» для прохода по массиву'; }
-renderLoop();
+function loopReset() {
+  loopPos = -1; renderLoop();
+  document.getElementById('loop-output').textContent = 'Нажми «Следующий шаг»';
+}
+if (document.getElementById('loop-viz')) renderLoop();
+
+/* ==========================================================
+   ВИЗУАЛИЗАТОР ПЕРЕБОРА (по индексам)
+   ========================================================== */
+let loopArr2 = [5, 3, 8];
+let loopPos2 = -1;
+function renderLoop2(highlight=-1) {
+  const box = document.getElementById('loop-viz-2');
+  if (!box) return;
+  box.innerHTML = '';
+  loopArr2.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'cell' + (i === highlight ? ' highlight' : '');
+    c.innerHTML = `<div class="idx">${i}</div><div class="val">${v}</div>`;
+    box.appendChild(c);
+  });
+}
+function loopStep2() {
+  loopPos2++;
+  if (loopPos2 >= loopArr2.length) {
+    document.getElementById('loop-output-2').textContent = '✅ Массив пройден!';
+    renderLoop2(-1); return;
+  }
+  renderLoop2(loopPos2);
+  document.getElementById('loop-output-2').textContent = `i = ${loopPos2}\nprint(i, nums[i]) → "${loopPos2} ${loopArr2[loopPos2]}"`;
+}
+function loopReset2() {
+  loopPos2 = -1; renderLoop2();
+  document.getElementById('loop-output-2').textContent = 'Нажми «Следующий шаг»';
+}
+if (document.getElementById('loop-viz-2')) renderLoop2();
 
 /* ==========================================================
    ИНИЦИАЛИЗАЦИЯ
