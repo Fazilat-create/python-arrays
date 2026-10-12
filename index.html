@@ -155,8 +155,9 @@
   .card.lesson1 { border-left: 6px solid #b8a8e8; }
   .card.lesson2 { border-left: 6px solid #ff8a95; }
   .card.teacher { border-left: 6px solid #a8e6cf; }
+  .card.test    { border-left: 6px solid #ffd966; }
 
-  /* индикатор прогресса на карточке урока */
+  /* индикатор прогресса на карточке */
   .card .card-progress {
     display: none;
     background: rgba(255,255,255,0.9);
@@ -213,8 +214,7 @@
 </style>
 </head>
 <body>
-
-<div class="wrap">
+ <div class="wrap">
 
   <div class="hero">
     <div class="icon">🌸</div>
@@ -223,11 +223,12 @@
     <div class="badges">
       <span class="badge">📘 2 урока</span>
       <span class="badge">🎯 12 заданий</span>
+      <span class="badge">📝 25 вопросов в тесте</span>
       <span class="badge">🌸 Цветочки за прогресс</span>
     </div>
   </div>
 
-  <!-- Приветствие ученицы (появляется, если имя сохранено) -->
+  <!-- Приветствие ученицы -->
   <div class="greeting" id="greeting">
     <div class="greet-avatar" id="greetAvatar">?</div>
     <div class="greet-text">
@@ -263,6 +264,17 @@
       <div class="arrow">Продолжить <span>→</span></div>
     </a>
 
+    <a href="test.html" class="card test">
+      <div class="card-icon">📝</div>
+      <div class="meta">Итоговый тест</div>
+      <h3>Проверочная работа</h3>
+      <p>25 заданий по всему материалу: массивы, строки, подпрограммы. Одна попытка.</p>
+      <div class="card-progress" id="progTest">
+        <span id="progTestText">Не пройден</span>
+      </div>
+      <div class="arrow">Пройти тест <span>→</span></div>
+    </a>
+
     <a href="teacher.html" class="card teacher">
       <div class="card-icon">👩‍🏫</div>
       <div class="meta">Для учителя</div>
@@ -279,6 +291,7 @@
       <li>Начни с <b>Урока 1</b> — введи своё имя, чтобы прогресс сохранился</li>
       <li>За каждое выполненное задание ты получаешь цветочек 🌸</li>
       <li>В конце урока 2 тебя ждёт <b>букет</b> со всеми собранными цветами</li>
+      <li>После уроков пройди <b>проверочную работу</b> — 25 заданий, одна попытка</li>
       <li>Имя и прогресс сохраняются в браузере — можно вернуться в любой момент</li>
     </ul>
   </div>
@@ -289,9 +302,8 @@
   </footer>
 
 </div>
-
 <script>
-  /* ============ ЧИТАЕМ ПРОГРЕСС ИЗ LOCALSTORAGE ============ */
+  /* ============ ЧИТАЕМ ПРОГРЕСС УРОКОВ ============ */
   const STORAGE_KEY = 'python_arrays_progress';
 
   function loadProgress() {
@@ -304,19 +316,18 @@
   const progress = loadProgress();
 
   if (progress && progress.name) {
-    // Показываем приветствие
+    // Приветствие
     const greet = document.getElementById('greeting');
     greet.classList.add('visible');
     document.getElementById('greetAvatar').textContent = progress.name.charAt(0).toUpperCase();
 
-    // Считаем цветы
+    // Цветочки
     const lesson1Keys = ['task1','task2','task3','task4','task5','task6'];
     const lesson2Keys = ['task7','task8','task9','task10','task11','task12'];
     const n1 = lesson1Keys.filter(k => progress[k]).length;
     const n2 = lesson2Keys.filter(k => progress[k]).length;
     const total = n1 + n2;
 
-    // Текст приветствия
     let msg = '';
     if (total === 0) msg = 'Готова начать? Открой Урок 1 и собери свой первый цветочек 🌸';
     else if (total < 6) msg = `Ты уже собрала ${total} ${plural(total, 'цветочек','цветочка','цветочков')}. Продолжай!`;
@@ -326,7 +337,7 @@
     document.getElementById('greetTitle').textContent = `С возвращением, ${progress.name}!`;
     document.getElementById('greetMessage').textContent = msg;
 
-    // Прогресс на карточках
+    // Прогресс на карточках уроков
     if (n1 > 0) {
       const p1 = document.getElementById('prog1');
       p1.classList.add('visible');
@@ -341,7 +352,33 @@
     }
   }
 
-  // Правильная форма слова для числа
+  /* ============ ПРОГРЕСС ТЕСТА ============ */
+  try {
+    const testRaw = localStorage.getItem('python_arrays_test');
+    if (testRaw) {
+      const testState = JSON.parse(testRaw);
+      const progTest = document.getElementById('progTest');
+      const progTestText = document.getElementById('progTestText');
+      if (progTest) {
+        progTest.classList.add('visible');
+        if (testState.completed) {
+          const pct = Math.round((testState.score / 25) * 100);
+          let grade = '2';
+          let emoji = '🌱';
+          if (pct >= 90) { grade = '5'; emoji = '🏆'; }
+          else if (pct >= 70) { grade = '4'; emoji = '🌟'; }
+          else if (pct >= 50) { grade = '3'; emoji = '👍'; }
+          progTestText.textContent = `${emoji} ${testState.score} / 25 · оценка ${grade}`;
+        } else if (testState.started) {
+          progTestText.textContent = '⏳ начат, но не завершён';
+        } else {
+          progTestText.textContent = 'Не пройден';
+        }
+      }
+    }
+  } catch(e) {}
+
+  /* ============ ПРАВИЛЬНАЯ ФОРМА СЛОВА ============ */
   function plural(n, one, few, many) {
     const mod10 = n % 10, mod100 = n % 100;
     if (mod10 === 1 && mod100 !== 11) return one;
