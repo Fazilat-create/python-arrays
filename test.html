@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Проверочная работа · Массивы в Python 🌸</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  input, textarea, select {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+
+  :root {
+    --lavender: #b8a8e8;
+    --mint: #a8e6cf;
+    --mint-deep: #7ed9b8;
+    --rose: #ffaaa5;
+    --rose-deep: #ff8a95;
+    --gold: #ffd966;
+    --ink: #5a4a7a;
+    --ink-soft: #8a7ab0;
+    --line: #ece4ff;
+  }
+  body {
+    font-family: 'Comfortaa', 'Segoe UI', 'Verdana', sans-serif;
+    background: linear-gradient(135deg, #fef6ff 0%, #e8f4fd 50%, #fff5e6 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 18px 10px;
+    line-height: 1.6;
+  }
+  body::before, body::after {
+    content: ""; position: fixed; border-radius: 50%;
+    filter: blur(60px); opacity: 0.35; pointer-events: none; z-index: -1;
+  }
+  body::before { width: 400px; height: 400px; background: #d5b3ff; top: -100px; left: -100px; }
+  body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
+
+  .container {
+    max-width: 900px; margin: 0 auto;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(180,150,220,0.25);
+    overflow: hidden; min-height: 92vh;
+    display: flex; flex-direction: column;
+  }
+
+  header {
+    background: linear-gradient(135deg, #d9c8ff 0%, #ffd6e8 50%, #c8ecff 100%);
+    padding: 22px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 15px; flex-wrap: wrap;
+  }
+  header .left { display: flex; align-items: center; gap: 12px; }
+  header .logo { font-size: 2em; }
+  header h1 { font-size: 1.2em; color: #5a4a8a; font-weight: 700; }
+  header .subtitle { font-size: 0.8em; color: #8a7ab0; }
+
+  header .right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .nav-home {
+    text-decoration: none; padding: 6px 14px;
+    background: rgba(255,255,255,0.8); color: #7a5aa8;
+    border-radius: 20px; font-size: 0.8em; font-weight: 600;
+    transition: 0.25s;
+  }
+  .nav-home:hover { background: #fff; transform: translateY(-2px); }
+
+  .student-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.8); padding: 6px 14px;
+    border-radius: 20px; font-size: 0.85em; font-weight: 600;
+    color: #5a4a8a; max-width: 200px;
+  }
+  .student-badge .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: 700; flex-shrink: 0;
+  }
+  .student-badge span:last-child {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  .progress-wrap {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.8em; color: #8a7ab0;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    width: 140px; height: 10px; background: rgba(255,255,255,0.7);
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 2px 6px rgba(180,150,220,0.25) inset;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #b8a8e8, #ff8a95);
+    border-radius: 10px; transition: width 0.5s; width: 0%;
+  }
+
+  .content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    max-height: calc(92vh - 110px);
+  }
+
+  .name-screen {
+    text-align: center;
+    padding: 60px 30px;
+    background: linear-gradient(135deg, #fff, #faf6ff);
+    border-radius: 24px;
+    border: 2px solid #f0eaff;
+    margin-bottom: 22px;
+  }
+  .name-screen .big-icon {
+    font-size: 4em; margin-bottom: 14px;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+  }
+  .name-screen h2 {
+    font-size: 1.6em; margin-bottom: 8px;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .name-screen p {
+    color: #8a7ab0; font-size: 1em;
+    margin-bottom: 26px; line-height: 1.7;
+  }
+  .name-screen .rules {
+    background: #fdfbff;
+    border-left: 4px solid #ffd966;
+    border-radius: 12px;
+    padding: 16px 22px;
+    text-align: left;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    font-size: 0.92em;
+    color: #5a5a7a;
+    line-height: 1.7;
+  }
+  .name-screen .rules b { color: #7a5aa8; }
+  .name-screen input[type="text"] {
+    width: 100%; max-width: 400px;
+    padding: 16px 20px;
+    border: 2px solid #ece4ff;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 1.1em;
+    text-align: center;
+    color: var(--ink);
+    outline: none;
+    background: #fff;
+    transition: 0.25s;
+    margin-bottom: 16px;
+  }
+  .name-screen input[type="text"]:focus {
+    border-color: #b8a8e8;
+    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
+  }
+  .name-screen .btn-start {
+    padding: 16px 44px;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 1.1em; font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 8px 20px rgba(184,168,232,0.4);
+  }
+  .name-screen .btn-start:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(184,168,232,0.55);
+  }
+  .name-screen .btn-start:disabled {
+    background: #e0d8f0; cursor: not-allowed; box-shadow: none;
+  }
+
+  .task {
+    background: #fff;
+    border: 2px solid #ece4ff;
+    border-radius: 20px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    transition: 0.3s;
+    position: relative;
+  }
+  .task.locked { opacity: 0.85; pointer-events: none; }
+  .task-number {
+    display: inline-block;
+    background: linear-gradient(135deg, #b8a8e8, #ffaaa5);
+    color: #fff; padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.72em; font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+  .task-number.creative {
+    background: linear-gradient(135deg, #ffd966, #ffb84d);
+    color: #7a4a00;
+  }
+  .task-question {
+    font-size: 1.05em; font-weight: 700;
+    color: #5a4a8a;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .task-hint {
+    font-size: 0.88em;
+    color: #8a7ab0;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .code-snippet {
+    background: #fdfbff;
+    border: 2px solid #e8dfff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 0.9em;
+    color: #5a4a7a;
+    margin: 10px 0;
+    white-space: pre-wrap;
+    line-height: 1.7;
+  }
+
+  .options { display: grid; gap: 10px; margin-top: 12px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fdfbff;
+    border: 2px solid #ece4ff;
+    border-radius: 14px;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-size: 0.95em;
+    color: #5a4a7a;
+    font-weight: 600;
+  }
+  .option:hover { border-color: #b8a8e8; background: #faf6ff; transform: translateX(4px); }
+  .option input[type="checkbox"],
+  .option input[type="radio"] {
+    width: 20px; height: 20px;
+    accent-color: #b8a8e8;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .select-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    background: #fdfbff;
+    border: 2px solid #ece4ff;
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+  }
+  .select-row .select-label {
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 0.9em;
+    color: #5a4a7a;
+    white-space: pre-wrap;
+  }
+  select {
+    padding: 8px 14px;
+    border: 2px solid #e8dfff;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #5a4a7a;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    min-width: 160px;
+  }
+  select:hover { border-color: #b8a8e8; }
+  select:focus { border-color: #b8a8e8; box-shadow: 0 0 0 3px rgba(184,168,232,0.2); }
+  select:disabled { cursor: not-allowed; opacity: 0.8; }
+
+  .match-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .match-column { display: flex; flex-direction: column; gap: 10px; }
+  .match-column h4 {
+    font-size: 0.85em; color: #7a5aa8;
+    margin-bottom: 6px; text-align: center;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .match-item {
+    background: #fdfbff;
+    border: 2px solid #ece4ff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 0.85em;
+    color: #5a4a7a;
+    font-weight: 600;
+    text-align: center;
+  }
+  .match-item:hover { border-color: #b8a8e8; background: #faf6ff; }
+  .match-item.selected {
+    background: linear-gradient(135deg, #f4ebff, #e8d8ff);
+    border-color: #b8a8e8;
+    transform: scale(1.02);
+  }
+  .match-item.matched {
+    background: linear-gradient(135deg, #e0fff0, #c8f5dd);
+    border-color: var(--mint-deep);
+    color: #2a6a4a; cursor: default;
+  }
+
+  .input-answer {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #ece4ff;
+    border-radius: 12px;
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 0.95em;
+    color: #5a4a7a;
+    outline: none;
+    transition: 0.2s;
+    background: #fdfbff;
+    margin-top: 10px;
+  }
+  .input-answer:focus { border-color: #b8a8e8; box-shadow: 0 0 0 4px rgba(184,168,232,0.15); }
+  .input-answer:disabled { cursor: not-allowed; opacity: 0.85; }
+
+  .code-area {
+    width: 100%;
+    min-height: 200px;
+    padding: 14px 16px;
+    border: 2px solid #ece4ff;
+    border-radius: 12px;
+    font-family: 'Consolas','Menlo',monospace;
+    font-size: 13.5px;
+    resize: vertical;
+    background: #fdfbff;
+    color: #5a4a7a;
+    line-height: 1.8;
+    transition: 0.2s;
+    margin-top: 10px;
+  }
+  .code-area:focus { outline: none; border-color: #b8a8e8; box-shadow: 0 0 0 4px rgba(184,168,232,0.15); }
+  .code-area:disabled { cursor: not-allowed; opacity: 0.85; }
+
+  .btn {
+    background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
+    color: #fff; border: none;
+    padding: 10px 20px; border-radius: 20px;
+    cursor: pointer; font-size: 0.9em; font-weight: 600;
+    font-family: inherit; margin: 10px 6px 0 0;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(184,168,232,0.35);
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(184,168,232,0.5); }
+  .btn.mint { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #3a7a5a; }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  .output {
+    background: #f4fffa;
+    border: 2px solid #a8e6cf;
+    color: #3a7a5a;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: 'Consolas',monospace;
+    font-size: 12.5px;
+    min-height: 40px; margin-top: 10px;
+    white-space: pre-wrap; word-break: break-word;
+    line-height: 1.7;
+  }
+  .output.error { background: #fff0f0; border-color: #ffaaa5; color: #c04a4a; }
+
+  .feedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.9em; font-weight: 600;
+    display: none; line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+
+  .submit-block {
+    text-align: center;
+    padding: 26px 20px;
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-radius: 20px;
+    margin-top: 20px;
+    border: 2px dashed #d9c8ff;
+  }
+  .submit-block h3 { color: #7a5aa8; margin-bottom: 10px; font-size: 1.1em; }
+  .submit-block p { color: #8a7ab0; font-size: 0.9em; margin-bottom: 16px; }
+  .btn-submit {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; border: none;
+    padding: 16px 40px; border-radius: 30px;
+    font-family: inherit; font-size: 1.05em; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(184,168,232,0.4);
+    transition: 0.25s;
+  }
+  .btn-submit:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(184,168,232,0.55); }
+  .btn-submit:disabled { background: #e0d8f0; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  .nav-bar {
+    padding: 16px 30px;
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-top: 1px solid rgba(180,150,220,0.2);
+    display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+  }
+
+  @media (max-width: 700px) {
+    .content { padding: 20px 18px; }
+    .task { padding: 18px 18px; }
+    header { padding: 14px 16px; flex-direction: column; text-align: center; }
+    .select-row { grid-template-columns: 1fr; }
+    .match-block { grid-template-columns: 1fr; }
+    .student-badge { max-width: 140px; }
+    .name-screen { padding: 40px 20px; }
+    .name-screen h2 { font-size: 1.3em; }
+    .name-screen .big-icon { font-size: 3em; }
+  }
+/* ТАЙМЕР */
+#timerBox { transition: 0.3s; }
+#timerBox.warning {
+  background: linear-gradient(135deg, #fff0e0, #ffe0d0) !important;
+  color: #c04a2a !important;
+  animation: pulse 1.5s infinite;
+}
+#timerBox.danger {
+  background: linear-gradient(135deg, #ffe0e0, #ffd0d0) !important;
+  color: #a02a2a !important;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* МОДАЛЬНОЕ ОКНО */
+.custom-modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(90, 74, 122, 0.5);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000; padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.custom-modal-bg.show { opacity: 1; pointer-events: auto; }
+.custom-modal {
+  background: #fff; border-radius: 24px;
+  padding: 32px 36px; max-width: 520px; width: 100%;
+  box-shadow: 0 30px 80px rgba(90, 74, 122, 0.4);
+  border: 2px solid #f0eaff;
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.6, 1);
+}
+.custom-modal-bg.show .custom-modal { transform: scale(1); }
+.custom-modal .modal-icon { font-size: 3em; text-align: center; margin-bottom: 12px; }
+.custom-modal h3 { color: #5a4a8a; font-size: 1.3em; text-align: center; margin-bottom: 12px; }
+.custom-modal p { color: #5a5a7a; text-align: center; line-height: 1.7; margin-bottom: 18px; font-size: 0.98em; }
+.custom-modal .unanswered-list {
+  background: #fff8e6; border: 2px solid #ffd966;
+  border-radius: 12px; padding: 14px 20px; margin: 16px 0;
+  font-size: 0.95em; color: #7a5a1a; line-height: 1.7; text-align: center;
+}
+.custom-modal .unanswered-list b { color: #5a4a8a; }
+.custom-modal .modal-actions {
+  display: flex; gap: 12px; justify-content: center;
+  flex-wrap: wrap; margin-top: 20px;
+}
+.custom-modal .modal-btn {
+  padding: 12px 28px; border-radius: 14px; border: none;
+  font-family: inherit; font-size: 1em; font-weight: 700;
+  cursor: pointer; transition: 0.25s;
+}
+.custom-modal .modal-btn.primary {
+  background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+  color: #fff; box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+}
+.custom-modal .modal-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(184,168,232,0.55);
+}
+.custom-modal .modal-btn.ghost {
+  background: #fff; color: #7a5aa8; border: 2px solid #ece4ff;
+}
+.custom-modal .modal-btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
+
+/* ОКНО РЕЗУЛЬТАТА */
+.result-modal-bg {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, rgba(254,246,255,0.97), rgba(232,244,253,0.97));
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3000; padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.result-modal-bg.show { opacity: 1; pointer-events: auto; }
+.result-modal {
+  background: #fff; border-radius: 28px;
+  padding: 40px 44px; max-width: 520px; width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(90, 74, 122, 0.3);
+  border: 2px solid #f0eaff;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.4, 1.4, 0.6, 1);
+}
+.result-modal-bg.show .result-modal { transform: scale(1); }
+.result-modal .result-big-icon {
+  font-size: 4em; margin-bottom: 10px;
+  animation: pop 0.6s cubic-bezier(0.4,1.6,0.6,1);
+}
+.result-modal .result-student { font-size: 1.3em; color: #5a4a8a; font-weight: 700; margin-bottom: 4px; }
+.result-modal .result-role { font-size: 0.85em; color: #8a7ab0; margin-bottom: 20px; }
+.result-modal .result-score-big {
+  font-size: 3.6em; font-weight: 800;
+  background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin: 10px 0 4px; line-height: 1;
+}
+.result-modal .result-percent { color: #8a7ab0; font-size: 1em; margin-bottom: 20px; }
+.result-modal .result-grade-big {
+  display: inline-block; padding: 14px 40px;
+  border-radius: 24px; font-weight: 800; font-size: 1.5em; margin: 16px 0;
+}
+.result-modal .result-comment { color: #5a5a7a; font-size: 1em; line-height: 1.7; margin: 16px 0; }
+.result-modal .result-note {
+  margin-top: 24px; padding: 16px 20px;
+  background: #f0fdf7; border-left: 5px solid #7ed9b8;
+  border-radius: 12px; font-size: 0.9em; color: #2a6a4a;
+  line-height: 1.7; text-align: left;
+}
+.result-modal .result-dua {
+  margin-top: 20px; padding: 18px;
+  background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+  border-radius: 14px;
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  font-size: 1.15em; color: #5a4a8a;
+  direction: rtl; line-height: 1.8;
+}
+@keyframes pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="left">
+      <a href="index.html" class="nav-home">← На главную</a>
+      <div class="logo">📝</div>
+      <div>
+        <h1>Проверочная работа</h1>
+        <div class="subtitle">Итоговый тест · массивы и подпрограммы</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="student-badge" id="studentBadge" style="display:none;">
+        <div class="avatar" id="avatarLetter">?</div>
+        <span id="studentName">—</span>
+      </div>
+      <div id="timerBox" style="display:none; background: rgba(255,255,255,0.85); padding: 6px 16px; border-radius: 20px; font-size: 0.9em; font-weight: 700; color: #7a5aa8; font-variant-numeric: tabular-nums;">
+        ⏱ <span id="timerDisplay">45:00</span>
+      </div>
+      <div class="progress-wrap">
+        <span id="task-counter">0 / 25</span>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content" id="content">
+
+    <!-- ВВОД ИМЕНИ -->
+    <div class="name-screen" id="nameScreen">
+      <div class="big-icon">🕌</div>
+
+      <div style="background: linear-gradient(135deg, #f0fdf7, #e8f4fd); border-radius: 20px; padding: 24px 28px; margin-bottom: 20px; border: 2px solid #c8e8d8; text-align: center;">
+        <div style="font-size: 1.6em; line-height: 2; color: #2a6a4a; direction: rtl; font-family: 'Amiri', 'Traditional Arabic', 'Arial', serif; margin-bottom: 14px;">
+          رَبِّ زِدْنِي عِلْمًا
+        </div>
+        <div style="font-size: 0.9em; color: #5a7a6a; font-style: italic; margin-bottom: 6px;">
+          «Господи! Приумножь мои знания»
+        </div>
+        <div style="font-size: 0.78em; color: #8a9a90;">
+          — Священный Коран, сура «Та Ха», аят 114
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #fff8f0, #fef6ff); border-radius: 20px; padding: 22px 26px; margin-bottom: 26px; border: 2px solid #f0e0b8; text-align: center;">
+        <div style="font-size: 1.05em; color: #7a5a1a; line-height: 1.7; font-style: italic; margin-bottom: 10px;">
+          «Тот, кто обманывает нас, не является одним из нас»
+        </div>
+        <div style="font-size: 0.8em; color: #a08960;">
+          — Пророк Мухаммад ﷺ (хадис от Абу Хурайры, Сахих Муслим)
+        </div>
+        <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed #f0e0b8; font-size: 0.85em; color: #7a5a1a; line-height: 1.6;">
+          🤲 <b>Работай честно.</b> Списывание — это обман,<br>а знания, добытые обманом, не принесут пользы.
+        </div>
+      </div>
+
+      <h2>Проверочная работа</h2>
+      <p>Проверим всё, чему научились на уроках.</p>
+
+      <div class="rules">
+        <b>⏱ На работу даётся 45 минут.</b><br>
+        <b>📋 25 заданий</b> — на выбор, вставку, соединение и написание кода.<br>
+        <b>⚠️ Попытка одна!</b> После отправки изменить ответы нельзя.<br>
+        <b>🌸 Удачи!</b>
+      </div>
+
+      <input type="text" id="nameInput" placeholder="Введи своё имя" maxlength="30" autocomplete="off">
+      <br>
+      <button class="btn-start" id="startBtn" disabled onclick="startTest()">Начать работу</button>
+    </div>
+
+    <div id="tasksContainer" style="display:none;">
+            <!-- 1 -->
+      <div class="task" data-task="1">
+        <div class="task-number">Задание 1</div>
+        <div class="task-question">На старт! Внимание! Знак!</div>
+        <div class="task-hint">На соревнование пускают участников, которым не меньше 14 лет. Условие:</div>
+        <div class="code-snippet">age >= 14</div>
+        <div class="task-hint">Какие значения <b>age</b> сделают условие истинным? Выбери <b>все</b> подходящие.</div>
+        <div class="options" data-name="task1">
+          <label class="option"><input type="checkbox" value="12"> 12</label>
+          <label class="option"><input type="checkbox" value="13"> 13</label>
+          <label class="option"><input type="checkbox" value="14"> 14</label>
+          <label class="option"><input type="checkbox" value="15"> 15</label>
+        </div>
+        <div class="feedback" data-feedback="1"></div>
+      </div>
+
+      <!-- 2 -->
+      <div class="task" data-task="2">
+        <div class="task-number">Задание 2</div>
+        <div class="task-question">Знаки препинания имеют значение</div>
+        <div class="task-hint">Определи, какие строки записаны правильно.</div>
+        <div class="select-row"><div class="select-label">if score >= 10:</div><select data-name="task2-1"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="select-row"><div class="select-label">elif score >= 10:</div><select data-name="task2-2"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="select-row"><div class="select-label">print("зачёт")</div><select data-name="task2-3"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="select-row"><div class="select-label">else:</div><select data-name="task2-4"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="select-row"><div class="select-label">if score >= 10</div><select data-name="task2-5"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="select-row"><div class="select-label">else if score >= 10:</div><select data-name="task2-6"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
+        <div class="feedback" data-feedback="2"></div>
+      </div>
+
+      <!-- 3 -->
+      <div class="task" data-task="3">
+        <div class="task-number">Задание 3</div>
+        <div class="task-question">Что выведет код?</div>
+        <div class="code-snippet">nums = [10, 20, 30, 40, 50]
+print(nums[2])</div>
+        <div class="options" data-name="task3">
+          <label class="option"><input type="radio" name="task3" value="a"> 20</label>
+          <label class="option"><input type="radio" name="task3" value="b"> 30</label>
+          <label class="option"><input type="radio" name="task3" value="c"> 40</label>
+          <label class="option"><input type="radio" name="task3" value="d"> Ошибку</label>
+        </div>
+        <div class="feedback" data-feedback="3"></div>
+      </div>
+
+      <!-- 4 -->
+      <div class="task" data-task="4">
+        <div class="task-number">Задание 4</div>
+        <div class="task-question">Отрицательные индексы</div>
+        <div class="code-snippet">fruits = ["яблоко", "банан", "вишня", "груша", "слива"]</div>
+        <div class="task-hint">Какие выражения вернут <b>"слива"</b>? Выбери <b>все</b>.</div>
+        <div class="options" data-name="task4">
+          <label class="option"><input type="checkbox" value="a"> fruits[4]</label>
+          <label class="option"><input type="checkbox" value="b"> fruits[-1]</label>
+          <label class="option"><input type="checkbox" value="c"> fruits[5]</label>
+          <label class="option"><input type="checkbox" value="d"> fruits[-2]</label>
+        </div>
+        <div class="feedback" data-feedback="4"></div>
+      </div>
+
+      <!-- 5 -->
+      <div class="task" data-task="5">
+        <div class="task-number">Задание 5</div>
+        <div class="task-question">Впиши пропущенную команду</div>
+        <div class="task-hint">Чтобы добавить число 7 в конец массива nums:</div>
+        <div class="code-snippet">nums.______(7)</div>
+        <input type="text" class="input-answer" data-name="task5" autocomplete="off" style="max-width: 300px;">
+        <div class="feedback" data-feedback="5"></div>
+      </div>
+
+      <!-- 6 -->
+      <div class="task" data-task="6">
+        <div class="task-number">Задание 6</div>
+        <div class="task-question">Что выведет код?</div>
+        <div class="code-snippet">nums = [3, 6, 9]
+print(nums[0])
+print(nums[2])</div>
+        <div class="task-hint">Что появится на экране?</div>
+        <div class="options" data-name="task6">
+          <label class="option"><input type="radio" name="task6" value="a"> 3 и 9</label>
+          <label class="option"><input type="radio" name="task6" value="b"> 3 и 6</label>
+          <label class="option"><input type="radio" name="task6" value="c"> 0 и 2</label>
+          <label class="option"><input type="radio" name="task6" value="d"> 9 и 3</label>
+        </div>
+        <div class="feedback" data-feedback="6"></div>
+      </div>
+
+      <!-- 7 -->
+      <div class="task" data-task="7">
+        <div class="task-number">Задание 7</div>
+        <div class="task-question">Что выведет цикл?</div>
+        <div class="code-snippet">nums = [5, 10, 15]
+for x in nums:
+    print(x)</div>
+        <div class="task-hint">Сколько строк выведет программа?</div>
+        <input type="text" class="input-answer" data-name="task7" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="7"></div>
+      </div>
+
+      <!-- 8 -->
+      <div class="task" data-task="8">
+        <div class="task-number">Задание 8</div>
+        <div class="task-question">Методы и результаты</div>
+        <div class="task-hint">Что делает каждая команда?</div>
+        <div class="select-row"><div class="select-label">len(nums)</div><select data-name="task8-1"><option value="">— выбрать —</option><option value="correct">Узнать длину массива</option><option value="wrong">Добавить элемент</option><option value="wrong">Посчитать вхождения</option></select></div>
+        <div class="select-row"><div class="select-label">nums.count(3)</div><select data-name="task8-2"><option value="">— выбрать —</option><option value="wrong">Узнать длину</option><option value="correct">Посчитать, сколько раз встречается 3</option><option value="wrong">Добавить элемент</option></select></div>
+        <div class="select-row"><div class="select-label">sum(nums)</div><select data-name="task8-3"><option value="">— выбрать —</option><option value="wrong">Добавить элемент</option><option value="wrong">Посчитать вхождения</option><option value="correct">Найти сумму элементов</option></select></div>
+        <div class="select-row"><div class="select-label">nums.append(5)</div><select data-name="task8-4"><option value="">— выбрать —</option><option value="wrong">Удалить элемент</option><option value="correct">Добавить 5 в конец массива</option><option value="wrong">Найти индекс 5</option></select></div>
+        <div class="feedback" data-feedback="8"></div>
+      </div>
+
+      <!-- 9 -->
+      <div class="task" data-task="9">
+        <div class="task-number">Задание 9</div>
+        <div class="task-question">Что делает код?</div>
+        <div class="code-snippet">nums = [3, 7, 12, 5, 9]
+count = 0
+for x in nums:
+    if x > 5:
+        count = count + 1
+print(count)</div>
+        <div class="task-hint">Что окажется на экране?</div>
+        <div class="options" data-name="task9">
+          <label class="option"><input type="radio" name="task9" value="a"> 5</label>
+          <label class="option"><input type="radio" name="task9" value="b"> 3</label>
+          <label class="option"><input type="radio" name="task9" value="c"> 12</label>
+          <label class="option"><input type="radio" name="task9" value="d"> Ошибку</label>
+        </div>
+        <div class="feedback" data-feedback="9"></div>
+      </div>
+
+      <!-- 10 -->
+      <div class="task" data-task="10">
+        <div class="task-number">Задание 10</div>
+        <div class="task-question">Что выведет код?</div>
+        <div class="code-snippet">nums = [7, 14, 21, 28]
+print(nums[-2])</div>
+        <input type="text" class="input-answer" data-name="task10" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="10"></div>
+      </div>
+
+      <!-- 11 -->
+      <div class="task" data-task="11">
+        <div class="task-number">Задание 11</div>
+        <div class="task-question">Что такое подпрограмма?</div>
+        <div class="task-hint">Выбери правильное определение.</div>
+        <div class="options" data-name="task11">
+          <label class="option"><input type="radio" name="task11" value="a"> Это массив с числами</label>
+          <label class="option"><input type="radio" name="task11" value="b"> Это отдельный блок кода, который можно вызывать по имени</label>
+          <label class="option"><input type="radio" name="task11" value="c"> Это цикл for</label>
+          <label class="option"><input type="radio" name="task11" value="d"> Это ошибка в программе</label>
+        </div>
+        <div class="feedback" data-feedback="11"></div>
+      </div>
+
+      <!-- 12 -->
+      <div class="task" data-task="12">
+        <div class="task-number">Задание 12</div>
+        <div class="task-question">Как вызвать подпрограмму?</div>
+        <div class="task-hint">Дана подпрограмма:</div>
+        <div class="code-snippet">def hello():
+    print("Привет!")</div>
+        <div class="task-hint">Как её вызвать, чтобы появилось «Привет!»?</div>
+        <div class="options" data-name="task12">
+          <label class="option"><input type="radio" name="task12" value="a"> <span style="font-family:Consolas,monospace;">hello</span></label>
+          <label class="option"><input type="radio" name="task12" value="b"> <span style="font-family:Consolas,monospace;">hello()</span></label>
+          <label class="option"><input type="radio" name="task12" value="c"> <span style="font-family:Consolas,monospace;">call hello</span></label>
+          <label class="option"><input type="radio" name="task12" value="d"> <span style="font-family:Consolas,monospace;">print(hello)</span></label>
+        </div>
+        <div class="feedback" data-feedback="12"></div>
+      </div>
+
+      <!-- 13 -->
+      <div class="task" data-task="13">
+        <div class="task-number">Задание 13</div>
+        <div class="task-question">Что выведет программа?</div>
+        <div class="code-snippet">def square(x):
+    return x * x
+
+print(square(4))</div>
+        <div class="task-hint">Что появится на экране?</div>
+        <input type="text" class="input-answer" data-name="task13" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="13"></div>
+      </div>
+
+      <!-- 14 -->
+      <div class="task" data-task="14">
+        <div class="task-number">Задание 14</div>
+        <div class="task-question">Что выведет код?</div>
+        <div class="code-snippet">nums = [42, 17, 8, 99]
+print(nums[0])</div>
+        <input type="text" class="input-answer" data-name="task14" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="14"></div>
+      </div>
+
+      <!-- 15 -->
+      <div class="task" data-task="15">
+        <div class="task-number">Задание 15</div>
+        <div class="task-question">Соотнеси команду и результат</div>
+        <div class="task-hint">Для массива <code>nums = [4, 8, 15, 8]</code></div>
+        <div class="select-row"><div class="select-label">len(nums)</div><select data-name="task15-1"><option value="">— выбрать —</option><option value="correct">4</option><option value="wrong">8</option><option value="wrong">35</option></select></div>
+        <div class="select-row"><div class="select-label">nums.count(8)</div><select data-name="task15-2"><option value="">— выбрать —</option><option value="wrong">1</option><option value="correct">2</option><option value="wrong">4</option></select></div>
+        <div class="select-row"><div class="select-label">sum(nums)</div><select data-name="task15-3"><option value="">— выбрать —</option><option value="wrong">8</option><option value="wrong">30</option><option value="correct">35</option></select></div>
+        <div class="feedback" data-feedback="15"></div>
+      </div>
+            <!-- 16 -->
+      <div class="task" data-task="16">
+        <div class="task-number">Задание 16</div>
+        <div class="task-question">Что найдёт этот код?</div>
+        <div class="code-snippet">nums = [5, 12, 7, 20, 3]
+target = 7
+
+for i in range(len(nums)):
+    if nums[i] == target:
+        print(i)
+        break</div>
+        <div class="task-hint">Что выведет программа?</div>
+        <div class="options" data-name="task16">
+          <label class="option"><input type="radio" name="task16" value="a"> 7</label>
+          <label class="option"><input type="radio" name="task16" value="b"> 2</label>
+          <label class="option"><input type="radio" name="task16" value="c"> 12</label>
+          <label class="option"><input type="radio" name="task16" value="d"> Ничего</label>
+        </div>
+        <div class="feedback" data-feedback="16"></div>
+      </div>
+
+      <!-- 17 -->
+      <div class="task" data-task="17">
+        <div class="task-number">Задание 17</div>
+        <div class="task-question">Снова считать</div>
+        <div class="task-hint">Сколько раз выполнится цикл?</div>
+        <div class="code-snippet">i = 0
+while i < 3:
+    print(i)
+    i = i + 1</div>
+        <input type="text" class="input-answer" data-name="task17" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="17"></div>
+      </div>
+
+      <!-- 18 -->
+      <div class="task" data-task="18">
+        <div class="task-number">Задание 18</div>
+        <div class="task-question">Явки! Адреса!</div>
+        <div class="task-hint">Алиса хранит названия файлов в списке.</div>
+        <div class="code-snippet">files = ["photo.jpg", "music.mp3", "report.docx"]
+print(files[-3])</div>
+        <div class="task-hint">Что будет выведено?</div>
+        <div class="options" data-name="task18">
+          <label class="option"><input type="radio" name="task18" value="a"> photo.jpg</label>
+          <label class="option"><input type="radio" name="task18" value="b"> music.mp3</label>
+          <label class="option"><input type="radio" name="task18" value="c"> report.docx</label>
+          <label class="option"><input type="radio" name="task18" value="d"> ошибка</label>
+        </div>
+        <div class="feedback" data-feedback="18"></div>
+      </div>
+
+      <!-- 19 -->
+      <div class="task" data-task="19">
+        <div class="task-number">Задание 19</div>
+        <div class="task-question">Список покупок</div>
+        <div class="task-hint">Алиса помогает родителям. В программе список хранится в переменной:</div>
+        <div class="code-snippet">products = ["хлеб", "молоко", "сыр"]</div>
+        <div class="task-hint">
+          <b>Соедини</b> каждую команду с результатом.<br>
+          <b>Как играть:</b> нажми на команду слева, потом на результат справа.
+        </div>
+        <div class="match-block" data-match="19">
+          <div class="match-column">
+            <h4>Команда</h4>
+            <div class="match-item" data-side="left" data-key="a">products.append("яблоки")</div>
+            <div class="match-item" data-side="left" data-key="b">products.pop()</div>
+            <div class="match-item" data-side="left" data-key="c">len(products)</div>
+            <div class="match-item" data-side="left" data-key="d">products.count("сыр")</div>
+          </div>
+          <div class="match-column">
+            <h4>Результат</h4>
+            <div class="match-item" data-side="right" data-key="1">["хлеб", "молоко", "сыр", "яблоки"]</div>
+            <div class="match-item" data-side="right" data-key="2">["хлеб", "молоко"]</div>
+            <div class="match-item" data-side="right" data-key="3">3</div>
+            <div class="match-item" data-side="right" data-key="4">1</div>
+          </div>
+        </div>
+        <div class="feedback" data-feedback="19"></div>
+      </div>
+
+      <!-- 20 -->
+      <div class="task" data-task="20">
+        <div class="task-number">Задание 20</div>
+        <div class="task-question">Хранилище</div>
+        <div class="task-hint">Робот должен достать деталь из ячейки хранилища. В программе записано:</div>
+        <div class="code-snippet">storage = [1, 2, 3]
+print(storage[3])</div>
+        <div class="task-hint">Робот выдаёт ошибку. <b>Выбери причину.</b></div>
+        <div class="options" data-name="task20">
+          <label class="option"><input type="radio" name="task20" value="a"> Склад пустой — в нём нет деталей</label>
+          <label class="option"><input type="radio" name="task20" value="b"> Робот обратился к несуществующей ячейке</label>
+          <label class="option"><input type="radio" name="task20" value="c"> Команда print написана с ошибкой</label>
+          <label class="option"><input type="radio" name="task20" value="d"> Имя storage не понравилось роботу</label>
+        </div>
+        <div class="feedback" data-feedback="20"></div>
+      </div>
+
+      <!-- 21 -->
+      <div class="task" data-task="21">
+        <div class="task-number">Задание 21</div>
+        <div class="task-question">Чем отличаются циклы?</div>
+        <div class="task-hint">Выбери <b>все верные</b> утверждения про <code>for</code> и <code>while</code>:</div>
+        <div class="options" data-name="task21">
+          <label class="option"><input type="checkbox" value="a"> for обычно используют для перебора массива</label>
+          <label class="option"><input type="checkbox" value="b"> while работает, пока условие истинно</label>
+          <label class="option"><input type="checkbox" value="c"> while обязательно должен идти с range</label>
+          <label class="option"><input type="checkbox" value="d"> В while нужно следить за изменением переменной</label>
+        </div>
+        <div class="feedback" data-feedback="21"></div>
+      </div>
+
+      <!-- 22 -->
+      <div class="task" data-task="22">
+        <div class="task-number">Задание 22</div>
+        <div class="task-question">Массив имён</div>
+        <div class="task-hint">Дан массив имён одноклассников:</div>
+        <div class="code-snippet">names = ["Аня", "Боря", "Вера", "Гриша", "Даша"]</div>
+        <div class="task-hint">Что вернёт <code>len(names)</code>?</div>
+        <input type="text" class="input-answer" data-name="task22" autocomplete="off" style="max-width: 200px;">
+        <div class="feedback" data-feedback="22"></div>
+      </div>
+
+      <!-- 23 -->
+      <div class="task" data-task="23">
+        <div class="task-number">Задание 23</div>
+        <div class="task-question">Что выведет код?</div>
+        <div class="code-snippet">names = ["Аня", "Боря", "Вера"]
+print(names[1])
+print(names[-1])</div>
+        <div class="task-hint">Что появится на экране?</div>
+        <div class="options" data-name="task23">
+          <label class="option"><input type="radio" name="task23" value="a"> Аня и Вера</label>
+          <label class="option"><input type="radio" name="task23" value="b"> Боря и Вера</label>
+          <label class="option"><input type="radio" name="task23" value="c"> Боря и Аня</label>
+          <label class="option"><input type="radio" name="task23" value="d"> Вера и Боря</label>
+        </div>
+        <div class="feedback" data-feedback="23"></div>
+      </div>
+
+      <!-- 24 -->
+      <div class="task" data-task="24">
+        <div class="task-number creative">Задание 24 · Творческое</div>
+        <div class="task-question">Оценки за контрольную 📝</div>
+        <div class="task-hint">Учительница проверила контрольную работу класса. Оценки хранятся в массиве:</div>
+        <div class="code-snippet">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5, 5, 4, 2, 5]</div>
+        <div class="task-hint">
+          Напиши программу, которая:
+          <br>1. Находит и выводит <b>средний балл</b> класса (сумма ÷ количество)
+          <br>2. Находит и выводит <b>количество пятёрок</b>
+          <br>3. Находит и выводит <b>количество двоек</b> (сколько учеников не сдали)
+          <br><br>
+          💡 Используй <code>sum()</code>, <code>len()</code>, <code>.count()</code> и <code>print</code>.
+        </div>
+        <textarea class="code-area" id="code-task24" spellcheck="false" style="min-height: 220px;">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5, 5, 4, 2, 5]
+
+# 1. Средний балл
+
+# 2. Сколько пятёрок
+
+# 3. Сколько двоек
+
+</textarea>
+        <button class="btn mint" onclick="runTask24()">▶ Запустить</button>
+        <div class="output" id="out-task24">Здесь появится результат ✨</div>
+        <div class="feedback" data-feedback="24"></div>
+      </div>
+
+      <!-- 25 -->
+      <div class="task" data-task="25">
+        <div class="task-number creative">Задание 25 · Творческое</div>
+        <div class="task-question">Билеты в кино 🎬</div>
+        <div class="task-hint">Ты помогаешь посчитать выручку кинотеатра. Есть массив цен проданных билетов:</div>
+        <div class="code-snippet">prices = [250, 400, 150, 300, 500, 200, 350, 450, 180, 320]</div>
+        <div class="task-hint">
+          Напиши программу, которая:
+          <br>1. Находит и выводит <b>общую выручку</b> (сумму всех цен)
+          <br>2. Находит и выводит <b>самый дорогой</b> билет
+          <br>3. Считает, сколько билетов было продано <b>дороже 300 рублей</b>, и выводит число
+          <br>4. Выводит, сколько всего билетов продано
+          <br><br>
+          💡 Используй <code>sum()</code>, <code>max()</code>, <code>len()</code>, цикл <code>for</code> с <code>if</code> и <code>print</code>.
+        </div>
+        <textarea class="code-area" id="code-task25" spellcheck="false" style="min-height: 240px;">prices = [250, 400, 150, 300, 500, 200, 350, 450, 180, 320]
+
+# 1. Общая выручка
+
+# 2. Самый дорогой билет
+
+# 3. Сколько билетов дороже 300 рублей
+
+# 4. Сколько всего билетов
+
+</textarea>
+        <button class="btn mint" onclick="runTask25()">▶ Запустить</button>
+        <div class="output" id="out-task25">Здесь появится результат ✨</div>
+        <div class="feedback" data-feedback="25"></div>
+      </div>
+
+      <!-- ПРОВЕРКА -->
+      <div class="submit-block" id="submitBlock">
+        <h3>Готова отправить работу?</h3>
+        <p>⚠️ <b>Попытка одна.</b> После отправки изменить ответы будет нельзя.</p>
+        <button class="btn-submit" id="submitBtn" onclick="askSubmit()">📤 Отправить работу</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-home">← На главную</a>
+    <span style="color:#8a7ab0;font-size:0.85em;">Попытка одна · Результат сохраняется</span>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ -->
+<div class="custom-modal-bg" id="submitModal">
+  <div class="custom-modal">
+    <div class="modal-icon" id="submitModalIcon">🤔</div>
+    <h3 id="submitModalTitle">Отправить работу?</h3>
+    <p id="submitModalText"></p>
+    <div class="unanswered-list" id="submitModalList" style="display:none;"></div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" onclick="closeSubmitModal()">← Вернуться и доделать</button>
+      <button class="modal-btn primary" onclick="confirmSubmit()">Да, отправить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ОКНО РЕЗУЛЬТАТА -->
+<div class="result-modal-bg" id="resultModal">
+  <div class="result-modal">
+    <div class="result-big-icon" id="resultModalIcon">🌸</div>
+    <div class="result-student" id="resultModalStudent">Ученица</div>
+    <div class="result-role">итоговый результат</div>
+    <div class="result-score-big" id="resultModalScore">0 / 25</div>
+    <div class="result-percent" id="resultModalPercent">0% правильных ответов</div>
+    <div class="result-grade-big" id="resultModalGrade">Оценка: 5</div>
+    <div class="result-comment" id="resultModalComment"></div>
+    <div class="result-note">
+      📌 <b>Разбор ответов</b> — какие задания верные, а какие нет — мы сделаем вместе на следующем уроке.
+    </div>
+    <div class="result-dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
+  </div>
+</div>
+<script>
+/* ЗАЩИТА */
+document.addEventListener('copy', e => { e.preventDefault(); return false; });
+document.addEventListener('cut', e => { e.preventDefault(); return false; });
+document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+document.addEventListener('keydown', e => {
+  const isMod = e.ctrlKey || e.metaKey;
+  if (isMod && ['c','C','a','A','x','X'].includes(e.key)) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+/* СОСТОЯНИЕ */
+const TEST_STORAGE = 'python_arrays_test';
+const TOTAL_TASKS = 25;
+const TIMER_STORAGE = 'python_arrays_test_timer';
+const TOTAL_TIME = 45 * 60;
+let timerInterval = null;
+let remainingSeconds = TOTAL_TIME;
+let timerStarted = false;
+
+let testState = {
+  name: '',
+  completed: false,
+  score: 0,
+  started: false
+};
+
+function loadTestState() {
+  try {
+    const s = localStorage.getItem(TEST_STORAGE);
+    if (s) Object.assign(testState, JSON.parse(s));
+  } catch(e) {}
+}
+function saveTestState() {
+  try { localStorage.setItem(TEST_STORAGE, JSON.stringify(testState)); } catch(e) {}
+}
+
+/* ТАЙМЕР */
+function loadTimer() {
+  try {
+    const s = localStorage.getItem(TIMER_STORAGE);
+    if (s) {
+      const data = JSON.parse(s);
+      remainingSeconds = data.remaining || TOTAL_TIME;
+      timerStarted = data.started || false;
+    }
+  } catch(e) {}
+}
+function saveTimer() {
+  try {
+    localStorage.setItem(TIMER_STORAGE, JSON.stringify({
+      remaining: remainingSeconds,
+      started: timerStarted
+    }));
+  } catch(e) {}
+}
+function startTimer() {
+  if (timerInterval) return;
+  timerStarted = true;
+  saveTimer();
+  document.getElementById('timerBox').style.display = 'block';
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    if (document.hidden) return;
+    remainingSeconds--;
+    saveTimer();
+    updateTimerDisplay();
+    if (remainingSeconds <= 0) {
+      stopTimer();
+      autoSubmit();
+    }
+  }, 1000);
+}
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+function updateTimerDisplay() {
+  const m = Math.floor(remainingSeconds / 60);
+  const s = remainingSeconds % 60;
+  const display = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const el = document.getElementById('timerDisplay');
+  const box = document.getElementById('timerBox');
+  if (el) el.textContent = display;
+  if (box) {
+    box.classList.remove('warning', 'danger');
+    if (remainingSeconds <= 60) box.classList.add('danger');
+    else if (remainingSeconds <= 300) box.classList.add('warning');
+  }
+}
+function autoSubmit() {
+  if (testState.completed) return;
+  alert('⏰ Время вышло! Работа отправляется автоматически.');
+  performCheck();
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveTimer();
+});
+window.addEventListener('beforeunload', () => {
+  saveTimer();
+});
+
+function startTest() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) return;
+  testState.name = name;
+  testState.started = true;
+  saveTestState();
+
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('tasksContainer').style.display = 'block';
+  document.getElementById('studentBadge').style.display = 'flex';
+  updateHeaderUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  loadTimer();
+  startTimer();
+}
+function updateHeaderUI() {
+  document.getElementById('avatarLetter').textContent = testState.name ? testState.name.charAt(0).toUpperCase() : '?';
+  document.getElementById('studentName').textContent = testState.name || '—';
+}
+document.getElementById('nameInput').addEventListener('input', e => {
+  document.getElementById('startBtn').disabled = !e.target.value.trim();
+});
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.value.trim()) startTest();
+});
+
+/* ПРАВИЛЬНЫЕ ОТВЕТЫ */
+const CORRECT_ANSWERS = {
+  task1: ['14', '15'],
+  task2: {
+    'task2-1': 'correct', 'task2-2': 'correct', 'task2-3': 'correct',
+    'task2-4': 'correct', 'task2-5': 'wrong', 'task2-6': 'wrong'
+  },
+  task3: 'b',
+  task4: ['a', 'b'],
+  task5: 'append',
+  task6: 'a',
+  task7: '3',
+  task8: {
+    'task8-1': 'correct', 'task8-2': 'correct', 'task8-3': 'correct', 'task8-4': 'correct'
+  },
+  task9: 'b',
+  task10: '21',
+  task11: 'b',
+  task12: 'b',
+  task13: '16',
+  task14: '42',
+  task15: {
+    'task15-1': 'correct', 'task15-2': 'correct', 'task15-3': 'correct'
+  },
+  task16: 'b',
+  task17: '3',
+  task18: 'a',
+  task19: { a: '1', b: '2', c: '3', d: '4' },
+  task20: 'b',
+  task21: ['a', 'b', 'd'],
+  task22: '5',
+  task23: 'b'
+};
+
+let taskResults = {};
+let matchState19 = { selectedLeft: null, matches: {} };
+
+/* MATCH (Задание 19) */
+document.querySelectorAll('[data-match="19"] .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (testState.completed) return;
+    const side = item.dataset.side;
+    const key = item.dataset.key;
+
+    if (side === 'left') {
+      document.querySelectorAll('[data-match="19"] .match-item[data-side="left"]').forEach(el => el.classList.remove('selected'));
+      item.classList.add('selected');
+      matchState19.selectedLeft = key;
+    } else {
+      if (!matchState19.selectedLeft) {
+        alert('Сначала выбери команду слева, потом результат справа 👈');
+        return;
+      }
+      const leftKey = matchState19.selectedLeft;
+      const prevRightKey = matchState19.matches[leftKey];
+      if (prevRightKey) {
+        const prevRight = document.querySelector(`[data-match="19"] .match-item[data-side="right"][data-key="${prevRightKey}"]`);
+        if (prevRight) prevRight.classList.remove('matched');
+      }
+      matchState19.matches[leftKey] = key;
+      item.classList.add('matched');
+      document.querySelectorAll('[data-match="19"] .match-item[data-side="left"]').forEach(el => el.classList.remove('selected'));
+      matchState19.selectedLeft = null;
+    }
+  });
+});
+  /* ПОДСЧЁТ НЕОТВЕЧЕННЫХ */
+function findUnanswered() {
+  const list = [];
+  if (!document.querySelector('[data-name="task1"] input:checked')) list.push(1);
+  for (let i = 1; i <= 6; i++) {
+    if (!document.querySelector(`[data-name="task2-${i}"]`).value) { list.push(2); break; }
+  }
+  if (!document.querySelector('[name="task3"]:checked')) list.push(3);
+  if (!document.querySelector('[data-name="task4"] input:checked')) list.push(4);
+  if (!document.querySelector('[data-name="task5"]').value.trim()) list.push(5);
+  if (!document.querySelector('[name="task6"]:checked')) list.push(6);
+  if (!document.querySelector('[data-name="task7"]').value.trim()) list.push(7);
+  for (let i = 1; i <= 4; i++) {
+    if (!document.querySelector(`[data-name="task8-${i}"]`).value) { list.push(8); break; }
+  }
+  if (!document.querySelector('[name="task9"]:checked')) list.push(9);
+  if (!document.querySelector('[data-name="task10"]').value.trim()) list.push(10);
+  if (!document.querySelector('[name="task11"]:checked')) list.push(11);
+  if (!document.querySelector('[name="task12"]:checked')) list.push(12);
+  if (!document.querySelector('[data-name="task13"]').value.trim()) list.push(13);
+  if (!document.querySelector('[data-name="task14"]').value.trim()) list.push(14);
+  for (let i = 1; i <= 3; i++) {
+    if (!document.querySelector(`[data-name="task15-${i}"]`).value) { list.push(15); break; }
+  }
+  if (!document.querySelector('[name="task16"]:checked')) list.push(16);
+  if (!document.querySelector('[data-name="task17"]').value.trim()) list.push(17);
+  if (!document.querySelector('[name="task18"]:checked')) list.push(18);
+  if (Object.keys(matchState19.matches).length < 4) list.push(19);
+  if (!document.querySelector('[name="task20"]:checked')) list.push(20);
+  if (!document.querySelector('[data-name="task21"] input:checked')) list.push(21);
+  if (!document.querySelector('[data-name="task22"]').value.trim()) list.push(22);
+  if (!document.querySelector('[name="task23"]:checked')) list.push(23);
+  return list;
+}
+
+/* ПОДТВЕРЖДЕНИЕ ОТПРАВКИ */
+function askSubmit() {
+  if (testState.completed) return;
+  const unanswered = findUnanswered();
+  const modal = document.getElementById('submitModal');
+  const icon = document.getElementById('submitModalIcon');
+  const title = document.getElementById('submitModalTitle');
+  const text = document.getElementById('submitModalText');
+  const listBox = document.getElementById('submitModalList');
+
+  if (unanswered.length === 0) {
+    icon.textContent = '✅';
+    title.textContent = 'Отправить работу?';
+    text.innerHTML = 'Ты ответила на все задания.<br><b>Попытка одна</b> — изменить ответы после отправки будет нельзя.';
+    listBox.style.display = 'none';
+  } else {
+    icon.textContent = '⚠️';
+    title.textContent = 'Ты уверена?';
+    const word = unanswered.length === 1 ? 'задание' :
+                 (unanswered.length < 5 ? 'задания' : 'заданий');
+    text.innerHTML = `У тебя осталось <b>${unanswered.length} ${word}</b> без ответа.<br>Попытка одна — если отправишь сейчас, за эти задания баллы не начислятся.`;
+    listBox.style.display = 'block';
+    listBox.innerHTML = `📌 <b>Неотвеченные задания:</b><br>${unanswered.map(n => '№' + n).join(', ')}`;
+  }
+  modal.classList.add('show');
+}
+function closeSubmitModal() {
+  document.getElementById('submitModal').classList.remove('show');
+}
+function confirmSubmit() {
+  document.getElementById('submitModal').classList.remove('show');
+  setTimeout(() => performCheck(), 250);
+}
+
+/* ОСНОВНАЯ ПРОВЕРКА */
+function performCheck() {
+  if (testState.completed) return;
+  stopTimer();
+
+  const t1 = Array.from(document.querySelectorAll('[data-name="task1"] input:checked')).map(cb => cb.value);
+  taskResults[1] = CORRECT_ANSWERS.task1.every(v => t1.includes(v)) && t1.every(v => CORRECT_ANSWERS.task1.includes(v));
+
+  let t2c = true;
+  for (const key in CORRECT_ANSWERS.task2) {
+    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task2[key]) { t2c = false; break; }
+  }
+  taskResults[2] = t2c;
+
+  const t3sel = document.querySelector('[name="task3"]:checked');
+  taskResults[3] = !!(t3sel && t3sel.value === CORRECT_ANSWERS.task3);
+
+  const t4 = Array.from(document.querySelectorAll('[data-name="task4"] input:checked')).map(cb => cb.value);
+  taskResults[4] = CORRECT_ANSWERS.task4.every(v => t4.includes(v)) && t4.every(v => CORRECT_ANSWERS.task4.includes(v));
+
+  taskResults[5] = document.querySelector('[data-name="task5"]').value.trim().toLowerCase() === CORRECT_ANSWERS.task5;
+
+  const t6sel = document.querySelector('[name="task6"]:checked');
+  taskResults[6] = !!(t6sel && t6sel.value === CORRECT_ANSWERS.task6);
+
+  taskResults[7] = document.querySelector('[data-name="task7"]').value.trim() === CORRECT_ANSWERS.task7;
+
+  let t8c = true;
+  for (const key in CORRECT_ANSWERS.task8) {
+    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task8[key]) { t8c = false; break; }
+  }
+  taskResults[8] = t8c;
+
+  const t9sel = document.querySelector('[name="task9"]:checked');
+  taskResults[9] = !!(t9sel && t9sel.value === CORRECT_ANSWERS.task9);
+
+  taskResults[10] = document.querySelector('[data-name="task10"]').value.trim() === CORRECT_ANSWERS.task10;
+
+  const t11sel = document.querySelector('[name="task11"]:checked');
+  taskResults[11] = !!(t11sel && t11sel.value === CORRECT_ANSWERS.task11);
+
+  const t12sel = document.querySelector('[name="task12"]:checked');
+  taskResults[12] = !!(t12sel && t12sel.value === CORRECT_ANSWERS.task12);
+
+  taskResults[13] = document.querySelector('[data-name="task13"]').value.trim() === CORRECT_ANSWERS.task13;
+  taskResults[14] = document.querySelector('[data-name="task14"]').value.trim() === CORRECT_ANSWERS.task14;
+
+  let t15c = true;
+  for (const key in CORRECT_ANSWERS.task15) {
+    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task15[key]) { t15c = false; break; }
+  }
+  taskResults[15] = t15c;
+
+  const t16sel = document.querySelector('[name="task16"]:checked');
+  taskResults[16] = !!(t16sel && t16sel.value === CORRECT_ANSWERS.task16);
+
+  taskResults[17] = document.querySelector('[data-name="task17"]').value.trim() === CORRECT_ANSWERS.task17;
+
+  const t18sel = document.querySelector('[name="task18"]:checked');
+  taskResults[18] = !!(t18sel && t18sel.value === CORRECT_ANSWERS.task18);
+
+  let t19c = Object.keys(matchState19.matches).length === 4;
+  if (t19c) {
+    for (const leftKey in CORRECT_ANSWERS.task19) {
+      if (matchState19.matches[leftKey] !== CORRECT_ANSWERS.task19[leftKey]) { t19c = false; break; }
+    }
+  }
+  taskResults[19] = t19c;
+
+  const t20sel = document.querySelector('[name="task20"]:checked');
+  taskResults[20] = !!(t20sel && t20sel.value === CORRECT_ANSWERS.task20);
+
+  const t21 = Array.from(document.querySelectorAll('[data-name="task21"] input:checked')).map(cb => cb.value);
+  taskResults[21] = CORRECT_ANSWERS.task21.every(v => t21.includes(v)) && t21.every(v => CORRECT_ANSWERS.task21.includes(v));
+
+  taskResults[22] = document.querySelector('[data-name="task22"]').value.trim() === CORRECT_ANSWERS.task22;
+
+  const t23sel = document.querySelector('[name="task23"]:checked');
+  taskResults[23] = !!(t23sel && t23sel.value === CORRECT_ANSWERS.task23);
+
+  if (taskResults[24] !== true) taskResults[24] = false;
+  if (taskResults[25] !== true) taskResults[25] = false;
+
+  const correctCount = Object.values(taskResults).filter(Boolean).length;
+  testState.score = correctCount;
+  testState.completed = true;
+  saveTestState();
+
+  lockAllInputs();
+  showResultModal(correctCount, TOTAL_TASKS);
+}
+
+/* ОКНО РЕЗУЛЬТАТА */
+function showResultModal(score, total) {
+  const pct = Math.round((score / total) * 100);
+  document.getElementById('resultModalStudent').textContent = testState.name;
+  document.getElementById('resultModalScore').textContent = `${score} / ${total}`;
+  document.getElementById('resultModalPercent').textContent = `${pct}% правильных ответов`;
+
+  const gradeEl = document.getElementById('resultModalGrade');
+  const iconEl = document.getElementById('resultModalIcon');
+  const commentEl = document.getElementById('resultModalComment');
+
+  if (pct >= 90) {
+    gradeEl.textContent = 'Оценка: 5';
+    gradeEl.className = 'result-grade-big grade-5';
+    iconEl.textContent = '🏆';
+    commentEl.textContent = `${testState.name}, блестящий результат! Ты отлично справилась с работой.`;
+  } else if (pct >= 70) {
+    gradeEl.textContent = 'Оценка: 4';
+    gradeEl.className = 'result-grade-big grade-4';
+    iconEl.textContent = '🌟';
+    commentEl.textContent = `${testState.name}, хороший результат! Большинство тем освоено.`;
+  } else if (pct >= 50) {
+    gradeEl.textContent = 'Оценка: 3';
+    gradeEl.className = 'result-grade-big grade-3';
+    iconEl.textContent = '👍';
+    commentEl.textContent = `${testState.name}, неплохо! Есть над чем поработать.`;
+  } else {
+    gradeEl.textContent = 'Оценка: 2';
+    gradeEl.className = 'result-grade-big grade-2';
+    iconEl.textContent = '🌱';
+    commentEl.textContent = `${testState.name}, пока рановато. Пройди уроки заново и попробуй ещё.`;
+  }
+
+  document.getElementById('resultModal').classList.add('show');
+}
+
+/* БЛОКИРОВКА */
+function lockAllInputs() {
+  document.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
+  document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = '✓ Работа отправлена';
+}
+
+function updateProgress() {
+  const done = Object.values(taskResults).filter(v => v === true).length;
+  document.getElementById('task-counter').textContent = `${done} / ${TOTAL_TASKS}`;
+  document.getElementById('progress-fill').style.width = `${(done / TOTAL_TASKS) * 100}%`;
+}
+
+/* ЗАДАНИЕ 24 */
+function runTask24() {
+  const code = document.getElementById('code-task24').value;
+  const out = document.getElementById('out-task24');
+  const result = runCodeRaw(code);
+  if (result.empty) { out.textContent = 'Сначала напиши код.'; out.classList.remove('error'); return; }
+  if (result.error) { out.textContent = '❌ Ошибка: ' + result.error; out.classList.add('error'); return; }
+  out.textContent = result.output;
+  out.classList.remove('error');
+
+  const codeOnly = code.split('\n').map(l => l.split('#')[0]).join('');
+  const hasSum = /sum\s*\(\s*grades\s*\)/.test(codeOnly);
+  const hasLen = /len\s*\(\s*grades\s*\)/.test(codeOnly);
+  const hasCount5 = /grades\s*\.count\s*\(\s*5\s*\)/.test(codeOnly);
+  const hasCount2 = /grades\s*\.count\s*\(\s*2\s*\)/.test(codeOnly);
+  const printCount = (codeOnly.match(/print\s*\(/g) || []).length;
+
+  const o = result.output.replace(/\s+/g, '');
+  const hasAvg = /3[.,]9/.test(o);
+  const hasFives = /(^|[^\d])6([^\d]|$)/.test(o);
+  const hasTwos = /(^|[^\d])2([^\d]|$)/.test(o);
+
+  const passed = hasSum && hasLen && hasCount5 && hasCount2 && printCount >= 3
+              && hasAvg && hasFives && hasTwos;
+
+  taskResults[24] = passed;
+  updateProgress();
+}
+
+/* ЗАДАНИЕ 25 */
+function runTask25() {
+  const code = document.getElementById('code-task25').value;
+  const out = document.getElementById('out-task25');
+  const result = runCodeRaw(code);
+  if (result.empty) { out.textContent = 'Сначала напиши код.'; out.classList.remove('error'); return; }
+  if (result.error) { out.textContent = '❌ Ошибка: ' + result.error; out.classList.add('error'); return; }
+  out.textContent = result.output;
+  out.classList.remove('error');
+
+  const codeOnly = code.split('\n').map(l => l.split('#')[0]).join('');
+  const hasSum = /sum\s*\(\s*prices\s*\)/.test(codeOnly);
+  const hasMax = /max\s*\(\s*prices\s*\)/.test(codeOnly);
+  const hasLen = /len\s*\(\s*prices\s*\)/.test(codeOnly);
+  const hasFor = /for\s+\w+\s+in/.test(codeOnly);
+  const hasIf = /if\s+/.test(codeOnly);
+  const printCount = (codeOnly.match(/print\s*\(/g) || []).length;
+
+  const o = result.output.replace(/\s+/g, '');
+  const hasSumCheck = /3100/.test(o);
+  const hasMaxCheck = /(^|[^\d])500([^\d]|$)/.test(o);
+  const hasCountCheck = /(^|[^\d])5([^\d]|$)/.test(o);
+  const hasLenCheck = /(^|[^\d])10([^\d]|$)/.test(o);
+
+  const passed = hasSum && hasMax && hasLen && hasFor && hasIf && printCount >= 4
+              && hasSumCheck && hasMaxCheck && hasCountCheck && hasLenCheck;
+
+  taskResults[25] = passed;
+  updateProgress();
+}
+
+/* ИНТЕРПРЕТАТОР */
+function fmt(v) {
+  if (Array.isArray(v)) return '[' + v.map(x => typeof x === 'string' ? `'${x}'` : fmt(x)).join(', ') + ']';
+  if (typeof v === 'number' && !Number.isInteger(v)) return Math.round(v * 1000) / 1000;
+  if (typeof v === 'boolean') return v ? 'True' : 'False';
+  if (v === null || v === undefined) return 'None';
+  return String(v);
+}
+function runCodeRaw(code) {
+  let buffer = '';
+  const __out = (...args) => { buffer += args.map(fmt).join(' ') + '\n'; };
+  const lines = code.split('\n');
+  let problemLine = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const noComment = lines[i].split('#')[0];
+    const noStrings = noComment.replace(/"[^"]*"/g, '""').replace(/'[^']*'/g, "''");
+    if (noStrings.includes('?')) { problemLine = i; break; }
+  }
+  if (problemLine >= 0) return { output: buffer, error: `В строке ${problemLine + 1} остался знак «?».` };
+  const codeStripped = code.split('\n').map(l => l.split('#')[0]).join('').trim();
+  if (!codeStripped) return { output: '', error: null, empty: true };
+  try {
+    const js = translatePython(code);
+    const wrapped = `
+      const __print = (...a) => __out(...a);
+      const __len = x => (Array.isArray(x) || typeof x === 'string') ? x.length : Object.keys(x).length;
+      const __sum = x => Array.isArray(x) ? x.reduce((a,b)=>a+b, 0) : 0;
+      const __min = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.min(...a[0]) : Math.min(...a);
+      const __max = (...a) => a.length===1 && Array.isArray(a[0]) ? Math.max(...a[0]) : Math.max(...a);
+      const __sorted = (arr) => [...arr].sort((a,b)=> a<b?-1:a>b?1:0);
+      const __round = (x, n=0) => { const p = Math.pow(10, n); return Math.round(x*p)/p; };
+      const __get = (arr, i) => {
+        if (Array.isArray(arr) || typeof arr === 'string') {
+          const idx = i < 0 ? arr.length + i : i;
+          const val = arr[idx];
+          return val === undefined ? null : val;
+        }
+        return null;
+      };
+      const __set = (arr, i, val) => {
+        const idx = i < 0 ? arr.length + i : i;
+        arr[idx] = val;
+        return val;
+      };
+      const __range = (...a) => {
+        let start=0, stop, step=1;
+        if (a.length===1) stop=a[0];
+        else if (a.length===2) [start, stop]=a;
+        else [start, stop, step]=a;
+        const r=[]; if (step>0) for(let i=start;i<stop;i+=step) r.push(i); else for(let i=start;i>stop;i+=step) r.push(i);
+        return r;
+      };
+      const __iter = x => Array.isArray(x) ? x : (typeof x==='string' ? x.split('') : Object.values(x));
+      const __in = (x, arr) => Array.isArray(arr) ? arr.includes(x) : (typeof arr==='string' ? arr.includes(x) : false);
+      const __truthy = x => Array.isArray(x) ? x.length>0 : (typeof x==='string' ? x.length>0 : !!x);
+      const __append = (arr, x) => { arr.push(x); };
+      const __pop = (arr, i) => i===undefined ? arr.pop() : arr.splice(i,1)[0];
+      const __count = (arr, x) => arr.filter(v=>v===x).length;
+      const __sort = (arr, kw) => { arr.sort((a,b)=> a<b?-1:a>b?1:0); if (kw && kw.reverse) arr.reverse(); };
+      const __reverse = arr => { arr.reverse(); };
+      ${js}
+    `;
+    const fn = new Function('__out', wrapped);
+    fn(__out);
+    return { output: buffer || '(нет вывода)', error: null };
+  } catch (e) {
+    return { output: buffer, error: e.message };
+  }
+}
+function translatePython(code) {
+  const lines = code.split('\n'); let js = ''; const stack = [];
+  for (let raw of lines) {
+    const ci = raw.indexOf('#'); let line = ci >= 0 ? raw.slice(0, ci) : raw;
+    if (line.trim() === '') continue;
+    const indent = line.match(/^\s*/)[0].length; let t = line.trim();
+    while (stack.length && indent <= stack[stack.length-1]) { js += '}\n'; stack.pop(); }
+
+    t = t.replace(/\bprint\s*\(/g, '__print(');
+    t = t.replace(/\blen\s*\(/g, '__len(');
+    t = t.replace(/\bsum\s*\(/g, '__sum(');
+    t = t.replace(/\bmin\s*\(/g, '__min(');
+    t = t.replace(/\bmax\s*\(/g, '__max(');
+    t = t.replace(/\bsorted\s*\(/g, '__sorted(');
+    t = t.replace(/\bround\s*\(/g, '__round(');
+    t = t.replace(/\brange\s*\(/g, '__range(');
+    t = t.replace(/\bTrue\b/g, 'true'); t = t.replace(/\bFalse\b/g, 'false'); t = t.replace(/\bNone\b/g, 'null');
+    t = t.replace(/\band\b/g, '&&'); t = t.replace(/\bor\b/g, '||'); t = t.replace(/\bnot\s+/g, '!');
+
+    let mFor = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/);
+    if (mFor) {
+      js += ' '.repeat(indent) + `for (let ${mFor[1]} of __iter(${mFor[2]})) {\n`;
+      stack.push(indent); continue;
+    }
+
+    if (/([A-Za-z_]\w*)\[[^\]]+\]\s*=(?!=)/.test(t)) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]\s*=(?!=)\s*(.+)/g,
+        (m, arr, idx, val) => `__set(${arr}, ${idx}, ${val})`);
+    }
+    if (!t.includes('__get(') && !t.includes('__set(')) {
+      t = t.replace(/([A-Za-z_]\w*)\[([^\]]+)\]/g, '__get($1, $2)');
+    }
+
+    t = t.replace(/([A-Za-z_]\w*)\.append\s*\(/g, '__append($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.pop\s*\(([^)]*)\)/g, '__pop($1, $2)');
+    t = t.replace(/([A-Za-z_]\w*)\.count\s*\(/g, '__count($1, ');
+    t = t.replace(/([A-Za-z_]\w*)\.sort\s*\(([^)]*)\)/g, (m,a,b) => `__sort(${a}, {${b.replace(/\s+/g,'')}})`.replace('{,}','{}'));
+    t = t.replace(/([A-Za-z_]\w*)\.reverse\s*\(\)/g, '__reverse($1)');
+
+    let mIf = t.match(/^if\s+(.+):$/);
+    if (mIf) { js += ' '.repeat(indent) + `if (__truthy(${mIf[1]})) {\n`; stack.push(indent); continue; }
+    let mElif = t.match(/^elif\s+(.+):$/);
+    if (mElif) { js += ' '.repeat(indent) + `} else if (__truthy(${mElif[1]})) {\n`; continue; }
+    if (t === 'else:') { js += ' '.repeat(indent) + `} else {\n`; continue; }
+    if (t === 'break') { js += ' '.repeat(indent) + 'break;\n'; continue; }
+    if (t === 'pass') { js += ' '.repeat(indent) + ';\n'; continue; }
+
+    js += ' '.repeat(indent) + t + ';\n';
+  }
+  while (stack.length) { js += '}\n'; stack.pop(); }
+  return js;
+}
+
+/* ВОССТАНОВЛЕНИЕ */
+loadTestState();
+updateHeaderUI();
+
+if (testState.completed) {
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('tasksContainer').style.display = 'block';
+  document.getElementById('studentBadge').style.display = 'flex';
+
+  lockAllInputs();
+  updateProgress();
+  showResultModal(testState.score, TOTAL_TASKS);
+} else if (testState.started && testState.name) {
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('tasksContainer').style.display = 'block';
+  document.getElementById('studentBadge').style.display = 'flex';
+  updateHeaderInfo();
+  loadTimer();
+  if (remainingSeconds > 0) startTimer();
+  updateProgress();
+}
+
+function updateHeaderInfo() {
+  document.getElementById('avatarLetter').textContent = testState.name ? testState.name.charAt(0).toUpperCase() : '?';
+  document.getElementById('studentName').textContent = testState.name || '—';
+}
+</script>
+
+</body>
+</html>
