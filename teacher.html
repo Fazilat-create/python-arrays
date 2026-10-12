@@ -29,9 +29,7 @@
   body::before { width: 400px; height: 400px; background: #d5b3ff; top: -100px; left: -100px; }
   body::after  { width: 500px; height: 500px; background: #ffd0e0; bottom: -150px; right: -150px; }
 
-  /* ==========================================================
-     ЭКРАН ВХОДА
-     ========================================================== */
+  /* ЭКРАН ВХОДА */
   .login-screen {
     position: fixed; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -121,9 +119,7 @@
     color: #a99cd0; font-style: italic;
   }
 
-  /* ==========================================================
-     ПАНЕЛЬ УЧИТЕЛЯ
-     ========================================================== */
+  /* ПАНЕЛЬ УЧИТЕЛЯ */
   #teacherPanel {
     height: 100vh;
     display: flex;
@@ -252,6 +248,56 @@
     box-shadow: 0 8px 18px rgba(255,184,77,0.5);
   }
 
+  .test-btn {
+    background: linear-gradient(135deg, #d9c8ff, #b8a8e8);
+    border: none; padding: 8px 16px;
+    border-radius: 12px; font-family: inherit;
+    font-size: 0.85em; font-weight: 700;
+    color: #4a3a7a; cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(184,168,232,0.35);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .test-btn:hover {
+    background: linear-gradient(135deg, #b8a8e8, #9a8ad8);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(184,168,232,0.5);
+  }
+
+  .test-result-btn {
+    background: linear-gradient(135deg, #c8ecff, #a8d8f0);
+    border: none; padding: 8px 16px;
+    border-radius: 12px; font-family: inherit;
+    font-size: 0.85em; font-weight: 700;
+    color: #2a5a7a; cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(168,216,240,0.35);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .test-result-btn:hover {
+    background: linear-gradient(135deg, #a8d8f0, #88c8e0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(168,216,240,0.5);
+  }
+
+  .reset-test-btn {
+    background: linear-gradient(135deg, #ffd6d6, #ffaaa5);
+    border: none; padding: 8px 16px;
+    border-radius: 12px; font-family: inherit;
+    font-size: 0.85em; font-weight: 700;
+    color: #7a2a2a; cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 4px 12px rgba(255,170,165,0.35);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .reset-test-btn:hover {
+    background: linear-gradient(135deg, #ffaaa5, #ff8a95);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255,138,149,0.5);
+  }
+
   .logout-btn {
     background: rgba(255,255,255,0.9);
     border: none; padding: 8px 14px;
@@ -264,8 +310,7 @@
     background: #fff; transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(255,138,149,0.3);
   }
-
-  .lesson-frame {
+   .lesson-frame {
     width: 100%;
     flex: 1;
     border: none;
@@ -274,9 +319,7 @@
     position: relative; z-index: 1;
   }
 
-  /* ==========================================================
-     МОДАЛКА «ОТКРЫТЬ УРОК 2»
-     ========================================================== */
+  /* МОДАЛКИ */
   .modal-bg {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, rgba(254,246,255,0.95), rgba(232,244,253,0.95));
@@ -368,6 +411,63 @@
     line-height: 1.6;
   }
 
+  /* МОДАЛКА РЕЗУЛЬТАТА ТЕСТА */
+  .test-result-modal {
+    background: #fff; border-radius: 24px;
+    padding: 34px 38px; max-width: 480px; width: 100%;
+    box-shadow: 0 25px 70px rgba(180,150,220,0.3);
+    border: 2px solid #f0eaff;
+    animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative; text-align: center;
+  }
+  .test-result-modal h3 {
+    color: var(--ink); font-size: 1.3em;
+    margin-bottom: 16px;
+  }
+  .test-result-modal .close-x {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.4em; color: var(--ink-soft);
+    transition: 0.2s; padding: 4px 8px;
+  }
+  .test-result-modal .close-x:hover { color: var(--ink); }
+  .test-result-modal .student-name {
+    font-size: 1.1em; color: #5a4a8a;
+    font-weight: 700; margin-bottom: 14px;
+  }
+  .test-result-modal .score-big {
+    font-size: 3em; font-weight: 800;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 10px 0;
+    line-height: 1;
+  }
+  .test-result-modal .score-label {
+    color: var(--ink-soft); font-size: 0.95em;
+    margin-bottom: 18px;
+  }
+  .test-result-modal .grade-big {
+    display: inline-block;
+    padding: 12px 36px; border-radius: 22px;
+    font-weight: 800; font-size: 1.4em;
+    margin: 12px 0 20px;
+  }
+  .grade-5 { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #2a6a4a; }
+  .grade-4 { background: linear-gradient(135deg, #ffd966, #ffb84d); color: #7a4a00; }
+  .grade-3 { background: linear-gradient(135deg, #ffd3b6, #ffb88c); color: #7a4a20; }
+  .grade-2 { background: linear-gradient(135deg, #ffaaa5, #ff8a95); color: #fff; }
+  .test-result-modal .not-passed {
+    color: #8a7ab0; font-size: 1.05em;
+    line-height: 1.7; padding: 20px 0;
+  }
+  .test-result-modal .attempt-info {
+    background: #fdfbff; border-radius: 12px;
+    padding: 12px 16px; font-size: 0.85em;
+    color: #8a7ab0; line-height: 1.6;
+    margin-top: 12px;
+  }
+
   .toast {
     position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%) translateY(100px);
@@ -382,6 +482,11 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
+  @media (max-width: 1100px) {
+    .test-btn, .test-result-btn, .reset-test-btn {
+      padding: 6px 10px; font-size: 0.78em;
+    }
+  }
   @media (max-width: 900px) {
     .teacher-header { padding: 10px 14px; }
     .teacher-header .brand h1 { font-size: 0.95em; }
@@ -444,8 +549,20 @@
         🔓 Открыть урок 2
       </button>
 
-      <button class="reset-btn" onclick="askResetProgress()" title="Очистить имя, цветочки и выполненные задания в этом браузере">
+      <button class="test-btn" onclick="openTest()" title="Открыть проверочную работу в новом окне">
+        📝 Открыть тест
+      </button>
+
+      <button class="test-result-btn" onclick="showTestResult()" title="Посмотреть результат теста">
+        📊 Результат теста
+      </button>
+
+      <button class="reset-btn" onclick="askResetProgress()" title="Очистить имя, цветочки и выполненные задания">
         🧹 Сброс прогресса
+      </button>
+
+      <button class="reset-test-btn" onclick="askResetTest()" title="Сбросить результат теста — ученица сможет пройти заново">
+        📝 Сбросить тест
       </button>
 
       <button class="logout-btn" onclick="logout()">Выйти</button>
@@ -479,19 +596,23 @@
   </div>
 </div>
 
+<!-- МОДАЛКА РЕЗУЛЬТАТА ТЕСТА -->
+<div class="modal-bg hidden" id="testResultModal">
+  <div class="test-result-modal">
+    <button class="close-x" onclick="closeTestResultModal()">×</button>
+    <h3>📊 Результат проверочной работы</h3>
+    <div id="testResultContent"></div>
+  </div>
+</div>
+
 <!-- УВЕДОМЛЕНИЕ -->
 <div class="toast" id="toast">Ссылка скопирована 🌸</div>
-
 <script>
-/* ==========================================================
-   ПАРОЛЬ
-   ========================================================== */
+/* ПАРОЛЬ */
 const TEACHER_PASSWORD = 'teacher2024';
 const AUTH_KEY = 'teacher_auth';
 
-/* ==========================================================
-   ВХОД / ВЫХОД
-   ========================================================== */
+/* ВХОД / ВЫХОД */
 function checkAuth() {
   try { return localStorage.getItem(AUTH_KEY) === 'ok'; }
   catch(e) { return false; }
@@ -545,18 +666,14 @@ document.getElementById('passwordInput').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.value) tryLogin();
 });
 
-/* ==========================================================
-   ПРИ ЗАГРУЗКЕ
-   ========================================================== */
+/* ПРИ ЗАГРУЗКЕ */
 if (checkAuth()) {
   showTeacherPanel();
 } else {
   showLoginScreen();
 }
 
-/* ==========================================================
-   ПЕРЕКЛЮЧЕНИЕ УРОКОВ
-   ========================================================== */
+/* ПЕРЕКЛЮЧЕНИЕ УРОКОВ */
 function switchLesson(n, btn) {
   document.querySelectorAll('.lesson-switch button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -565,9 +682,7 @@ function switchLesson(n, btn) {
   document.getElementById('studentLink').href = n === 1 ? 'urok1.html' : 'urok2.html?open=1';
 }
 
-/* ==========================================================
-   ТАЙМЕР
-   ========================================================== */
+/* ТАЙМЕР */
 const LESSON_DURATION = 45 * 60;
 let timerSeconds = LESSON_DURATION;
 let timerInterval = null;
@@ -585,20 +700,17 @@ function updateTimerDisplay() {
 function toggleTimer() {
   const btn = document.getElementById('timerBtn');
 
-  // Защита от двойного клика в течение 150мс
   if (btn.dataset.locked === '1') return;
   btn.dataset.locked = '1';
   setTimeout(() => { btn.dataset.locked = '0'; }, 150);
 
   if (timerInterval !== null) {
-    // Пауза
     clearInterval(timerInterval);
     timerInterval = null;
     btn.textContent = 'Продолжить';
     return;
   }
 
-  // Старт
   btn.textContent = 'Пауза';
   timerInterval = setInterval(() => {
     timerSeconds--;
@@ -622,9 +734,7 @@ function resetTimer() {
   updateTimerDisplay();
 }
 
-/* ==========================================================
-   ССЫЛКА НА УРОК 2 С ?open=1
-   ========================================================== */
+/* ССЫЛКА НА УРОК 2 */
 function getLesson2Url() {
   const base = window.location.href.replace(/teacher\.html.*$/, '');
   return base + 'urok2.html?open=1';
@@ -673,12 +783,92 @@ function openLesson2InNewTab() {
   window.open(getLesson2Url(), '_blank');
 }
 
-/* ==========================================================
-   СБРОС ПРОГРЕССА
-   ========================================================== */
+/* ТЕСТ */
+function openTest() {
+  window.open('test.html', '_blank');
+}
+
+function showTestResult() {
+  const modal = document.getElementById('testResultModal');
+  const content = document.getElementById('testResultContent');
+
+  let testState = null;
+  try {
+    const raw = localStorage.getItem('python_arrays_test');
+    if (raw) testState = JSON.parse(raw);
+  } catch(e) {}
+
+  if (!testState) {
+    content.innerHTML = `
+      <div class="not-passed">
+        📭 Тест ещё не начат.<br>
+        <span style="font-size:0.85em;color:#a99cd0;">
+          Ученица откроет <b>test.html</b> и введёт имя.
+        </span>
+      </div>
+    `;
+  } else if (!testState.completed) {
+    content.innerHTML = `
+      <div class="student-name">👤 ${testState.name || 'Без имени'}</div>
+      <div class="not-passed">
+        ⏳ Тест начат, но не завершён.<br>
+        <span style="font-size:0.85em;color:#a99cd0;">
+          Попытка ещё идёт.
+        </span>
+      </div>
+    `;
+  } else {
+    const pct = Math.round((testState.score / 25) * 100);
+    let grade = '2';
+    let gradeClass = 'grade-2';
+    let emoji = '🌱';
+    if (pct >= 90) { grade = '5'; gradeClass = 'grade-5'; emoji = '🏆'; }
+    else if (pct >= 70) { grade = '4'; gradeClass = 'grade-4'; emoji = '🌟'; }
+    else if (pct >= 50) { grade = '3'; gradeClass = 'grade-3'; emoji = '👍'; }
+
+    content.innerHTML = `
+      <div class="student-name">👤 ${testState.name || 'Без имени'}</div>
+      <div class="score-big">${testState.score} / 25</div>
+      <div class="score-label">${pct}% правильных ответов</div>
+      <div class="grade-big ${gradeClass}">${emoji} Оценка: ${grade}</div>
+      <div class="attempt-info">
+        ⚠️ Попытка одна. Чтобы ученица прошла заново — нажмите «📝 Сбросить тест».
+      </div>
+    `;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeTestResultModal() {
+  document.getElementById('testResultModal').classList.add('hidden');
+}
+
+function askResetTest() {
+  const ok = confirm(
+    '📝 Сбросить результат теста?\n\n' +
+    'Это удалит:\n' +
+    '• имя, введённое в тесте\n' +
+    '• все ответы и баллы\n' +
+    '• таймер теста\n\n' +
+    '⚠️ Ученица сможет пройти тест заново.\n\n' +
+    'Продолжить?'
+  );
+  if (!ok) return;
+
+  try {
+    localStorage.removeItem('python_arrays_test');
+    localStorage.removeItem('python_arrays_test_timer');
+  } catch(e) {}
+
+  showToast('Результат теста сброшен 📝');
+  closeTestResultModal();
+}
+
+/* СБРОС ПРОГРЕССА УРОКОВ */
 function askResetProgress() {
   const ok = confirm(
-    '🧹 Сбросить прогресс?\n\n' +
+    '🧹 Сбросить прогресс уроков?\n\n' +
     'Это очистит в ЭТОМ браузере:\n' +
     '• имя ученицы\n' +
     '• собранные цветочки\n' +
@@ -698,13 +888,11 @@ function doResetProgress() {
   const currentSrc = frame.src;
   frame.src = 'about:blank';
   setTimeout(() => { frame.src = currentSrc; }, 50);
-  showToast('Прогресс сброшен 🌸');
+  showToast('Прогресс уроков сброшен 🌸');
   resetTimer();
 }
 
-/* ==========================================================
-   УВЕДОМЛЕНИЕ
-   ========================================================== */
+/* УВЕДОМЛЕНИЕ */
 let toastTimeout = null;
 function showToast(text) {
   const toast = document.getElementById('toast');
@@ -717,14 +905,16 @@ function showToast(text) {
   }, 2500);
 }
 
-/* ==========================================================
-   ГОРЯЧИЕ КЛАВИШИ
-   (без пробела — чтобы не конфликтовало с таймером)
-   ========================================================== */
+/* ГОРЯЧИЕ КЛАВИШИ */
 document.addEventListener('keydown', e => {
   if (!document.getElementById('loginScreen').classList.contains('hidden')) return;
+
   if (!document.getElementById('openLesson2Modal').classList.contains('hidden')) {
     if (e.key === 'Escape') closeLesson2Modal();
+    return;
+  }
+  if (!document.getElementById('testResultModal').classList.contains('hidden')) {
+    if (e.key === 'Escape') closeTestResultModal();
     return;
   }
 
@@ -740,11 +930,13 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     resetTimer();
   }
+  if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+    e.preventDefault();
+    openTest();
+  }
 });
 
-/* ==========================================================
-   ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ
-   ========================================================== */
+/* ИНИЦИАЛИЗАЦИЯ */
 updateTimerDisplay();
 </script>
 
