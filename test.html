@@ -1198,21 +1198,6 @@ print(names[-1])</div>
   </div>
 </div>
 
-<!-- МОДАЛКА ВВОДА КОДА ДЛЯ РАЗБОРА -->
-<div class="custom-modal-bg" id="codeModal">
-  <div class="custom-modal">
-    <div class="modal-icon">🔒</div>
-    <h3>Разбор откроет учитель</h3>
-    <p>Введи код доступа, который скажет учитель на уроке.</p>
-    <input type="text" id="codeInput" placeholder="Код доступа" autocomplete="off" inputmode="text">
-    <div id="codeError"></div>
-    <div class="modal-actions">
-      <button class="modal-btn ghost" onclick="closeCodeModal()">Отмена</button>
-      <button class="modal-btn primary" onclick="checkRevealCode()">Открыть</button>
-    </div>
-  </div>
-</div>
-
 <!-- ОКНО РЕЗУЛЬТАТА -->
 <div class="result-modal-bg" id="resultModal">
   <div class="result-modal">
@@ -1223,15 +1208,11 @@ print(names[-1])</div>
     <div class="result-percent" id="resultModalPercent">0% правильных ответов</div>
     <div class="result-grade-big" id="resultModalGrade">Оценка: 5</div>
     <div class="result-comment" id="resultModalComment"></div>
-    <div class="result-note">
-      📌 <b>Разбор ответов</b> откроет учитель на уроке — по коду доступа.
-    </div>
     <div class="result-dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
 
-    <div class="after-submit-actions" id="afterSubmitActions">
-      <button class="action-btn download" onclick="downloadWork()">📥 Скачать мою работу</button>
-      <button class="action-btn reveal" id="revealBtn" onclick="askRevealCode()">🔒 Показать мои ошибки</button>
-    </div>
+<div class="after-submit-actions" id="afterSubmitActions">
+  <button class="action-btn download" onclick="downloadWork()">📥 Скачать мою работу</button>
+</div>
   </div>
 </div>
 <script>
