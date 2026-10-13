@@ -1651,24 +1651,14 @@ function performCheck() {
 
 /* БЛОКИРОВКА */
 function lockAllInputs() {
-  // Блокируем поля ввода (input, textarea, select) — но НЕ трогаем кнопки
   document.querySelectorAll('input, textarea, select').forEach(el => el.disabled = true);
-
-  // Блокируем кнопки «▶ Запустить» в заданиях 24 и 25
   document.querySelectorAll('.task button').forEach(el => el.disabled = true);
-
-  // Блокируем кнопку «Отправить работу»
   const sb = document.getElementById('submitBtn');
   if (sb) {
     sb.disabled = true;
     sb.textContent = '✓ Работа отправлена';
   }
-
-  // Помечаем задания как «заблокированные» (визуально)
   document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
-
-  // ⚠️ Кнопки в окне результата («Скачать мою работу», «Показать мои ошибки») —
-  // НЕ блокируем. Они должны работать.
 }
 
 function updateProgress() {
@@ -1718,116 +1708,6 @@ function showResultModal(score, total) {
 }
 
 /* ==========================================================
-   РАЗБОР ОШИБОК — ЗАПРОС КОДА
-   ========================================================== */
-function askRevealCode() {
-  if (revealMode) {
-    hideReveal();
-    return;
-  }
-  document.getElementById('codeModal').classList.add('show');
-  document.getElementById('codeInput').value = '';
-  document.getElementById('codeError').textContent = '';
-  setTimeout(() => document.getElementById('codeInput').focus(), 200);
-}
-function closeCodeModal() {
-  document.getElementById('codeModal').classList.remove('show');
-}
-function checkRevealCode() {
-  const input = document.getElementById('codeInput');
-  const errorEl = document.getElementById('codeError');
-  const value = (input.value || '').trim().toUpperCase();
-
-  if (value === REVEAL_CODE) {
-    closeCodeModal();
-    showReveal();
-  } else {
-    errorEl.textContent = 'Неверный код. Спроси учителя.';
-    input.value = '';
-    input.focus();
-  }
-}
-
-/* Показ разбора */
-function showReveal() {
-  revealMode = true;
-  const btn = document.getElementById('revealBtn');
-  if (btn) {
-    btn.textContent = '🙈 Скрыть мои ошибки';
-    btn.classList.add('active');
-  }
-
-  for (let n = 1; n <= 25; n++) {
-    const task = document.querySelector(`[data-task="${n}"]`);
-    if (!task) continue;
-    const status = task.querySelector(`[data-status="${n}"]`);
-
-    task.classList.remove('revealed-correct', 'revealed-wrong');
-
-    if (taskResults[n] === true) {
-      task.classList.add('revealed-correct');
-      if (status) {
-        status.classList.remove('err');
-        status.classList.add('ok', 'show');
-        status.textContent = '✓ Верно';
-      }
-    } else {
-      task.classList.add('revealed-wrong');
-      if (status) {
-        status.classList.remove('ok');
-        status.classList.add('err', 'show');
-        let text = '✗ Ошибка';
-        const userAnswer = getUserAnswerText(n);
-        if (userAnswer) text += ' · Твой ответ: ' + userAnswer;
-        status.textContent = text;
-      }
-    }
-  }
-
-  const first = document.querySelector('[data-task="1"]');
-  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function hideReveal() {
-  revealMode = false;
-  const btn = document.getElementById('revealBtn');
-  if (btn) {
-    btn.textContent = '🔒 Показать мои ошибки';
-    btn.classList.remove('active');
-  }
-  for (let n = 1; n <= 25; n++) {
-    const task = document.querySelector(`[data-task="${n}"]`);
-    if (!task) continue;
-    task.classList.remove('revealed-correct', 'revealed-wrong');
-    const status = task.querySelector(`[data-status="${n}"]`);
-    if (status) status.classList.remove('show', 'ok', 'err');
-  }
-}
-
-function getUserAnswerText(n) {
-  if (!savedAnswers) return '';
-  const a = savedAnswers.answers[n];
-  if (a === undefined || a === '' || (Array.isArray(a) && a.length === 0)) return 'нет ответа';
-  if (Array.isArray(a)) return a.join(', ');
-  if (typeof a === 'object') {
-    const parts = [];
-    for (const k in a) parts.push(a[k] ? a[k] : '—');
-    return parts.join(', ');
-  }
-  const s = String(a);
-  if (s.length > 100) return s.slice(0, 100) + '…';
-  return s;
-}
-
-/* Enter в поле кода */
-document.getElementById('codeInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkRevealCode();
-});
-document.getElementById('codeInput').addEventListener('input', () => {
-  document.getElementById('codeError').textContent = '';
-});
-
-/* ==========================================================
    СКАЧИВАНИЕ РАБОТЫ
    ========================================================== */
 function downloadWork() {
@@ -1872,9 +1752,6 @@ function buildWorkHtml(s) {
     return parts.join('<br>');
   }
 
-  const resultsJson = JSON.stringify(taskResults);
-  const answersJson = JSON.stringify(s.answers);
-
   return `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -1913,16 +1790,6 @@ function buildWorkHtml(s) {
     box-shadow: 0 6px 15px rgba(184,168,232,0.4);
   }
   .print-btn:hover { transform: translateY(-2px); }
-  .reveal-btn {
-    background: linear-gradient(135deg, #ffd6d6, #ffaaa5);
-    color: #7a2a2a;
-    box-shadow: 0 6px 15px rgba(255,170,165,0.4);
-  }
-  .reveal-btn:hover { transform: translateY(-2px); }
-  .reveal-btn.active {
-    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
-    color: #2a6a4a;
-  }
   h1 { color: #5a4a8a; font-size: 1.6em; text-align: center; margin: 0 0 8px; }
   .sub { text-align: center; color: #8a7ab0; font-size: 0.9em; margin-bottom: 24px; }
   .score-box {
@@ -1949,29 +1816,9 @@ function buildWorkHtml(s) {
     padding: 10px 14px; border-radius: 10px;
     background: #fdfbff; border: 1px solid #ece4ff;
     margin-bottom: 8px; font-size: 0.92em;
-    transition: 0.3s;
-  }
-  .answer-row.revealed-correct {
-    border-color: #7ed9b8;
-    background: linear-gradient(135deg, #f8fffc, #f0fff8);
-  }
-  .answer-row.revealed-wrong {
-    border-color: #ff8a95;
-    background: linear-gradient(135deg, #fff8f8, #fff0f0);
   }
   .answer-num { font-weight: 700; color: #7a5aa8; flex-shrink: 0; min-width: 90px; }
   .answer-val { color: #5a4a7a; flex: 1; }
-  .answer-status {
-    display: none; font-size: 0.88em; font-weight: 700;
-    margin-top: 6px; padding: 6px 12px; border-radius: 8px;
-  }
-  .answer-status.show { display: block; }
-  .answer-status.ok {
-    background: linear-gradient(135deg, #e0fff0, #c8f5dd); color: #2a6a4a;
-  }
-  .answer-status.err {
-    background: linear-gradient(135deg, #ffe8e8, #ffd6d6); color: #a04a4a;
-  }
   .code-block {
     background: #f4f4fa; border: 1px solid #e8e8f0;
     border-radius: 8px; padding: 12px 14px;
@@ -1989,71 +1836,10 @@ function buildWorkHtml(s) {
     font-size: 1.3em; color: #5a4a8a;
     direction: rtl; margin: 20px 0;
   }
-  .code-modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(90, 74, 122, 0.5);
-    backdrop-filter: blur(6px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 2000; padding: 20px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s;
-  }
-  .code-modal-bg.show { opacity: 1; pointer-events: auto; }
-  .code-modal {
-    background: #fff; border-radius: 24px;
-    padding: 32px 36px; max-width: 480px; width: 100%;
-    box-shadow: 0 30px 80px rgba(90, 74, 122, 0.4);
-    border: 2px solid #f0eaff;
-    text-align: center;
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.6, 1);
-  }
-  .code-modal-bg.show .code-modal { transform: scale(1); }
-  .code-modal .icon { font-size: 3em; margin-bottom: 12px; }
-  .code-modal h3 { color: #5a4a8a; font-size: 1.3em; margin-bottom: 12px; }
-  .code-modal p { color: #5a5a7a; margin-bottom: 18px; line-height: 1.7; font-size: 0.95em; }
-  .code-modal input {
-    width: 100%; padding: 14px 18px;
-    border: 2px solid #ece4ff; border-radius: 14px;
-    font-family: inherit; font-size: 1.05em;
-    text-align: center; color: #5a4a7a; outline: none;
-    background: #fdfbff; letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .code-modal input:focus {
-    border-color: #b8a8e8;
-    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
-  }
-  .code-modal .err {
-    color: #c04a4a; font-size: 0.88em; font-weight: 600;
-    min-height: 20px; margin-top: 10px;
-  }
-  .code-modal .actions {
-    display: flex; gap: 12px; justify-content: center;
-    margin-top: 20px;
-  }
-  .code-modal .actions button {
-    padding: 12px 28px; border-radius: 14px; border: none;
-    font-family: inherit; font-size: 1em; font-weight: 700;
-    cursor: pointer; transition: 0.25s;
-  }
-  .code-modal .btn-primary {
-    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
-    color: #fff;
-    box-shadow: 0 6px 15px rgba(184,168,232,0.4);
-  }
-  .code-modal .btn-primary:hover { transform: translateY(-2px); }
-  .code-modal .btn-ghost {
-    background: #fff; color: #7a5aa8;
-    border: 2px solid #ece4ff;
-  }
-  .code-modal .btn-ghost:hover { background: #faf6ff; }
-
   @media print {
     body { background: #fff; padding: 0; }
     .paper { box-shadow: none; padding: 20px; }
     .top-actions { display: none; }
-    .code-modal-bg { display: none !important; }
   }
   @media (max-width: 700px) {
     .paper { padding: 24px 20px; }
@@ -2066,7 +1852,6 @@ function buildWorkHtml(s) {
 
   <div class="top-actions">
     <button class="print-btn" onclick="window.print()">🖨 Распечатать / Сохранить в PDF</button>
-    <button class="reveal-btn" id="revealBtn" onclick="askCode()">🔒 Показать мои ошибки</button>
   </div>
 
   <h1>📄 Моя работа по информатике</h1>
@@ -2083,144 +1868,38 @@ function buildWorkHtml(s) {
 
   <h2>📋 Мои ответы</h2>
 
-  <div class="answer-row" data-row="1"><div class="answer-num">Задание 1</div><div class="answer-val">${fmt(s.answers[1])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="2"><div class="answer-num">Задание 2</div><div class="answer-val">${fmtSelect(s.answers[2])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="3"><div class="answer-num">Задание 3</div><div class="answer-val">${fmt(s.answers[3])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="4"><div class="answer-num">Задание 4</div><div class="answer-val">${fmt(s.answers[4])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="5"><div class="answer-num">Задание 5</div><div class="answer-val">${fmt(s.answers[5])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="6"><div class="answer-num">Задание 6</div><div class="answer-val">${fmt(s.answers[6])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="7"><div class="answer-num">Задание 7</div><div class="answer-val">${fmt(s.answers[7])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="8"><div class="answer-num">Задание 8</div><div class="answer-val">${fmtSelect(s.answers[8])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="9"><div class="answer-num">Задание 9</div><div class="answer-val">${fmt(s.answers[9])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="10"><div class="answer-num">Задание 10</div><div class="answer-val">${fmt(s.answers[10])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="11"><div class="answer-num">Задание 11</div><div class="answer-val">${fmt(s.answers[11])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="12"><div class="answer-num">Задание 12</div><div class="answer-val">${fmt(s.answers[12])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="13"><div class="answer-num">Задание 13</div><div class="answer-val">${fmt(s.answers[13])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="14"><div class="answer-num">Задание 14</div><div class="answer-val">${fmt(s.answers[14])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="15"><div class="answer-num">Задание 15</div><div class="answer-val">${fmtSelect(s.answers[15])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="16"><div class="answer-num">Задание 16</div><div class="answer-val">${fmt(s.answers[16])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="17"><div class="answer-num">Задание 17</div><div class="answer-val">${fmt(s.answers[17])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="18"><div class="answer-num">Задание 18</div><div class="answer-val">${fmt(s.answers[18])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="19"><div class="answer-num">Задание 19</div><div class="answer-val">${fmtMatch(s.answers[19])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="20"><div class="answer-num">Задание 20</div><div class="answer-val">${fmt(s.answers[20])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="21"><div class="answer-num">Задание 21</div><div class="answer-val">${fmt(s.answers[21])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="22"><div class="answer-num">Задание 22</div><div class="answer-val">${fmt(s.answers[22])}<div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="23"><div class="answer-num">Задание 23</div><div class="answer-val">${fmt(s.answers[23])}<div class="answer-status"></div></div></div>
+  <div class="answer-row"><div class="answer-num">Задание 1</div><div class="answer-val">${fmt(s.answers[1])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 2</div><div class="answer-val">${fmtSelect(s.answers[2])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 3</div><div class="answer-val">${fmt(s.answers[3])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 4</div><div class="answer-val">${fmt(s.answers[4])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 5</div><div class="answer-val">${fmt(s.answers[5])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 6</div><div class="answer-val">${fmt(s.answers[6])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 7</div><div class="answer-val">${fmt(s.answers[7])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 8</div><div class="answer-val">${fmtSelect(s.answers[8])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 9</div><div class="answer-val">${fmt(s.answers[9])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 10</div><div class="answer-val">${fmt(s.answers[10])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 11</div><div class="answer-val">${fmt(s.answers[11])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 12</div><div class="answer-val">${fmt(s.answers[12])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 13</div><div class="answer-val">${fmt(s.answers[13])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 14</div><div class="answer-val">${fmt(s.answers[14])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 15</div><div class="answer-val">${fmtSelect(s.answers[15])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 16</div><div class="answer-val">${fmt(s.answers[16])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 17</div><div class="answer-val">${fmt(s.answers[17])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 18</div><div class="answer-val">${fmt(s.answers[18])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 19</div><div class="answer-val">${fmtMatch(s.answers[19])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 20</div><div class="answer-val">${fmt(s.answers[20])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 21</div><div class="answer-val">${fmt(s.answers[21])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 22</div><div class="answer-val">${fmt(s.answers[22])}</div></div>
+  <div class="answer-row"><div class="answer-num">Задание 23</div><div class="answer-val">${fmt(s.answers[23])}</div></div>
 
   <h2>💻 Творческие задания</h2>
-  <div class="answer-row" data-row="24"><div class="answer-num">Задание 24</div><div class="answer-val"><div class="code-block">${(s.answers[24] || '').replace(/</g,'&lt;') || '(пусто)'}</div><div class="answer-status"></div></div></div>
-  <div class="answer-row" data-row="25"><div class="answer-num">Задание 25</div><div class="answer-val"><div class="code-block">${(s.answers[25] || '').replace(/</g,'&lt;') || '(пусто)'}</div><div class="answer-status"></div></div></div>
+  <div class="answer-row"><div class="answer-num">Задание 24</div><div class="answer-val"><div class="code-block">${(s.answers[24] || '').replace(/</g,'&lt;') || '(пусто)'}</div></div></div>
+  <div class="answer-row"><div class="answer-num">Задание 25</div><div class="answer-val"><div class="code-block">${(s.answers[25] || '').replace(/</g,'&lt;') || '(пусто)'}</div></div></div>
 
   <div class="dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
 
   <div class="footer">🌸 Удачи в учёбе! Работа сохранена из интерактивного учебника.</div>
 </div>
-
-<div class="code-modal-bg" id="codeModal">
-  <div class="code-modal">
-    <div class="icon">🔒</div>
-    <h3>Разбор откроет учитель</h3>
-    <p>Введи код доступа, который скажет учитель на уроке.</p>
-    <input type="text" id="codeInput" placeholder="Код доступа" autocomplete="off">
-    <div class="err" id="codeError"></div>
-    <div class="actions">
-      <button class="btn-ghost" onclick="closeCodeModal()">Отмена</button>
-      <button class="btn-primary" onclick="checkCode()">Открыть</button>
-    </div>
-  </div>
-</div>
-
-<scr` + `ipt>
-const RESULTS = ${resultsJson};
-const ANSWERS = ${answersJson};
-const REVEAL_CODE = 'ОШИБКИ';
-let revealed = false;
-
-function askCode() {
-  if (revealed) { hideReveal(); return; }
-  document.getElementById('codeModal').classList.add('show');
-  document.getElementById('codeInput').value = '';
-  document.getElementById('codeError').textContent = '';
-  setTimeout(() => document.getElementById('codeInput').focus(), 200);
-}
-function closeCodeModal() {
-  document.getElementById('codeModal').classList.remove('show');
-}
-function checkCode() {
-  const input = document.getElementById('codeInput');
-  const err = document.getElementById('codeError');
-  const val = (input.value || '').trim().toUpperCase();
-  if (val === REVEAL_CODE) {
-    closeCodeModal();
-    showReveal();
-  } else {
-    err.textContent = 'Неверный код. Спроси учителя.';
-    input.value = '';
-    input.focus();
-  }
-}
-document.getElementById('codeInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkCode();
-});
-document.getElementById('codeInput').addEventListener('input', () => {
-  document.getElementById('codeError').textContent = '';
-});
-
-function showReveal() {
-  revealed = true;
-  const btn = document.getElementById('revealBtn');
-  btn.textContent = '🙈 Скрыть мои ошибки';
-  btn.classList.add('active');
-
-  for (let n = 1; n <= 25; n++) {
-    const row = document.querySelector('[data-row="' + n + '"]');
-    if (!row) continue;
-    const status = row.querySelector('.answer-status');
-    row.classList.remove('revealed-correct', 'revealed-wrong');
-    if (status) status.classList.remove('show', 'ok', 'err');
-
-    if (RESULTS[n] === true) {
-      row.classList.add('revealed-correct');
-      if (status) { status.classList.add('show', 'ok'); status.textContent = '✓ Верно'; }
-    } else {
-      row.classList.add('revealed-wrong');
-      if (status) {
-        status.classList.add('show', 'err');
-        let text = '✗ Ошибка';
-        const ans = ANSWERS[n];
-        if (ans !== undefined && ans !== '' && !(Array.isArray(ans) && ans.length === 0)) {
-          let a = '';
-          if (Array.isArray(ans)) a = ans.join(', ');
-          else if (typeof ans === 'object') {
-            const p = [];
-            for (const k in ans) p.push(ans[k] || '—');
-            a = p.join(', ');
-          } else a = String(ans);
-          if (a.length > 80) a = a.slice(0, 80) + '…';
-          text += ' · Твой ответ: ' + a;
-        }
-        status.textContent = text;
-      }
-    }
-  }
-  const first = document.querySelector('[data-row="1"]');
-  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function hideReveal() {
-  revealed = false;
-  const btn = document.getElementById('revealBtn');
-  btn.textContent = '🔒 Показать мои ошибки';
-  btn.classList.remove('active');
-  for (let n = 1; n <= 25; n++) {
-    const row = document.querySelector('[data-row="' + n + '"]');
-    if (!row) continue;
-    row.classList.remove('revealed-correct', 'revealed-wrong');
-    const status = row.querySelector('.answer-status');
-    if (status) status.classList.remove('show', 'ok', 'err');
-  }
-}
-</scr` + `ipt>
 </body>
 </html>`;
 }
