@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Проверочная работа · Массивы в Python 🌸</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
 <style>
@@ -13,9 +14,16 @@
     -ms-user-select: none;
     -webkit-touch-callout: none;
   }
-  input, textarea, select {
+  input, textarea, select,
+  input[type="text"], input[type="password"], input[type="number"],
+  textarea.code-area {
     user-select: text !important;
     -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    -webkit-user-modify: read-write !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(184,168,232,0.3) !important;
   }
 
   :root {
@@ -200,6 +208,14 @@
     position: relative;
   }
   .task.locked { opacity: 0.85; pointer-events: none; }
+  .task.revealed-correct {
+    border-color: var(--mint-deep) !important;
+    background: linear-gradient(135deg, #f8fffc, #f0fff8) !important;
+  }
+  .task.revealed-wrong {
+    border-color: var(--rose) !important;
+    background: linear-gradient(135deg, #fff8f8, #fff0f0) !important;
+  }
   .task-number {
     display: inline-block;
     background: linear-gradient(135deg, #b8a8e8, #ffaaa5);
@@ -225,7 +241,27 @@
     margin-bottom: 14px;
     line-height: 1.6;
   }
-  .code-snippet {
+  .task-status {
+    display: none;
+    font-size: 0.85em;
+    font-weight: 700;
+    margin-top: 12px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .task-status.show { display: block; }
+  .task-status.ok {
+    background: linear-gradient(135deg, #e0fff0, #c8f5dd);
+    color: #2a6a4a;
+    border-left: 4px solid #7ed9b8;
+  }
+  .task-status.err {
+    background: linear-gradient(135deg, #ffe8e8, #ffd6d6);
+    color: #a04a4a;
+    border-left: 4px solid #ff8a95;
+  }
+   .code-snippet {
     background: #fdfbff;
     border: 2px solid #e8dfff;
     border-radius: 12px;
@@ -395,15 +431,6 @@
   }
   .output.error { background: #fff0f0; border-color: #ffaaa5; color: #c04a4a; }
 
-  .feedback {
-    margin-top: 12px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 0.9em; font-weight: 600;
-    display: none; line-height: 1.6;
-  }
-  .feedback.show { display: block; }
-
   .submit-block {
     text-align: center;
     padding: 26px 20px;
@@ -434,6 +461,218 @@
     flex-wrap: wrap; gap: 10px;
   }
 
+  /* ТАЙМЕР */
+  #timerBox { transition: 0.3s; }
+  #timerBox.warning {
+    background: linear-gradient(135deg, #fff0e0, #ffe0d0) !important;
+    color: #c04a2a !important;
+    animation: pulse 1.5s infinite;
+  }
+  #timerBox.danger {
+    background: linear-gradient(135deg, #ffe0e0, #ffd0d0) !important;
+    color: #a02a2a !important;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* МОДАЛЬНОЕ ОКНО (подтверждение + код) */
+  .custom-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(90, 74, 122, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .custom-modal-bg.show { opacity: 1; pointer-events: auto; }
+  .custom-modal {
+    background: #fff; border-radius: 24px;
+    padding: 32px 36px; max-width: 520px; width: 100%;
+    box-shadow: 0 30px 80px rgba(90, 74, 122, 0.4);
+    border: 2px solid #f0eaff;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.6, 1);
+  }
+  .custom-modal-bg.show .custom-modal { transform: scale(1); }
+  .custom-modal .modal-icon { font-size: 3em; text-align: center; margin-bottom: 12px; }
+  .custom-modal h3 { color: #5a4a8a; font-size: 1.3em; text-align: center; margin-bottom: 12px; }
+  .custom-modal p { color: #5a5a7a; text-align: center; line-height: 1.7; margin-bottom: 18px; font-size: 0.98em; }
+  .custom-modal .unanswered-list {
+    background: #fff8e6; border: 2px solid #ffd966;
+    border-radius: 12px; padding: 14px 20px; margin: 16px 0;
+    font-size: 0.95em; color: #7a5a1a; line-height: 1.7; text-align: center;
+  }
+  .custom-modal .unanswered-list b { color: #5a4a8a; }
+  .custom-modal .modal-actions {
+    display: flex; gap: 12px; justify-content: center;
+    flex-wrap: wrap; margin-top: 20px;
+  }
+  .custom-modal .modal-btn {
+    padding: 12px 28px; border-radius: 14px; border: none;
+    font-family: inherit; font-size: 1em; font-weight: 700;
+    cursor: pointer; transition: 0.25s;
+  }
+  .custom-modal .modal-btn.primary {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff; box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+  }
+  .custom-modal .modal-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(184,168,232,0.55);
+  }
+  .custom-modal .modal-btn.ghost {
+    background: #fff; color: #7a5aa8; border: 2px solid #ece4ff;
+  }
+  .custom-modal .modal-btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
+
+  /* Поле ввода кода */
+  #codeInput {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #ece4ff;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 1.05em;
+    text-align: center;
+    color: #5a4a7a;
+    outline: none;
+    background: #fdfbff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  #codeInput:focus {
+    border-color: #b8a8e8;
+    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
+  }
+  #codeError {
+    color: #c04a4a;
+    font-size: 0.88em;
+    font-weight: 600;
+    min-height: 20px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  /* ОКНО РЕЗУЛЬТАТА */
+  .result-modal-bg {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, rgba(254,246,255,0.97), rgba(232,244,253,0.97));
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3000; padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+    overflow-y: auto;
+  }
+  .result-modal-bg.show { opacity: 1; pointer-events: auto; }
+  .result-modal {
+    background: #fff; border-radius: 28px;
+    padding: 40px 44px; max-width: 560px; width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(90, 74, 122, 0.3);
+    border: 2px solid #f0eaff;
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.4, 1.4, 0.6, 1);
+    margin: auto;
+  }
+  .result-modal-bg.show .result-modal { transform: scale(1); }
+  .result-modal .result-big-icon {
+    font-size: 4em; margin-bottom: 10px;
+    animation: pop 0.6s cubic-bezier(0.4,1.6,0.6,1);
+  }
+  .result-modal .result-student { font-size: 1.3em; color: #5a4a8a; font-weight: 700; margin-bottom: 4px; }
+  .result-modal .result-role { font-size: 0.85em; color: #8a7ab0; margin-bottom: 20px; }
+  .result-modal .result-score-big {
+    font-size: 3.6em; font-weight: 800;
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin: 10px 0 4px; line-height: 1;
+  }
+  .result-modal .result-percent { color: #8a7ab0; font-size: 1em; margin-bottom: 20px; }
+  .result-modal .result-grade-big {
+    display: inline-block; padding: 14px 40px;
+    border-radius: 24px; font-weight: 800; font-size: 1.5em; margin: 16px 0;
+  }
+  .grade-5 { background: linear-gradient(135deg, #a8e6cf, #7ed9b8); color: #2a6a4a; }
+  .grade-4 { background: linear-gradient(135deg, #ffd966, #ffb84d); color: #7a4a00; }
+  .grade-3 { background: linear-gradient(135deg, #ffd3b6, #ffb88c); color: #7a4a20; }
+  .grade-2 { background: linear-gradient(135deg, #ffaaa5, #ff8a95); color: #fff; }
+  .result-modal .result-comment { color: #5a5a7a; font-size: 1em; line-height: 1.7; margin: 16px 0; }
+  .result-modal .result-note {
+    margin-top: 24px; padding: 16px 20px;
+    background: #f0fdf7; border-left: 5px solid #7ed9b8;
+    border-radius: 12px; font-size: 0.9em; color: #2a6a4a;
+    line-height: 1.7; text-align: left;
+  }
+  .result-modal .result-dua {
+    margin-top: 20px; padding: 18px;
+    background: linear-gradient(135deg, #fef6ff, #f0f8ff);
+    border-radius: 14px;
+    font-family: 'Amiri', 'Traditional Arabic', serif;
+    font-size: 1.15em; color: #5a4a8a;
+    direction: rtl; line-height: 1.8;
+  }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  /* КНОПКИ ПОСЛЕ ОТПРАВКИ */
+  .after-submit-actions {
+    display: none;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .after-submit-actions.show { display: flex; }
+  .after-submit-actions .action-btn {
+    padding: 14px 26px;
+    border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 0.98em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .after-submit-actions .action-btn.download {
+    background: linear-gradient(135deg, #c8ecff, #a8d8f0);
+    color: #2a5a7a;
+    box-shadow: 0 6px 15px rgba(168,216,240,0.4);
+  }
+  .after-submit-actions .action-btn.download:hover {
+    background: linear-gradient(135deg, #a8d8f0, #88c8e0);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(168,216,240,0.6);
+  }
+  .after-submit-actions .action-btn.reveal {
+    background: linear-gradient(135deg, #ffd6d6, #ffaaa5);
+    color: #7a2a2a;
+    box-shadow: 0 6px 15px rgba(255,170,165,0.4);
+  }
+  .after-submit-actions .action-btn.reveal:hover {
+    background: linear-gradient(135deg, #ffaaa5, #ff8a95);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(255,138,149,0.6);
+  }
+  .after-submit-actions .action-btn.reveal.active {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #2a6a4a;
+  }
+  .after-submit-actions .action-btn.reveal.active:hover {
+    background: linear-gradient(135deg, #7ed9b8, #5ec497);
+  }
+
   @media (max-width: 700px) {
     .content { padding: 20px 18px; }
     .task { padding: 18px 18px; }
@@ -444,137 +683,18 @@
     .name-screen { padding: 40px 20px; }
     .name-screen h2 { font-size: 1.3em; }
     .name-screen .big-icon { font-size: 3em; }
+    .result-modal { padding: 28px 20px; }
+    .after-submit-actions .action-btn {
+      padding: 12px 18px;
+      font-size: 0.88em;
+      width: 100%;
+      justify-content: center;
+    }
   }
-/* ТАЙМЕР */
-#timerBox { transition: 0.3s; }
-#timerBox.warning {
-  background: linear-gradient(135deg, #fff0e0, #ffe0d0) !important;
-  color: #c04a2a !important;
-  animation: pulse 1.5s infinite;
-}
-#timerBox.danger {
-  background: linear-gradient(135deg, #ffe0e0, #ffd0d0) !important;
-  color: #a02a2a !important;
-  animation: pulse 1s infinite;
-}
-@keyframes pulse {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-/* МОДАЛЬНОЕ ОКНО */
-.custom-modal-bg {
-  position: fixed; inset: 0;
-  background: rgba(90, 74, 122, 0.5);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2000; padding: 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s;
-}
-.custom-modal-bg.show { opacity: 1; pointer-events: auto; }
-.custom-modal {
-  background: #fff; border-radius: 24px;
-  padding: 32px 36px; max-width: 520px; width: 100%;
-  box-shadow: 0 30px 80px rgba(90, 74, 122, 0.4);
-  border: 2px solid #f0eaff;
-  transform: scale(0.9);
-  transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.6, 1);
-}
-.custom-modal-bg.show .custom-modal { transform: scale(1); }
-.custom-modal .modal-icon { font-size: 3em; text-align: center; margin-bottom: 12px; }
-.custom-modal h3 { color: #5a4a8a; font-size: 1.3em; text-align: center; margin-bottom: 12px; }
-.custom-modal p { color: #5a5a7a; text-align: center; line-height: 1.7; margin-bottom: 18px; font-size: 0.98em; }
-.custom-modal .unanswered-list {
-  background: #fff8e6; border: 2px solid #ffd966;
-  border-radius: 12px; padding: 14px 20px; margin: 16px 0;
-  font-size: 0.95em; color: #7a5a1a; line-height: 1.7; text-align: center;
-}
-.custom-modal .unanswered-list b { color: #5a4a8a; }
-.custom-modal .modal-actions {
-  display: flex; gap: 12px; justify-content: center;
-  flex-wrap: wrap; margin-top: 20px;
-}
-.custom-modal .modal-btn {
-  padding: 12px 28px; border-radius: 14px; border: none;
-  font-family: inherit; font-size: 1em; font-weight: 700;
-  cursor: pointer; transition: 0.25s;
-}
-.custom-modal .modal-btn.primary {
-  background: linear-gradient(135deg, #b8a8e8, #ff8a95);
-  color: #fff; box-shadow: 0 6px 15px rgba(184,168,232,0.4);
-}
-.custom-modal .modal-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(184,168,232,0.55);
-}
-.custom-modal .modal-btn.ghost {
-  background: #fff; color: #7a5aa8; border: 2px solid #ece4ff;
-}
-.custom-modal .modal-btn.ghost:hover { background: #faf6ff; border-color: #d9c8ff; }
-
-/* ОКНО РЕЗУЛЬТАТА */
-.result-modal-bg {
-  position: fixed; inset: 0;
-  background: linear-gradient(135deg, rgba(254,246,255,0.97), rgba(232,244,253,0.97));
-  backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 3000; padding: 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.4s;
-}
-.result-modal-bg.show { opacity: 1; pointer-events: auto; }
-.result-modal {
-  background: #fff; border-radius: 28px;
-  padding: 40px 44px; max-width: 520px; width: 100%;
-  text-align: center;
-  box-shadow: 0 30px 80px rgba(90, 74, 122, 0.3);
-  border: 2px solid #f0eaff;
-  transform: scale(0.9);
-  transition: transform 0.4s cubic-bezier(0.4, 1.4, 0.6, 1);
-}
-.result-modal-bg.show .result-modal { transform: scale(1); }
-.result-modal .result-big-icon {
-  font-size: 4em; margin-bottom: 10px;
-  animation: pop 0.6s cubic-bezier(0.4,1.6,0.6,1);
-}
-.result-modal .result-student { font-size: 1.3em; color: #5a4a8a; font-weight: 700; margin-bottom: 4px; }
-.result-modal .result-role { font-size: 0.85em; color: #8a7ab0; margin-bottom: 20px; }
-.result-modal .result-score-big {
-  font-size: 3.6em; font-weight: 800;
-  background: linear-gradient(135deg, #b8a8e8, #ff8a95);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; margin: 10px 0 4px; line-height: 1;
-}
-.result-modal .result-percent { color: #8a7ab0; font-size: 1em; margin-bottom: 20px; }
-.result-modal .result-grade-big {
-  display: inline-block; padding: 14px 40px;
-  border-radius: 24px; font-weight: 800; font-size: 1.5em; margin: 16px 0;
-}
-.result-modal .result-comment { color: #5a5a7a; font-size: 1em; line-height: 1.7; margin: 16px 0; }
-.result-modal .result-note {
-  margin-top: 24px; padding: 16px 20px;
-  background: #f0fdf7; border-left: 5px solid #7ed9b8;
-  border-radius: 12px; font-size: 0.9em; color: #2a6a4a;
-  line-height: 1.7; text-align: left;
-}
-.result-modal .result-dua {
-  margin-top: 20px; padding: 18px;
-  background: linear-gradient(135deg, #fef6ff, #f0f8ff);
-  border-radius: 14px;
-  font-family: 'Amiri', 'Traditional Arabic', serif;
-  font-size: 1.15em; color: #5a4a8a;
-  direction: rtl; line-height: 1.8;
-}
-@keyframes pop {
-  0% { transform: scale(0); }
-  60% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
 </style>
 </head>
 <body>
-<div class="container">
+ <div class="container">
   <header>
     <div class="left">
       <a href="index.html" class="nav-home">← На главную</a>
@@ -639,13 +759,13 @@
         <b>🌸 Удачи!</b>
       </div>
 
-      <input type="text" id="nameInput" placeholder="Введи своё имя" maxlength="30" autocomplete="off">
+      <input type="text" id="nameInput" placeholder="Введи своё имя" maxlength="30" autocomplete="off" inputmode="text">
       <br>
       <button class="btn-start" id="startBtn" disabled onclick="startTest()">Начать работу</button>
     </div>
 
     <div id="tasksContainer" style="display:none;">
-            <!-- 1 -->
+           <!-- 1 -->
       <div class="task" data-task="1">
         <div class="task-number">Задание 1</div>
         <div class="task-question">На старт! Внимание! Знак!</div>
@@ -658,7 +778,7 @@
           <label class="option"><input type="checkbox" value="14"> 14</label>
           <label class="option"><input type="checkbox" value="15"> 15</label>
         </div>
-        <div class="feedback" data-feedback="1"></div>
+        <div class="task-status" data-status="1"></div>
       </div>
 
       <!-- 2 -->
@@ -672,7 +792,7 @@
         <div class="select-row"><div class="select-label">else:</div><select data-name="task2-4"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
         <div class="select-row"><div class="select-label">if score >= 10</div><select data-name="task2-5"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
         <div class="select-row"><div class="select-label">else if score >= 10:</div><select data-name="task2-6"><option value="">— выбрать —</option><option value="correct">Верно</option><option value="wrong">Неверно</option></select></div>
-        <div class="feedback" data-feedback="2"></div>
+        <div class="task-status" data-status="2"></div>
       </div>
 
       <!-- 3 -->
@@ -687,7 +807,7 @@ print(nums[2])</div>
           <label class="option"><input type="radio" name="task3" value="c"> 40</label>
           <label class="option"><input type="radio" name="task3" value="d"> Ошибку</label>
         </div>
-        <div class="feedback" data-feedback="3"></div>
+        <div class="task-status" data-status="3"></div>
       </div>
 
       <!-- 4 -->
@@ -702,7 +822,7 @@ print(nums[2])</div>
           <label class="option"><input type="checkbox" value="c"> fruits[5]</label>
           <label class="option"><input type="checkbox" value="d"> fruits[-2]</label>
         </div>
-        <div class="feedback" data-feedback="4"></div>
+        <div class="task-status" data-status="4"></div>
       </div>
 
       <!-- 5 -->
@@ -711,8 +831,8 @@ print(nums[2])</div>
         <div class="task-question">Впиши пропущенную команду</div>
         <div class="task-hint">Чтобы добавить число 7 в конец массива nums:</div>
         <div class="code-snippet">nums.______(7)</div>
-        <input type="text" class="input-answer" data-name="task5" autocomplete="off" style="max-width: 300px;">
-        <div class="feedback" data-feedback="5"></div>
+        <input type="text" class="input-answer" data-name="task5" autocomplete="off" style="max-width: 300px;" inputmode="text">
+        <div class="task-status" data-status="5"></div>
       </div>
 
       <!-- 6 -->
@@ -729,7 +849,7 @@ print(nums[2])</div>
           <label class="option"><input type="radio" name="task6" value="c"> 0 и 2</label>
           <label class="option"><input type="radio" name="task6" value="d"> 9 и 3</label>
         </div>
-        <div class="feedback" data-feedback="6"></div>
+        <div class="task-status" data-status="6"></div>
       </div>
 
       <!-- 7 -->
@@ -740,8 +860,8 @@ print(nums[2])</div>
 for x in nums:
     print(x)</div>
         <div class="task-hint">Сколько строк выведет программа?</div>
-        <input type="text" class="input-answer" data-name="task7" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="7"></div>
+        <input type="text" class="input-answer" data-name="task7" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="7"></div>
       </div>
 
       <!-- 8 -->
@@ -753,7 +873,7 @@ for x in nums:
         <div class="select-row"><div class="select-label">nums.count(3)</div><select data-name="task8-2"><option value="">— выбрать —</option><option value="wrong">Узнать длину</option><option value="correct">Посчитать, сколько раз встречается 3</option><option value="wrong">Добавить элемент</option></select></div>
         <div class="select-row"><div class="select-label">sum(nums)</div><select data-name="task8-3"><option value="">— выбрать —</option><option value="wrong">Добавить элемент</option><option value="wrong">Посчитать вхождения</option><option value="correct">Найти сумму элементов</option></select></div>
         <div class="select-row"><div class="select-label">nums.append(5)</div><select data-name="task8-4"><option value="">— выбрать —</option><option value="wrong">Удалить элемент</option><option value="correct">Добавить 5 в конец массива</option><option value="wrong">Найти индекс 5</option></select></div>
-        <div class="feedback" data-feedback="8"></div>
+        <div class="task-status" data-status="8"></div>
       </div>
 
       <!-- 9 -->
@@ -773,7 +893,7 @@ print(count)</div>
           <label class="option"><input type="radio" name="task9" value="c"> 12</label>
           <label class="option"><input type="radio" name="task9" value="d"> Ошибку</label>
         </div>
-        <div class="feedback" data-feedback="9"></div>
+        <div class="task-status" data-status="9"></div>
       </div>
 
       <!-- 10 -->
@@ -782,8 +902,8 @@ print(count)</div>
         <div class="task-question">Что выведет код?</div>
         <div class="code-snippet">nums = [7, 14, 21, 28]
 print(nums[-2])</div>
-        <input type="text" class="input-answer" data-name="task10" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="10"></div>
+        <input type="text" class="input-answer" data-name="task10" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="10"></div>
       </div>
 
       <!-- 11 -->
@@ -797,7 +917,7 @@ print(nums[-2])</div>
           <label class="option"><input type="radio" name="task11" value="c"> Это цикл for</label>
           <label class="option"><input type="radio" name="task11" value="d"> Это ошибка в программе</label>
         </div>
-        <div class="feedback" data-feedback="11"></div>
+        <div class="task-status" data-status="11"></div>
       </div>
 
       <!-- 12 -->
@@ -814,7 +934,7 @@ print(nums[-2])</div>
           <label class="option"><input type="radio" name="task12" value="c"> <span style="font-family:Consolas,monospace;">call hello</span></label>
           <label class="option"><input type="radio" name="task12" value="d"> <span style="font-family:Consolas,monospace;">print(hello)</span></label>
         </div>
-        <div class="feedback" data-feedback="12"></div>
+        <div class="task-status" data-status="12"></div>
       </div>
 
       <!-- 13 -->
@@ -826,8 +946,8 @@ print(nums[-2])</div>
 
 print(square(4))</div>
         <div class="task-hint">Что появится на экране?</div>
-        <input type="text" class="input-answer" data-name="task13" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="13"></div>
+        <input type="text" class="input-answer" data-name="task13" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="13"></div>
       </div>
 
       <!-- 14 -->
@@ -836,8 +956,8 @@ print(square(4))</div>
         <div class="task-question">Что выведет код?</div>
         <div class="code-snippet">nums = [42, 17, 8, 99]
 print(nums[0])</div>
-        <input type="text" class="input-answer" data-name="task14" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="14"></div>
+        <input type="text" class="input-answer" data-name="task14" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="14"></div>
       </div>
 
       <!-- 15 -->
@@ -848,7 +968,7 @@ print(nums[0])</div>
         <div class="select-row"><div class="select-label">len(nums)</div><select data-name="task15-1"><option value="">— выбрать —</option><option value="correct">4</option><option value="wrong">8</option><option value="wrong">35</option></select></div>
         <div class="select-row"><div class="select-label">nums.count(8)</div><select data-name="task15-2"><option value="">— выбрать —</option><option value="wrong">1</option><option value="correct">2</option><option value="wrong">4</option></select></div>
         <div class="select-row"><div class="select-label">sum(nums)</div><select data-name="task15-3"><option value="">— выбрать —</option><option value="wrong">8</option><option value="wrong">30</option><option value="correct">35</option></select></div>
-        <div class="feedback" data-feedback="15"></div>
+        <div class="task-status" data-status="15"></div>
       </div>
             <!-- 16 -->
       <div class="task" data-task="16">
@@ -868,7 +988,7 @@ for i in range(len(nums)):
           <label class="option"><input type="radio" name="task16" value="c"> 12</label>
           <label class="option"><input type="radio" name="task16" value="d"> Ничего</label>
         </div>
-        <div class="feedback" data-feedback="16"></div>
+        <div class="task-status" data-status="16"></div>
       </div>
 
       <!-- 17 -->
@@ -880,8 +1000,8 @@ for i in range(len(nums)):
 while i < 3:
     print(i)
     i = i + 1</div>
-        <input type="text" class="input-answer" data-name="task17" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="17"></div>
+        <input type="text" class="input-answer" data-name="task17" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="17"></div>
       </div>
 
       <!-- 18 -->
@@ -898,7 +1018,7 @@ print(files[-3])</div>
           <label class="option"><input type="radio" name="task18" value="c"> report.docx</label>
           <label class="option"><input type="radio" name="task18" value="d"> ошибка</label>
         </div>
-        <div class="feedback" data-feedback="18"></div>
+        <div class="task-status" data-status="18"></div>
       </div>
 
       <!-- 19 -->
@@ -927,7 +1047,7 @@ print(files[-3])</div>
             <div class="match-item" data-side="right" data-key="4">1</div>
           </div>
         </div>
-        <div class="feedback" data-feedback="19"></div>
+        <div class="task-status" data-status="19"></div>
       </div>
 
       <!-- 20 -->
@@ -944,7 +1064,7 @@ print(storage[3])</div>
           <label class="option"><input type="radio" name="task20" value="c"> Команда print написана с ошибкой</label>
           <label class="option"><input type="radio" name="task20" value="d"> Имя storage не понравилось роботу</label>
         </div>
-        <div class="feedback" data-feedback="20"></div>
+        <div class="task-status" data-status="20"></div>
       </div>
 
       <!-- 21 -->
@@ -958,7 +1078,7 @@ print(storage[3])</div>
           <label class="option"><input type="checkbox" value="c"> while обязательно должен идти с range</label>
           <label class="option"><input type="checkbox" value="d"> В while нужно следить за изменением переменной</label>
         </div>
-        <div class="feedback" data-feedback="21"></div>
+        <div class="task-status" data-status="21"></div>
       </div>
 
       <!-- 22 -->
@@ -968,8 +1088,8 @@ print(storage[3])</div>
         <div class="task-hint">Дан массив имён одноклассников:</div>
         <div class="code-snippet">names = ["Аня", "Боря", "Вера", "Гриша", "Даша"]</div>
         <div class="task-hint">Что вернёт <code>len(names)</code>?</div>
-        <input type="text" class="input-answer" data-name="task22" autocomplete="off" style="max-width: 200px;">
-        <div class="feedback" data-feedback="22"></div>
+        <input type="text" class="input-answer" data-name="task22" autocomplete="off" style="max-width: 200px;" inputmode="numeric">
+        <div class="task-status" data-status="22"></div>
       </div>
 
       <!-- 23 -->
@@ -986,7 +1106,7 @@ print(names[-1])</div>
           <label class="option"><input type="radio" name="task23" value="c"> Боря и Аня</label>
           <label class="option"><input type="radio" name="task23" value="d"> Вера и Боря</label>
         </div>
-        <div class="feedback" data-feedback="23"></div>
+        <div class="task-status" data-status="23"></div>
       </div>
 
       <!-- 24 -->
@@ -1003,7 +1123,7 @@ print(names[-1])</div>
           <br><br>
           💡 Используй <code>sum()</code>, <code>len()</code>, <code>.count()</code> и <code>print</code>.
         </div>
-        <textarea class="code-area" id="code-task24" spellcheck="false" style="min-height: 220px;">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5, 5, 4, 2, 5]
+        <textarea class="code-area" id="code-task24" spellcheck="false" style="min-height: 220px;" inputmode="text">grades = [5, 4, 3, 5, 2, 4, 5, 3, 4, 5, 5, 4, 2, 5]
 
 # 1. Средний балл
 
@@ -1014,7 +1134,7 @@ print(names[-1])</div>
 </textarea>
         <button class="btn mint" onclick="runTask24()">▶ Запустить</button>
         <div class="output" id="out-task24">Здесь появится результат ✨</div>
-        <div class="feedback" data-feedback="24"></div>
+        <div class="task-status" data-status="24"></div>
       </div>
 
       <!-- 25 -->
@@ -1032,7 +1152,7 @@ print(names[-1])</div>
           <br><br>
           💡 Используй <code>sum()</code>, <code>max()</code>, <code>len()</code>, цикл <code>for</code> с <code>if</code> и <code>print</code>.
         </div>
-        <textarea class="code-area" id="code-task25" spellcheck="false" style="min-height: 240px;">prices = [250, 400, 150, 300, 500, 200, 350, 450, 180, 320]
+        <textarea class="code-area" id="code-task25" spellcheck="false" style="min-height: 240px;" inputmode="text">prices = [250, 400, 150, 300, 500, 200, 350, 450, 180, 320]
 
 # 1. Общая выручка
 
@@ -1045,7 +1165,7 @@ print(names[-1])</div>
 </textarea>
         <button class="btn mint" onclick="runTask25()">▶ Запустить</button>
         <div class="output" id="out-task25">Здесь появится результат ✨</div>
-        <div class="feedback" data-feedback="25"></div>
+        <div class="task-status" data-status="25"></div>
       </div>
 
       <!-- ПРОВЕРКА -->
@@ -1064,7 +1184,7 @@ print(names[-1])</div>
   </div>
 </div>
 
-<!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ -->
+<!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ ОТПРАВКИ -->
 <div class="custom-modal-bg" id="submitModal">
   <div class="custom-modal">
     <div class="modal-icon" id="submitModalIcon">🤔</div>
@@ -1074,6 +1194,21 @@ print(names[-1])</div>
     <div class="modal-actions">
       <button class="modal-btn ghost" onclick="closeSubmitModal()">← Вернуться и доделать</button>
       <button class="modal-btn primary" onclick="confirmSubmit()">Да, отправить</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА ВВОДА КОДА ДЛЯ РАЗБОРА -->
+<div class="custom-modal-bg" id="codeModal">
+  <div class="custom-modal">
+    <div class="modal-icon">🔒</div>
+    <h3>Разбор откроет учитель</h3>
+    <p>Введи код доступа, который скажет учитель на уроке.</p>
+    <input type="text" id="codeInput" placeholder="Код доступа" autocomplete="off" inputmode="text">
+    <div id="codeError"></div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" onclick="closeCodeModal()">Отмена</button>
+      <button class="modal-btn primary" onclick="checkRevealCode()">Открыть</button>
     </div>
   </div>
 </div>
@@ -1089,9 +1224,14 @@ print(names[-1])</div>
     <div class="result-grade-big" id="resultModalGrade">Оценка: 5</div>
     <div class="result-comment" id="resultModalComment"></div>
     <div class="result-note">
-      📌 <b>Разбор ответов</b> — какие задания верные, а какие нет — мы сделаем вместе на следующем уроке.
+      📌 <b>Разбор ответов</b> откроет учитель на уроке — по коду доступа.
     </div>
     <div class="result-dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
+
+    <div class="after-submit-actions" id="afterSubmitActions">
+      <button class="action-btn download" onclick="downloadWork()">📥 Скачать мою работу</button>
+      <button class="action-btn reveal" id="revealBtn" onclick="askRevealCode()">🔒 Показать мои ошибки</button>
+    </div>
   </div>
 </div>
 <script>
@@ -1107,11 +1247,13 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* СОСТОЯНИЕ */
+/* КОНСТАНТЫ */
 const TEST_STORAGE = 'python_arrays_test';
 const TOTAL_TASKS = 25;
 const TIMER_STORAGE = 'python_arrays_test_timer';
 const TOTAL_TIME = 45 * 60;
+const REVEAL_CODE = 'ОШИБКИ';
+
 let timerInterval = null;
 let remainingSeconds = TOTAL_TIME;
 let timerStarted = false;
@@ -1122,6 +1264,9 @@ let testState = {
   score: 0,
   started: false
 };
+
+let savedAnswers = null;
+let revealMode = false;
 
 function loadTestState() {
   try {
@@ -1156,7 +1301,8 @@ function startTimer() {
   if (timerInterval) return;
   timerStarted = true;
   saveTimer();
-  document.getElementById('timerBox').style.display = 'block';
+  const box = document.getElementById('timerBox');
+  if (box) box.style.display = 'block';
   updateTimerDisplay();
   timerInterval = setInterval(() => {
     if (document.hidden) return;
@@ -1292,7 +1438,9 @@ document.querySelectorAll('[data-match="19"] .match-item').forEach(item => {
     }
   });
 });
-  /* ПОДСЧЁТ НЕОТВЕЧЕННЫХ */
+</script>
+<script>
+/* ПОДСЧЁТ НЕОТВЕЧЕННЫХ */
 function findUnanswered() {
   const list = [];
   if (!document.querySelector('[data-name="task1"] input:checked')) list.push(1);
@@ -1325,6 +1473,61 @@ function findUnanswered() {
   if (!document.querySelector('[data-name="task22"]').value.trim()) list.push(22);
   if (!document.querySelector('[name="task23"]:checked')) list.push(23);
   return list;
+}
+
+/* СНИМОК ОТВЕТОВ */
+function captureAnswers() {
+  const snapshot = {
+    name: testState.name,
+    date: new Date().toLocaleString('ru-RU'),
+    answers: {}
+  };
+
+  snapshot.answers[1] = Array.from(document.querySelectorAll('[data-name="task1"] input:checked')).map(cb => cb.value);
+  snapshot.answers[2] = {};
+  for (let i = 1; i <= 6; i++) {
+    snapshot.answers[2][i] = document.querySelector(`[data-name="task2-${i}"]`).value;
+  }
+  const t3 = document.querySelector('[name="task3"]:checked');
+  snapshot.answers[3] = t3 ? t3.value : '';
+  snapshot.answers[4] = Array.from(document.querySelectorAll('[data-name="task4"] input:checked')).map(cb => cb.value);
+  snapshot.answers[5] = document.querySelector('[data-name="task5"]').value.trim();
+  const t6 = document.querySelector('[name="task6"]:checked');
+  snapshot.answers[6] = t6 ? t6.value : '';
+  snapshot.answers[7] = document.querySelector('[data-name="task7"]').value.trim();
+  snapshot.answers[8] = {};
+  for (let i = 1; i <= 4; i++) {
+    snapshot.answers[8][i] = document.querySelector(`[data-name="task8-${i}"]`).value;
+  }
+  const t9 = document.querySelector('[name="task9"]:checked');
+  snapshot.answers[9] = t9 ? t9.value : '';
+  snapshot.answers[10] = document.querySelector('[data-name="task10"]').value.trim();
+  const t11 = document.querySelector('[name="task11"]:checked');
+  snapshot.answers[11] = t11 ? t11.value : '';
+  const t12 = document.querySelector('[name="task12"]:checked');
+  snapshot.answers[12] = t12 ? t12.value : '';
+  snapshot.answers[13] = document.querySelector('[data-name="task13"]').value.trim();
+  snapshot.answers[14] = document.querySelector('[data-name="task14"]').value.trim();
+  snapshot.answers[15] = {};
+  for (let i = 1; i <= 3; i++) {
+    snapshot.answers[15][i] = document.querySelector(`[data-name="task15-${i}"]`).value;
+  }
+  const t16 = document.querySelector('[name="task16"]:checked');
+  snapshot.answers[16] = t16 ? t16.value : '';
+  snapshot.answers[17] = document.querySelector('[data-name="task17"]').value.trim();
+  const t18 = document.querySelector('[name="task18"]:checked');
+  snapshot.answers[18] = t18 ? t18.value : '';
+  snapshot.answers[19] = JSON.parse(JSON.stringify(matchState19.matches));
+  const t20 = document.querySelector('[name="task20"]:checked');
+  snapshot.answers[20] = t20 ? t20.value : '';
+  snapshot.answers[21] = Array.from(document.querySelectorAll('[data-name="task21"] input:checked')).map(cb => cb.value);
+  snapshot.answers[22] = document.querySelector('[data-name="task22"]').value.trim();
+  const t23 = document.querySelector('[name="task23"]:checked');
+  snapshot.answers[23] = t23 ? t23.value : '';
+  snapshot.answers[24] = document.getElementById('code-task24').value;
+  snapshot.answers[25] = document.getElementById('code-task25').value;
+
+  return snapshot;
 }
 
 /* ПОДТВЕРЖДЕНИЕ ОТПРАВКИ */
@@ -1366,80 +1569,68 @@ function performCheck() {
   if (testState.completed) return;
   stopTimer();
 
-  const t1 = Array.from(document.querySelectorAll('[data-name="task1"] input:checked')).map(cb => cb.value);
+  savedAnswers = captureAnswers();
+
+  const t1 = savedAnswers.answers[1];
   taskResults[1] = CORRECT_ANSWERS.task1.every(v => t1.includes(v)) && t1.every(v => CORRECT_ANSWERS.task1.includes(v));
 
   let t2c = true;
   for (const key in CORRECT_ANSWERS.task2) {
-    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task2[key]) { t2c = false; break; }
+    const idx = key.split('-')[1];
+    if (savedAnswers.answers[2][idx] !== CORRECT_ANSWERS.task2[key]) { t2c = false; break; }
   }
   taskResults[2] = t2c;
 
-  const t3sel = document.querySelector('[name="task3"]:checked');
-  taskResults[3] = !!(t3sel && t3sel.value === CORRECT_ANSWERS.task3);
+  taskResults[3] = savedAnswers.answers[3] === CORRECT_ANSWERS.task3;
 
-  const t4 = Array.from(document.querySelectorAll('[data-name="task4"] input:checked')).map(cb => cb.value);
+  const t4 = savedAnswers.answers[4];
   taskResults[4] = CORRECT_ANSWERS.task4.every(v => t4.includes(v)) && t4.every(v => CORRECT_ANSWERS.task4.includes(v));
 
-  taskResults[5] = document.querySelector('[data-name="task5"]').value.trim().toLowerCase() === CORRECT_ANSWERS.task5;
+  taskResults[5] = savedAnswers.answers[5].toLowerCase() === CORRECT_ANSWERS.task5;
 
-  const t6sel = document.querySelector('[name="task6"]:checked');
-  taskResults[6] = !!(t6sel && t6sel.value === CORRECT_ANSWERS.task6);
-
-  taskResults[7] = document.querySelector('[data-name="task7"]').value.trim() === CORRECT_ANSWERS.task7;
+  taskResults[6] = savedAnswers.answers[6] === CORRECT_ANSWERS.task6;
+  taskResults[7] = savedAnswers.answers[7] === CORRECT_ANSWERS.task7;
 
   let t8c = true;
   for (const key in CORRECT_ANSWERS.task8) {
-    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task8[key]) { t8c = false; break; }
+    const idx = key.split('-')[1];
+    if (savedAnswers.answers[8][idx] !== CORRECT_ANSWERS.task8[key]) { t8c = false; break; }
   }
   taskResults[8] = t8c;
 
-  const t9sel = document.querySelector('[name="task9"]:checked');
-  taskResults[9] = !!(t9sel && t9sel.value === CORRECT_ANSWERS.task9);
-
-  taskResults[10] = document.querySelector('[data-name="task10"]').value.trim() === CORRECT_ANSWERS.task10;
-
-  const t11sel = document.querySelector('[name="task11"]:checked');
-  taskResults[11] = !!(t11sel && t11sel.value === CORRECT_ANSWERS.task11);
-
-  const t12sel = document.querySelector('[name="task12"]:checked');
-  taskResults[12] = !!(t12sel && t12sel.value === CORRECT_ANSWERS.task12);
-
-  taskResults[13] = document.querySelector('[data-name="task13"]').value.trim() === CORRECT_ANSWERS.task13;
-  taskResults[14] = document.querySelector('[data-name="task14"]').value.trim() === CORRECT_ANSWERS.task14;
+  taskResults[9] = savedAnswers.answers[9] === CORRECT_ANSWERS.task9;
+  taskResults[10] = savedAnswers.answers[10] === CORRECT_ANSWERS.task10;
+  taskResults[11] = savedAnswers.answers[11] === CORRECT_ANSWERS.task11;
+  taskResults[12] = savedAnswers.answers[12] === CORRECT_ANSWERS.task12;
+  taskResults[13] = savedAnswers.answers[13] === CORRECT_ANSWERS.task13;
+  taskResults[14] = savedAnswers.answers[14] === CORRECT_ANSWERS.task14;
 
   let t15c = true;
   for (const key in CORRECT_ANSWERS.task15) {
-    if (document.querySelector(`[data-name="${key}"]`).value !== CORRECT_ANSWERS.task15[key]) { t15c = false; break; }
+    const idx = key.split('-')[1];
+    if (savedAnswers.answers[15][idx] !== CORRECT_ANSWERS.task15[key]) { t15c = false; break; }
   }
   taskResults[15] = t15c;
 
-  const t16sel = document.querySelector('[name="task16"]:checked');
-  taskResults[16] = !!(t16sel && t16sel.value === CORRECT_ANSWERS.task16);
+  taskResults[16] = savedAnswers.answers[16] === CORRECT_ANSWERS.task16;
+  taskResults[17] = savedAnswers.answers[17] === CORRECT_ANSWERS.task17;
+  taskResults[18] = savedAnswers.answers[18] === CORRECT_ANSWERS.task18;
 
-  taskResults[17] = document.querySelector('[data-name="task17"]').value.trim() === CORRECT_ANSWERS.task17;
-
-  const t18sel = document.querySelector('[name="task18"]:checked');
-  taskResults[18] = !!(t18sel && t18sel.value === CORRECT_ANSWERS.task18);
-
-  let t19c = Object.keys(matchState19.matches).length === 4;
+  let t19c = Object.keys(savedAnswers.answers[19]).length === 4;
   if (t19c) {
     for (const leftKey in CORRECT_ANSWERS.task19) {
-      if (matchState19.matches[leftKey] !== CORRECT_ANSWERS.task19[leftKey]) { t19c = false; break; }
+      if (savedAnswers.answers[19][leftKey] !== CORRECT_ANSWERS.task19[leftKey]) { t19c = false; break; }
     }
   }
   taskResults[19] = t19c;
 
-  const t20sel = document.querySelector('[name="task20"]:checked');
-  taskResults[20] = !!(t20sel && t20sel.value === CORRECT_ANSWERS.task20);
+  taskResults[20] = savedAnswers.answers[20] === CORRECT_ANSWERS.task20;
 
-  const t21 = Array.from(document.querySelectorAll('[data-name="task21"] input:checked')).map(cb => cb.value);
+  const t21 = savedAnswers.answers[21];
   taskResults[21] = CORRECT_ANSWERS.task21.every(v => t21.includes(v)) && t21.every(v => CORRECT_ANSWERS.task21.includes(v));
 
-  taskResults[22] = document.querySelector('[data-name="task22"]').value.trim() === CORRECT_ANSWERS.task22;
-
-  const t23sel = document.querySelector('[name="task23"]:checked');
-  taskResults[23] = !!(t23sel && t23sel.value === CORRECT_ANSWERS.task23);
+  taskResults[22] = savedAnswers.answers[22] === CORRECT_ANSWERS.task22;
+  taskResults[23] = savedAnswers.answers[23] === CORRECT_ANSWERS.task23;
 
   if (taskResults[24] !== true) taskResults[24] = false;
   if (taskResults[25] !== true) taskResults[25] = false;
@@ -1449,8 +1640,32 @@ function performCheck() {
   testState.completed = true;
   saveTestState();
 
+  try {
+    localStorage.setItem(TEST_STORAGE + '_answers', JSON.stringify(savedAnswers));
+    localStorage.setItem(TEST_STORAGE + '_results', JSON.stringify(taskResults));
+  } catch(e) {}
+
   lockAllInputs();
   showResultModal(correctCount, TOTAL_TASKS);
+}
+
+/* БЛОКИРОВКА */
+function lockAllInputs() {
+  document.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
+  document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
+  const sb = document.getElementById('submitBtn');
+  if (sb) {
+    sb.disabled = true;
+    sb.textContent = '✓ Работа отправлена';
+  }
+}
+
+function updateProgress() {
+  const done = Object.values(taskResults).filter(v => v === true).length;
+  const counter = document.getElementById('task-counter');
+  const fill = document.getElementById('progress-fill');
+  if (counter) counter.textContent = `${done} / ${TOTAL_TASKS}`;
+  if (fill) fill.style.width = `${(done / TOTAL_TASKS) * 100}%`;
 }
 
 /* ОКНО РЕЗУЛЬТАТА */
@@ -1487,22 +1702,519 @@ function showResultModal(score, total) {
   }
 
   document.getElementById('resultModal').classList.add('show');
+  document.getElementById('afterSubmitActions').classList.add('show');
+  updateProgress();
 }
 
-/* БЛОКИРОВКА */
-function lockAllInputs() {
-  document.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
-  document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
-  document.getElementById('submitBtn').disabled = true;
-  document.getElementById('submitBtn').textContent = '✓ Работа отправлена';
+/* ==========================================================
+   РАЗБОР ОШИБОК — ЗАПРОС КОДА
+   ========================================================== */
+function askRevealCode() {
+  if (revealMode) {
+    hideReveal();
+    return;
+  }
+  document.getElementById('codeModal').classList.add('show');
+  document.getElementById('codeInput').value = '';
+  document.getElementById('codeError').textContent = '';
+  setTimeout(() => document.getElementById('codeInput').focus(), 200);
+}
+function closeCodeModal() {
+  document.getElementById('codeModal').classList.remove('show');
+}
+function checkRevealCode() {
+  const input = document.getElementById('codeInput');
+  const errorEl = document.getElementById('codeError');
+  const value = (input.value || '').trim().toUpperCase();
+
+  if (value === REVEAL_CODE) {
+    closeCodeModal();
+    showReveal();
+  } else {
+    errorEl.textContent = 'Неверный код. Спроси учителя.';
+    input.value = '';
+    input.focus();
+  }
 }
 
-function updateProgress() {
-  const done = Object.values(taskResults).filter(v => v === true).length;
-  document.getElementById('task-counter').textContent = `${done} / ${TOTAL_TASKS}`;
-  document.getElementById('progress-fill').style.width = `${(done / TOTAL_TASKS) * 100}%`;
+/* Показ разбора */
+function showReveal() {
+  revealMode = true;
+  const btn = document.getElementById('revealBtn');
+  if (btn) {
+    btn.textContent = '🙈 Скрыть мои ошибки';
+    btn.classList.add('active');
+  }
+
+  for (let n = 1; n <= 25; n++) {
+    const task = document.querySelector(`[data-task="${n}"]`);
+    if (!task) continue;
+    const status = task.querySelector(`[data-status="${n}"]`);
+
+    task.classList.remove('revealed-correct', 'revealed-wrong');
+
+    if (taskResults[n] === true) {
+      task.classList.add('revealed-correct');
+      if (status) {
+        status.classList.remove('err');
+        status.classList.add('ok', 'show');
+        status.textContent = '✓ Верно';
+      }
+    } else {
+      task.classList.add('revealed-wrong');
+      if (status) {
+        status.classList.remove('ok');
+        status.classList.add('err', 'show');
+        let text = '✗ Ошибка';
+        const userAnswer = getUserAnswerText(n);
+        if (userAnswer) text += ' · Твой ответ: ' + userAnswer;
+        status.textContent = text;
+      }
+    }
+  }
+
+  const first = document.querySelector('[data-task="1"]');
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function hideReveal() {
+  revealMode = false;
+  const btn = document.getElementById('revealBtn');
+  if (btn) {
+    btn.textContent = '🔒 Показать мои ошибки';
+    btn.classList.remove('active');
+  }
+  for (let n = 1; n <= 25; n++) {
+    const task = document.querySelector(`[data-task="${n}"]`);
+    if (!task) continue;
+    task.classList.remove('revealed-correct', 'revealed-wrong');
+    const status = task.querySelector(`[data-status="${n}"]`);
+    if (status) status.classList.remove('show', 'ok', 'err');
+  }
+}
+
+function getUserAnswerText(n) {
+  if (!savedAnswers) return '';
+  const a = savedAnswers.answers[n];
+  if (a === undefined || a === '' || (Array.isArray(a) && a.length === 0)) return 'нет ответа';
+  if (Array.isArray(a)) return a.join(', ');
+  if (typeof a === 'object') {
+    const parts = [];
+    for (const k in a) parts.push(a[k] ? a[k] : '—');
+    return parts.join(', ');
+  }
+  const s = String(a);
+  if (s.length > 100) return s.slice(0, 100) + '…';
+  return s;
+}
+
+/* Enter в поле кода */
+document.getElementById('codeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkRevealCode();
+});
+document.getElementById('codeInput').addEventListener('input', () => {
+  document.getElementById('codeError').textContent = '';
+});
+
+/* ==========================================================
+   СКАЧИВАНИЕ РАБОТЫ
+   ========================================================== */
+function downloadWork() {
+  if (!savedAnswers) return;
+  const html = buildWorkHtml(savedAnswers);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (testState.name || 'работа').replace(/[^\wа-яёА-ЯЁ\-]+/gi, '_');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `работа_${safeName}_${dateStr}.html`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 100);
+}
+
+function buildWorkHtml(s) {
+  const pct = Math.round((testState.score / 25) * 100);
+  let grade = '2', gradeColor = '#ff8a95', emoji = '🌱';
+  if (pct >= 90) { grade = '5'; gradeColor = '#7ed9b8'; emoji = '🏆'; }
+  else if (pct >= 70) { grade = '4'; gradeColor = '#ffd966'; emoji = '🌟'; }
+  else if (pct >= 50) { grade = '3'; gradeColor = '#ffb88c'; emoji = '👍'; }
+
+  function fmt(val) {
+    if (val === '' || val === undefined) return '<i style="color:#a99cd0;">нет ответа</i>';
+    if (Array.isArray(val)) return val.length ? val.join(', ') : '<i style="color:#a99cd0;">нет ответа</i>';
+    return String(val);
+  }
+  function fmtSelect(obj) {
+    const parts = [];
+    for (const k in obj) parts.push(`<b>${k}:</b> ${obj[k] || '<i>—</i>'}`);
+    return parts.join('<br>');
+  }
+  function fmtMatch(obj) {
+    if (!obj || Object.keys(obj).length === 0) return '<i style="color:#a99cd0;">не выполнено</i>';
+    const parts = [];
+    for (const k in obj) parts.push(`<b>${k} →</b> ${obj[k]}`);
+    return parts.join('<br>');
+  }
+
+  const resultsJson = JSON.stringify(taskResults);
+  const answersJson = JSON.stringify(s.answers);
+
+  return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Моя работа · ${s.name}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Comfortaa', 'Segoe UI', Verdana, sans-serif;
+    background: linear-gradient(135deg, #fef6ff, #e8f4fd);
+    color: #5a4a7a;
+    padding: 30px 15px;
+    line-height: 1.6;
+  }
+  .paper {
+    max-width: 800px; margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 44px;
+    box-shadow: 0 20px 60px rgba(180,150,220,0.25);
+  }
+  .top-actions {
+    display: flex; gap: 10px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .top-actions button {
+    padding: 12px 24px;
+    border: none; border-radius: 14px;
+    font-family: inherit; font-size: 0.95em; font-weight: 700;
+    cursor: pointer; transition: 0.25s;
+  }
+  .print-btn {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff;
+    box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+  }
+  .print-btn:hover { transform: translateY(-2px); }
+  .reveal-btn {
+    background: linear-gradient(135deg, #ffd6d6, #ffaaa5);
+    color: #7a2a2a;
+    box-shadow: 0 6px 15px rgba(255,170,165,0.4);
+  }
+  .reveal-btn:hover { transform: translateY(-2px); }
+  .reveal-btn.active {
+    background: linear-gradient(135deg, #a8e6cf, #7ed9b8);
+    color: #2a6a4a;
+  }
+  h1 { color: #5a4a8a; font-size: 1.6em; text-align: center; margin: 0 0 8px; }
+  .sub { text-align: center; color: #8a7ab0; font-size: 0.9em; margin-bottom: 24px; }
+  .score-box {
+    text-align: center;
+    background: linear-gradient(135deg, #f0fdf7, #e8f4fd);
+    border-radius: 16px; padding: 22px;
+    margin-bottom: 26px; border: 2px solid #c8e8d8;
+  }
+  .score-big { font-size: 2.6em; font-weight: 800; color: #5a4a8a; line-height: 1; }
+  .score-percent { color: #8a7ab0; font-size: 0.95em; margin: 6px 0 14px; }
+  .grade-badge {
+    display: inline-block; padding: 10px 30px;
+    border-radius: 20px; font-weight: 800; font-size: 1.2em;
+    background: ${gradeColor};
+    color: ${grade === '4' || grade === '3' ? '#7a4a00' : (grade === '5' ? '#2a6a4a' : '#fff')};
+  }
+  h2 {
+    color: #7a5aa8; font-size: 1.1em;
+    margin: 26px 0 12px; padding-bottom: 8px;
+    border-bottom: 2px solid #ece4ff;
+  }
+  .answer-row {
+    display: flex; gap: 12px;
+    padding: 10px 14px; border-radius: 10px;
+    background: #fdfbff; border: 1px solid #ece4ff;
+    margin-bottom: 8px; font-size: 0.92em;
+    transition: 0.3s;
+  }
+  .answer-row.revealed-correct {
+    border-color: #7ed9b8;
+    background: linear-gradient(135deg, #f8fffc, #f0fff8);
+  }
+  .answer-row.revealed-wrong {
+    border-color: #ff8a95;
+    background: linear-gradient(135deg, #fff8f8, #fff0f0);
+  }
+  .answer-num { font-weight: 700; color: #7a5aa8; flex-shrink: 0; min-width: 90px; }
+  .answer-val { color: #5a4a7a; flex: 1; }
+  .answer-status {
+    display: none; font-size: 0.88em; font-weight: 700;
+    margin-top: 6px; padding: 6px 12px; border-radius: 8px;
+  }
+  .answer-status.show { display: block; }
+  .answer-status.ok {
+    background: linear-gradient(135deg, #e0fff0, #c8f5dd); color: #2a6a4a;
+  }
+  .answer-status.err {
+    background: linear-gradient(135deg, #ffe8e8, #ffd6d6); color: #a04a4a;
+  }
+  .code-block {
+    background: #f4f4fa; border: 1px solid #e8e8f0;
+    border-radius: 8px; padding: 12px 14px;
+    font-family: Consolas, monospace; font-size: 0.85em;
+    color: #5a4a7a; white-space: pre-wrap; margin-top: 6px;
+  }
+  .footer {
+    text-align: center; margin-top: 30px;
+    padding-top: 20px; border-top: 1px dashed #ece4ff;
+    color: #a99cd0; font-size: 0.85em;
+  }
+  .dua {
+    text-align: center;
+    font-family: 'Amiri', 'Traditional Arabic', serif;
+    font-size: 1.3em; color: #5a4a8a;
+    direction: rtl; margin: 20px 0;
+  }
+  .code-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(90, 74, 122, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .code-modal-bg.show { opacity: 1; pointer-events: auto; }
+  .code-modal {
+    background: #fff; border-radius: 24px;
+    padding: 32px 36px; max-width: 480px; width: 100%;
+    box-shadow: 0 30px 80px rgba(90, 74, 122, 0.4);
+    border: 2px solid #f0eaff;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.6, 1);
+  }
+  .code-modal-bg.show .code-modal { transform: scale(1); }
+  .code-modal .icon { font-size: 3em; margin-bottom: 12px; }
+  .code-modal h3 { color: #5a4a8a; font-size: 1.3em; margin-bottom: 12px; }
+  .code-modal p { color: #5a5a7a; margin-bottom: 18px; line-height: 1.7; font-size: 0.95em; }
+  .code-modal input {
+    width: 100%; padding: 14px 18px;
+    border: 2px solid #ece4ff; border-radius: 14px;
+    font-family: inherit; font-size: 1.05em;
+    text-align: center; color: #5a4a7a; outline: none;
+    background: #fdfbff; letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .code-modal input:focus {
+    border-color: #b8a8e8;
+    box-shadow: 0 0 0 4px rgba(184,168,232,0.15);
+  }
+  .code-modal .err {
+    color: #c04a4a; font-size: 0.88em; font-weight: 600;
+    min-height: 20px; margin-top: 10px;
+  }
+  .code-modal .actions {
+    display: flex; gap: 12px; justify-content: center;
+    margin-top: 20px;
+  }
+  .code-modal .actions button {
+    padding: 12px 28px; border-radius: 14px; border: none;
+    font-family: inherit; font-size: 1em; font-weight: 700;
+    cursor: pointer; transition: 0.25s;
+  }
+  .code-modal .btn-primary {
+    background: linear-gradient(135deg, #b8a8e8, #ff8a95);
+    color: #fff;
+    box-shadow: 0 6px 15px rgba(184,168,232,0.4);
+  }
+  .code-modal .btn-primary:hover { transform: translateY(-2px); }
+  .code-modal .btn-ghost {
+    background: #fff; color: #7a5aa8;
+    border: 2px solid #ece4ff;
+  }
+  .code-modal .btn-ghost:hover { background: #faf6ff; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .paper { box-shadow: none; padding: 20px; }
+    .top-actions { display: none; }
+    .code-modal-bg { display: none !important; }
+  }
+  @media (max-width: 700px) {
+    .paper { padding: 24px 20px; }
+    .top-actions button { padding: 10px 18px; font-size: 0.88em; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="paper">
+
+  <div class="top-actions">
+    <button class="print-btn" onclick="window.print()">🖨 Распечатать / Сохранить в PDF</button>
+    <button class="reveal-btn" id="revealBtn" onclick="askCode()">🔒 Показать мои ошибки</button>
+  </div>
+
+  <h1>📄 Моя работа по информатике</h1>
+  <div class="sub">Массивы в Python · 9 класс</div>
+
+  <div class="score-box">
+    <div style="color:#8a7ab0;font-size:0.9em;margin-bottom:6px;">Ученица</div>
+    <div style="font-size:1.2em;font-weight:700;color:#5a4a8a;margin-bottom:14px;">${s.name}</div>
+    <div class="score-big">${testState.score} / 25</div>
+    <div class="score-percent">${pct}% правильных ответов</div>
+    <div class="grade-badge">${emoji} Оценка: ${grade}</div>
+    <div style="color:#8a7ab0;font-size:0.85em;margin-top:14px;">Дата: ${s.date}</div>
+  </div>
+
+  <h2>📋 Мои ответы</h2>
+
+  <div class="answer-row" data-row="1"><div class="answer-num">Задание 1</div><div class="answer-val">${fmt(s.answers[1])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="2"><div class="answer-num">Задание 2</div><div class="answer-val">${fmtSelect(s.answers[2])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="3"><div class="answer-num">Задание 3</div><div class="answer-val">${fmt(s.answers[3])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="4"><div class="answer-num">Задание 4</div><div class="answer-val">${fmt(s.answers[4])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="5"><div class="answer-num">Задание 5</div><div class="answer-val">${fmt(s.answers[5])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="6"><div class="answer-num">Задание 6</div><div class="answer-val">${fmt(s.answers[6])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="7"><div class="answer-num">Задание 7</div><div class="answer-val">${fmt(s.answers[7])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="8"><div class="answer-num">Задание 8</div><div class="answer-val">${fmtSelect(s.answers[8])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="9"><div class="answer-num">Задание 9</div><div class="answer-val">${fmt(s.answers[9])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="10"><div class="answer-num">Задание 10</div><div class="answer-val">${fmt(s.answers[10])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="11"><div class="answer-num">Задание 11</div><div class="answer-val">${fmt(s.answers[11])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="12"><div class="answer-num">Задание 12</div><div class="answer-val">${fmt(s.answers[12])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="13"><div class="answer-num">Задание 13</div><div class="answer-val">${fmt(s.answers[13])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="14"><div class="answer-num">Задание 14</div><div class="answer-val">${fmt(s.answers[14])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="15"><div class="answer-num">Задание 15</div><div class="answer-val">${fmtSelect(s.answers[15])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="16"><div class="answer-num">Задание 16</div><div class="answer-val">${fmt(s.answers[16])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="17"><div class="answer-num">Задание 17</div><div class="answer-val">${fmt(s.answers[17])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="18"><div class="answer-num">Задание 18</div><div class="answer-val">${fmt(s.answers[18])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="19"><div class="answer-num">Задание 19</div><div class="answer-val">${fmtMatch(s.answers[19])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="20"><div class="answer-num">Задание 20</div><div class="answer-val">${fmt(s.answers[20])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="21"><div class="answer-num">Задание 21</div><div class="answer-val">${fmt(s.answers[21])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="22"><div class="answer-num">Задание 22</div><div class="answer-val">${fmt(s.answers[22])}<div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="23"><div class="answer-num">Задание 23</div><div class="answer-val">${fmt(s.answers[23])}<div class="answer-status"></div></div></div>
+
+  <h2>💻 Творческие задания</h2>
+  <div class="answer-row" data-row="24"><div class="answer-num">Задание 24</div><div class="answer-val"><div class="code-block">${(s.answers[24] || '').replace(/</g,'&lt;') || '(пусто)'}</div><div class="answer-status"></div></div></div>
+  <div class="answer-row" data-row="25"><div class="answer-num">Задание 25</div><div class="answer-val"><div class="code-block">${(s.answers[25] || '').replace(/</g,'&lt;') || '(пусто)'}</div><div class="answer-status"></div></div></div>
+
+  <div class="dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
+
+  <div class="footer">🌸 Удачи в учёбе! Работа сохранена из интерактивного учебника.</div>
+</div>
+
+<div class="code-modal-bg" id="codeModal">
+  <div class="code-modal">
+    <div class="icon">🔒</div>
+    <h3>Разбор откроет учитель</h3>
+    <p>Введи код доступа, который скажет учитель на уроке.</p>
+    <input type="text" id="codeInput" placeholder="Код доступа" autocomplete="off">
+    <div class="err" id="codeError"></div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="closeCodeModal()">Отмена</button>
+      <button class="btn-primary" onclick="checkCode()">Открыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const RESULTS = ${resultsJson};
+const ANSWERS = ${answersJson};
+const REVEAL_CODE = 'ОШИБКИ';
+let revealed = false;
+
+function askCode() {
+  if (revealed) { hideReveal(); return; }
+  document.getElementById('codeModal').classList.add('show');
+  document.getElementById('codeInput').value = '';
+  document.getElementById('codeError').textContent = '';
+  setTimeout(() => document.getElementById('codeInput').focus(), 200);
+}
+function closeCodeModal() {
+  document.getElementById('codeModal').classList.remove('show');
+}
+function checkCode() {
+  const input = document.getElementById('codeInput');
+  const err = document.getElementById('codeError');
+  const val = (input.value || '').trim().toUpperCase();
+  if (val === REVEAL_CODE) {
+    closeCodeModal();
+    showReveal();
+  } else {
+    err.textContent = 'Неверный код. Спроси учителя.';
+    input.value = '';
+    input.focus();
+  }
+}
+document.getElementById('codeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkCode();
+});
+document.getElementById('codeInput').addEventListener('input', () => {
+  document.getElementById('codeError').textContent = '';
+});
+
+function showReveal() {
+  revealed = true;
+  const btn = document.getElementById('revealBtn');
+  btn.textContent = '🙈 Скрыть мои ошибки';
+  btn.classList.add('active');
+
+  for (let n = 1; n <= 25; n++) {
+    const row = document.querySelector('[data-row="' + n + '"]');
+    if (!row) continue;
+    const status = row.querySelector('.answer-status');
+    row.classList.remove('revealed-correct', 'revealed-wrong');
+    if (status) status.classList.remove('show', 'ok', 'err');
+
+    if (RESULTS[n] === true) {
+      row.classList.add('revealed-correct');
+      if (status) { status.classList.add('show', 'ok'); status.textContent = '✓ Верно'; }
+    } else {
+      row.classList.add('revealed-wrong');
+      if (status) {
+        status.classList.add('show', 'err');
+        let text = '✗ Ошибка';
+        const ans = ANSWERS[n];
+        if (ans !== undefined && ans !== '' && !(Array.isArray(ans) && ans.length === 0)) {
+          let a = '';
+          if (Array.isArray(ans)) a = ans.join(', ');
+          else if (typeof ans === 'object') {
+            const p = [];
+            for (const k in ans) p.push(ans[k] || '—');
+            a = p.join(', ');
+          } else a = String(ans);
+          if (a.length > 80) a = a.slice(0, 80) + '…';
+          text += ' · Твой ответ: ' + a;
+        }
+        status.textContent = text;
+      }
+    }
+  }
+  const first = document.querySelector('[data-row="1"]');
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function hideReveal() {
+  revealed = false;
+  const btn = document.getElementById('revealBtn');
+  btn.textContent = '🔒 Показать мои ошибки';
+  btn.classList.remove('active');
+  for (let n = 1; n <= 25; n++) {
+    const row = document.querySelector('[data-row="' + n + '"]');
+    if (!row) continue;
+    row.classList.remove('revealed-correct', 'revealed-wrong');
+    const status = row.querySelector('.answer-status');
+    if (status) status.classList.remove('show', 'ok', 'err');
+  }
+}
+</script>
+</body>
+</html>`;
+}
+</script>
+<script>
 /* ЗАДАНИЕ 24 */
 function runTask24() {
   const code = document.getElementById('code-task24').value;
@@ -1694,6 +2406,13 @@ if (testState.completed) {
   document.getElementById('tasksContainer').style.display = 'block';
   document.getElementById('studentBadge').style.display = 'flex';
 
+  try {
+    const raw = localStorage.getItem(TEST_STORAGE + '_answers');
+    if (raw) savedAnswers = JSON.parse(raw);
+    const rawR = localStorage.getItem(TEST_STORAGE + '_results');
+    if (rawR) taskResults = JSON.parse(rawR);
+  } catch(e) {}
+
   lockAllInputs();
   updateProgress();
   showResultModal(testState.score, TOTAL_TASKS);
@@ -1701,15 +2420,9 @@ if (testState.completed) {
   document.getElementById('nameScreen').style.display = 'none';
   document.getElementById('tasksContainer').style.display = 'block';
   document.getElementById('studentBadge').style.display = 'flex';
-  updateHeaderInfo();
   loadTimer();
   if (remainingSeconds > 0) startTimer();
   updateProgress();
-}
-
-function updateHeaderInfo() {
-  document.getElementById('avatarLetter').textContent = testState.name ? testState.name.charAt(0).toUpperCase() : '?';
-  document.getElementById('studentName').textContent = testState.name || '—';
 }
 </script>
 
