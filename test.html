@@ -1651,13 +1651,24 @@ function performCheck() {
 
 /* БЛОКИРОВКА */
 function lockAllInputs() {
-  document.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
-  document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
+  // Блокируем поля ввода (input, textarea, select) — но НЕ трогаем кнопки
+  document.querySelectorAll('input, textarea, select').forEach(el => el.disabled = true);
+
+  // Блокируем кнопки «▶ Запустить» в заданиях 24 и 25
+  document.querySelectorAll('.task button').forEach(el => el.disabled = true);
+
+  // Блокируем кнопку «Отправить работу»
   const sb = document.getElementById('submitBtn');
   if (sb) {
     sb.disabled = true;
     sb.textContent = '✓ Работа отправлена';
   }
+
+  // Помечаем задания как «заблокированные» (визуально)
+  document.querySelectorAll('.task').forEach(t => t.classList.add('locked'));
+
+  // ⚠️ Кнопки в окне результата («Скачать мою работу», «Показать мои ошибки») —
+  // НЕ блокируем. Они должны работать.
 }
 
 function updateProgress() {
